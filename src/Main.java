@@ -16,8 +16,7 @@ public class Main {
 		// TODO Auto-generated method stub.
 		System.out.println("Hello World");
 		System.out.println("cool");
-		int hello = 0;
-		System.out.println("conflict with me");
+		System.out.println("change");
 		int goodbye = 12;
 	}
 
