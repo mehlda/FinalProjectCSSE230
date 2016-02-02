@@ -18,6 +18,7 @@ public class Main {
 		System.out.println("cool");
 		int hello = 0;
 		System.out.println("conflict with me");
+		int goodbye = 12;
 	}
 
 }
