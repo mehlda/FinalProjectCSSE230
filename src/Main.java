@@ -18,6 +18,7 @@ public class Main {
 		System.out.println("cool");
 		System.out.println("change");
 		int goodbye = 12;
+		int david = 1;
 	}
 
 }
