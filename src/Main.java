@@ -1,3 +1,10 @@
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 
 /**
  * TODO Put here a description of what this class does.
@@ -6,6 +13,8 @@
  *         Created Feb 2, 2016.
  */
 public class Main {
+	private static final Dimension SIZE = new Dimension(1080, 850);
+	
 
 	/**
 	 * TODO Put here a description of what this method does.
@@ -13,12 +22,11 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub.
-		System.out.println("Hello World");
-		System.out.println("cool");
-		System.out.println("change");
-		int goodbye = 12;
-		int david = 1;
+		JFrame frame = new MapFrame();
+		frame.setSize(SIZE);
+		frame.setTitle("Our Map Title");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		frame.setResizable(false);
 	}
-
 }
