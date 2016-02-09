@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
@@ -12,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SpringLayout;
 
 public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
@@ -40,6 +42,7 @@ public class MapFrame extends JFrame {
 			this.tripPlanner = new TripPlanner();
 			this.map = new MapComponent();
 			this.info = new InformationComponent();
+			
 
 			// Add components to GUI
 			this.add(this.tripPlanner, BorderLayout.WEST);
@@ -88,13 +91,15 @@ public class MapFrame extends JFrame {
 	public class TripPlanner extends JComponent {
 		private JLabel label;
 		protected Shape background = new Rectangle2D.Double(0, 0, SIZE.getWidth() / 4, SIZE.getHeight());
+		private GridBagLayout layout = new GridBagLayout();
 		
 		public TripPlanner(){
 			super();
 			JButton startTripButton = new JButton("Start Trip");
-			this.setLayout(new BorderLayout());
+			this.setLayout(this.layout);
 			startTripButton.setVisible(true);
 			this.add(startTripButton,BorderLayout.SOUTH);
+			//this.layout.putConstraint(SpringLayout.WEST,startTripButton,5,SpringLayout.WEST,);
 
 			this.setVisible(true);
 		}
