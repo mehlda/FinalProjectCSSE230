@@ -1,3 +1,6 @@
+import java.awt.BorderLayout;
+
+import javax.swing.JButton;
 import javax.swing.JComponent;
 
 /**
@@ -10,6 +13,9 @@ public class TripPlanner extends JComponent {
 
 	public TripPlanner(){
 		super();
+		JButton startTripButton = new JButton("Start Trip");
+		this.add(startTripButton,BorderLayout.CENTER);
+		this.setVisible(true);
 	}
 	
 	public void updateDisplay(){

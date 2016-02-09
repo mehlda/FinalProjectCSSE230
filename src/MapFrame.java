@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,10 +22,12 @@ public class MapFrame extends JFrame {
 	public MapFrame() {
 		MapPanel content = new MapPanel();
 		this.add(content);
+		this.pack();
+		this.setVisible(true);
 	}
 
 	public class MapPanel extends JPanel {
-		TripPlannerComponent tripPlanner;
+		TripPlanner tripPlanner;
 		MapComponent map;
 		InformationComponent info;
 
@@ -34,7 +37,7 @@ public class MapFrame extends JFrame {
 			setLayout(layout);
 
 			// Create Componenet objects
-			this.tripPlanner = new TripPlannerComponent();
+			this.tripPlanner = new TripPlanner();
 			this.map = new MapComponent();
 			this.info = new InformationComponent();
 
@@ -42,6 +45,9 @@ public class MapFrame extends JFrame {
 			this.add(this.tripPlanner, BorderLayout.WEST);
 			this.add(this.map, BorderLayout.CENTER);
 			this.add(this.info, BorderLayout.EAST);
+
+			
+
 
 			// This should be only thread in program
 			Runnable repainter = new Runnable() {
@@ -71,7 +77,7 @@ public class MapFrame extends JFrame {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(Color.BLUE);
-			g2.fill(this.tripPlanner.background);
+
 			g2.setColor(Color.RED);
 			g2.fill(this.map.background);
 			g2.setColor(Color.GREEN);
@@ -79,17 +85,22 @@ public class MapFrame extends JFrame {
 		}
 	}
 
-	public class TripPlannerComponent extends JComponent {
+	public class TripPlanner extends JComponent {
 		private JLabel label;
 		protected Shape background = new Rectangle2D.Double(0, 0, SIZE.getWidth() / 4, SIZE.getHeight());
 		
-		public TripPlannerComponent() {
-			this.label = new JLabel();
-			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
-			this.label.setForeground(Color.GREEN);
-			this.label.setText("Trip Planner");
-			this.label.setVisible(true);
-			this.add(this.label, BorderLayout.NORTH);
+		public TripPlanner(){
+			super();
+			JButton startTripButton = new JButton("Start Trip");
+			this.setLayout(new BorderLayout());
+			startTripButton.setVisible(true);
+			this.add(startTripButton,BorderLayout.SOUTH);
+
+			this.setVisible(true);
+		}
+		
+		public void updateDisplay(){
+			
 		}
 	}
 
