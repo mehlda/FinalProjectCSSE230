@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -36,8 +38,8 @@ public class MapFrame extends JFrame {
 
 	public MapFrame() {
 		MapPanel content = new MapPanel();
-		this.add(content);
 		super.setJMenuBar(content.menuBar);
+		this.add(content);
 
 		// this.pack();
 
@@ -135,11 +137,34 @@ public class MapFrame extends JFrame {
 
 			setupRouteInfoPanel();
 			setupRouteInstructionPanel();
-			//this.add(routeInstructionPanel,BorderLayout.CENTER);
 			this.add(routeInfoPanel,BorderLayout.CENTER);
+			//this.add(routeInstructionPanel,BorderLayout.CENTER);
 			
-
 			this.setVisible(true);
+		}
+		
+		private class RouteButtonAction implements ActionListener{
+			JPanel info;
+			JPanel instr;
+			String message;
+			JComponent planner;
+			
+			public RouteButtonAction(String message, JPanel infoPanel, JPanel instrPanel, JComponent planner){
+				this.info = infoPanel;
+				this.instr = instrPanel;
+				this.message = message;
+				this.planner = planner;
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
+				setupRouteInstructionPanel();
+				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel,BorderLayout.CENTER);
+				TripPlanner.this.routeInstructionPanel.repaint();
+				TripPlanner.this.validate();
+				this.planner.repaint();
+			}
 		}
 		
 		private void setupRouteInstructionPanel(){
@@ -152,7 +177,9 @@ public class MapFrame extends JFrame {
 			String routeDistance = "<p>Distance: " + distance + "</p>";
 			String routeTime = "<p>Time: " + time + "</p>";
 			String buttonText = formatting + routeLabel + routeDistance + routeTime;
-			this.routeButtons.add(new JButton(buttonText));
+			JButton button = new JButton(buttonText);
+			button.addActionListener(new RouteButtonAction("Hell0",this.routeInfoPanel,this.routeInstructionPanel,this));
+			this.routeButtons.add(button);
 		}
 
 		private void setupRouteInfoPanel() {
