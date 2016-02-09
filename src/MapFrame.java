@@ -25,10 +25,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
@@ -126,7 +128,7 @@ public class MapFrame extends JFrame {
 		private JPanel routeInfoPanel = new JPanel();
 		private JPanel routeInstructionPanel = new JPanel();
 		private ArrayList<JButton> routeButtons = new ArrayList<JButton>();
-		
+
 		private static final int WIDTH = 300;
 
 		public TripPlanner() {
@@ -137,48 +139,44 @@ public class MapFrame extends JFrame {
 
 			setupRouteInfoPanel();
 			setupRouteInstructionPanel();
-			this.add(routeInfoPanel,BorderLayout.CENTER);
-			//this.add(routeInstructionPanel,BorderLayout.CENTER);
-			
+			//this.add(routeInfoPanel, BorderLayout.CENTER);
+			 this.add(routeInstructionPanel,BorderLayout.CENTER);
+
 			this.setVisible(true);
 		}
-		
-		private class RouteButtonAction implements ActionListener{
-			JPanel info;
-			JPanel instr;
-			String message;
-			JComponent planner;
-			
-			public RouteButtonAction(String message, JPanel infoPanel, JPanel instrPanel, JComponent planner){
-				this.info = infoPanel;
-				this.instr = instrPanel;
-				this.message = message;
-				this.planner = planner;
+
+		private class RouteButtonAction implements ActionListener {
+			Route route;
+
+			public RouteButtonAction(Route r) {
+				this.route = r;
 			}
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
 				setupRouteInstructionPanel();
-				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel,BorderLayout.CENTER);
+				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel, BorderLayout.CENTER);
 				TripPlanner.this.routeInstructionPanel.repaint();
 				TripPlanner.this.validate();
-				this.planner.repaint();
+
 			}
 		}
-		
-		private void setupRouteInstructionPanel(){
-			this.routeInstructionPanel.add(new JScrollPane(new JTextArea("testing",35,35)));
+
+		private void setupRouteInstructionPanel() {
+			JTextArea text = new JTextArea("testing", 35, 25);
+			JScrollPane scroll = new JScrollPane(text,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			this.routeInstructionPanel.add(scroll);
 		}
 
-		private void buildAndAddButton(int distance, int time, int width, int routeNumber) {
-			String formatting = "<html>" + "<body style= width: " + width + "'>";
+		private void buildAndAddButton(Route r, int routeNumber) {
+			String formatting = "<html>" + "<body style= width: " + WIDTH + "'>";
 			String routeLabel = "<h1>Route " + routeNumber + "</h1>";
-			String routeDistance = "<p>Distance: " + distance + "</p>";
-			String routeTime = "<p>Time: " + time + "</p>";
+			String routeDistance = "<p>Distance: " + r.distanceCost + "</p>";
+			String routeTime = "<p>Time: " + r.timeCost + "</p>";
 			String buttonText = formatting + routeLabel + routeDistance + routeTime;
 			JButton button = new JButton(buttonText);
-			button.addActionListener(new RouteButtonAction("Hell0",this.routeInfoPanel,this.routeInstructionPanel,this));
+			button.addActionListener(new RouteButtonAction(r));
 			this.routeButtons.add(button);
 		}
 
@@ -188,9 +186,9 @@ public class MapFrame extends JFrame {
 			routeInfoPanel.setLayout(rifLayout);
 			// routeInfoPanel.setBackground(Color.black);
 			routeInfoPanel.setVisible(true);
-			for (int k = 0; k < 5; k++) {
-				buildAndAddButton((k + 1) * 50, (k + 1) * 35, WIDTH, k + 1);
-			}
+//			for (int k = 0; k < 5; k++) {
+//				buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
+//			}
 			for (int i = 0; i < routeButtons.size(); i++)
 				routeInfoPanel.add(routeButtons.get(i));
 		}
