@@ -8,16 +8,24 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class MapFrame extends JFrame {
@@ -29,7 +37,9 @@ public class MapFrame extends JFrame {
 	public MapFrame() {
 		MapPanel content = new MapPanel();
 		this.add(content);
-		this.pack();
+		super.setJMenuBar(content.menuBar);
+
+		// this.pack();
 
 		this.setVisible(true);
 	}
@@ -38,9 +48,12 @@ public class MapFrame extends JFrame {
 		TripPlanner tripPlanner;
 		MapComponent map;
 		InformationComponent info;
+		JMenu menu;
+		JMenuBar menuBar;
 
 		public MapPanel() {
 			// Define GUI layout
+
 			BorderLayout layout = new BorderLayout(0, 0);
 			setLayout(layout);
 
@@ -48,6 +61,7 @@ public class MapFrame extends JFrame {
 			this.tripPlanner = new TripPlanner();
 			this.map = new MapComponent();
 			this.info = new InformationComponent();
+			buildMenu();
 
 			// Add components to GUI
 			this.add(this.tripPlanner, BorderLayout.WEST);
@@ -67,6 +81,18 @@ public class MapFrame extends JFrame {
 				}
 			};
 			new Thread(repainter).start();
+		}
+
+		private void buildMenu() {
+			this.menu = new JMenu();
+			this.menuBar = new JMenuBar();
+			menuBar.add(menu);
+			JMenuItem menuItem = new JMenuItem("A text-only menu item");
+			menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
+			menu.add(menuItem);
+			menuItem = new JMenuItem("Both text and icon");
+			menuItem.setMnemonic(KeyEvent.VK_B);
+			menu.add(menuItem);
 		}
 
 		public void timePassed() {
@@ -96,7 +122,9 @@ public class MapFrame extends JFrame {
 		private GridBagConstraints c = new GridBagConstraints();
 		private JPanel userInputPanel = new JPanel();
 		private JPanel routeInfoPanel = new JPanel();
+		private JPanel routeInstructionPanel = new JPanel();
 		private ArrayList<JButton> routeButtons = new ArrayList<JButton>();
+		
 		private static final int WIDTH = 300;
 
 		public TripPlanner() {
@@ -104,18 +132,25 @@ public class MapFrame extends JFrame {
 			this.setLayout(this.layout);
 			setupUserInputPanel();
 			this.add(this.userInputPanel, BorderLayout.NORTH);
-			
+
 			setupRouteInfoPanel();
-			this.add(routeInfoPanel);
+			setupRouteInstructionPanel();
+			//this.add(routeInstructionPanel,BorderLayout.CENTER);
+			this.add(routeInfoPanel,BorderLayout.CENTER);
+			
 
 			this.setVisible(true);
+		}
+		
+		private void setupRouteInstructionPanel(){
+			this.routeInstructionPanel.add(new JScrollPane(new JTextArea("testing",35,35)));
 		}
 
 		private void buildAndAddButton(int distance, int time, int width, int routeNumber) {
 			String formatting = "<html>" + "<body style= width: " + width + "'>";
-			String routeLabel =  "<h1>Route " + routeNumber + "</h1>";
+			String routeLabel = "<h1>Route " + routeNumber + "</h1>";
 			String routeDistance = "<p>Distance: " + distance + "</p>";
-			String routeTime = "<p>Time: " + time + "<p/>";
+			String routeTime = "<p>Time: " + time + "</p>";
 			String buttonText = formatting + routeLabel + routeDistance + routeTime;
 			this.routeButtons.add(new JButton(buttonText));
 		}
@@ -124,10 +159,10 @@ public class MapFrame extends JFrame {
 
 			GridLayout rifLayout = new GridLayout(0, 1);
 			routeInfoPanel.setLayout(rifLayout);
-			//routeInfoPanel.add(new JButton("Test Route Info"), BorderLayout.SOUTH);
-			//routeButtons.add(new JButton("TestButton\nDisance:  50\nTime: 50 minutes"));
-			for(int k = 0; k < 5; k++){
-				buildAndAddButton((k + 1) * 50, (k + 1) * 35, WIDTH,k+1);
+			// routeInfoPanel.setBackground(Color.black);
+			routeInfoPanel.setVisible(true);
+			for (int k = 0; k < 5; k++) {
+				buildAndAddButton((k + 1) * 50, (k + 1) * 35, WIDTH, k + 1);
 			}
 			for (int i = 0; i < routeButtons.size(); i++)
 				routeInfoPanel.add(routeButtons.get(i));
@@ -155,6 +190,12 @@ public class MapFrame extends JFrame {
 			this.userInputPanel.add(distance);
 			this.userInputPanel.add(time);
 			this.userInputPanel.add(startTripButton);
+			this.userInputPanel.add(new JLabel(""));
+			this.userInputPanel.add(new JLabel(""));
+			this.userInputPanel.add(new JLabel(""));
+			this.userInputPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+			this.userInputPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+
 		}
 
 		public void updateDisplay() {
