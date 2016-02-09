@@ -97,13 +97,14 @@ public class MapFrame extends JFrame {
 		private JPanel userInputPanel = new JPanel();
 		private JPanel routeInfoPanel = new JPanel();
 		private ArrayList<JButton> routeButtons = new ArrayList<JButton>();
+		private static final int WIDTH = 300;
 
 		public TripPlanner() {
 			super();
 			this.setLayout(this.layout);
 			setupUserInputPanel();
 			this.add(this.userInputPanel, BorderLayout.NORTH);
-			buildAndAddButton(50, 50, 200,10);
+			
 			setupRouteInfoPanel();
 			this.add(routeInfoPanel);
 
@@ -111,27 +112,25 @@ public class MapFrame extends JFrame {
 		}
 
 		private void buildAndAddButton(int distance, int time, int width, int routeNumber) {
-			String content1 = "<html>" + "<body style='background-color: green; width: ";
-			String content2 = "'>" + "<h1>Route ";
-			String content6 = "</h1>";
-
-			String content3 = "<p>Distance: ";
-			String content4 = "<p>Time: ";
-			String content5 = "</p>";
-			String content = content1 +  width + content2 +routeNumber + content6 + content3 + distance + content5
-					+ content4 + time + content5;
-			this.routeButtons.add(new JButton(content));
+			String formatting = "<html>" + "<body style= width: " + width + "'>";
+			String routeLabel =  "<h1>Route " + routeNumber + "</h1>";
+			String routeDistance = "<p>Distance: " + distance + "</p>";
+			String routeTime = "<p>Time: " + time + "<p/>";
+			String buttonText = formatting + routeLabel + routeDistance + routeTime;
+			this.routeButtons.add(new JButton(buttonText));
 		}
 
 		private void setupRouteInfoPanel() {
 
 			GridLayout rifLayout = new GridLayout(0, 1);
 			routeInfoPanel.setLayout(rifLayout);
-			routeInfoPanel.add(new JButton("Test Route Info"), BorderLayout.SOUTH);
-			routeButtons.add(new JButton("TestButton\nDisance:  50\nTime: 50 minutes"));
+			//routeInfoPanel.add(new JButton("Test Route Info"), BorderLayout.SOUTH);
+			//routeButtons.add(new JButton("TestButton\nDisance:  50\nTime: 50 minutes"));
+			for(int k = 0; k < 5; k++){
+				buildAndAddButton((k + 1) * 50, (k + 1) * 35, WIDTH,k+1);
+			}
 			for (int i = 0; i < routeButtons.size(); i++)
 				routeInfoPanel.add(routeButtons.get(i));
-
 		}
 
 		private void setupUserInputPanel() {
