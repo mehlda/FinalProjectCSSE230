@@ -4,15 +4,20 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 public class MapFrame extends JFrame {
@@ -42,15 +47,11 @@ public class MapFrame extends JFrame {
 			this.tripPlanner = new TripPlanner();
 			this.map = new MapComponent();
 			this.info = new InformationComponent();
-			
 
 			// Add components to GUI
 			this.add(this.tripPlanner, BorderLayout.WEST);
 			this.add(this.map, BorderLayout.CENTER);
 			this.add(this.info, BorderLayout.EAST);
-
-			
-
 
 			// This should be only thread in program
 			Runnable repainter = new Runnable() {
@@ -71,10 +72,9 @@ public class MapFrame extends JFrame {
 			// Update graphics here
 			System.out.println("time passed");
 		}
-		
+
 		/**
-		 * Temporary graphics to visualize layout
-		 * TODO:
+		 * Temporary graphics to visualize layout TODO:
 		 */
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -91,28 +91,55 @@ public class MapFrame extends JFrame {
 	public class TripPlanner extends JComponent {
 		private JLabel label;
 		protected Shape background = new Rectangle2D.Double(0, 0, SIZE.getWidth() / 4, SIZE.getHeight());
-		private GridBagLayout layout = new GridBagLayout();
-		
-		public TripPlanner(){
-			super();
-			JButton startTripButton = new JButton("Start Trip");
-			this.setLayout(this.layout);
-			startTripButton.setVisible(true);
-			this.add(startTripButton,BorderLayout.SOUTH);
-			//this.layout.putConstraint(SpringLayout.WEST,startTripButton,5,SpringLayout.WEST,);
+		private BorderLayout layout = new BorderLayout();
+		private GridBagConstraints c = new GridBagConstraints();
+		private JPanel userInputPanel = new JPanel();
 
+		public TripPlanner() {
+			super();
+			this.setLayout(this.layout);
+			setupUserInputPanel();
+			this.add(this.userInputPanel,BorderLayout.NORTH);
+			JPanel routeInfo = new JPanel();
+			this.add(routeInfo);
+			routeInfo.add(new JButton("Test Route Info"),BorderLayout.SOUTH);
 			this.setVisible(true);
 		}
 		
-		public void updateDisplay(){
-			
+		public void setupUserInputPanel(){
+			GridLayout bui = new GridLayout(0,2);
+			this.userInputPanel.setLayout(bui);
+			JButton startTripButton = new JButton("Start Trip");
+			JRadioButton distance = new JRadioButton("Shortest Distance", true);
+			JRadioButton time = new JRadioButton("Fastest Time");
+			ButtonGroup timeOrDistance = new ButtonGroup();
+			timeOrDistance.add(distance);
+			timeOrDistance.add(time);
+			this.userInputPanel.add(new JLabel("Trip Planner"));
+			this.userInputPanel.add(new JLabel(""));
+			this.userInputPanel.add(new JLabel("Start: "));
+			this.userInputPanel.add(new JTextField());
+			this.userInputPanel.add(new JLabel("Waypoints: "));
+			this.userInputPanel.add(new JTextField());
+			this.userInputPanel.add(new JLabel("Destination: "));
+			this.userInputPanel.add(new JTextField());
+			this.userInputPanel.add(new JLabel("Select Criteria:"));
+			this.userInputPanel.add(new JLabel(""));
+			this.userInputPanel.add(distance);
+			this.userInputPanel.add(time);
+			this.userInputPanel.add(startTripButton);
+		}
+
+		public void updateDisplay() {
+
 		}
 	}
 
 	public class MapComponent extends JComponent {
 		private JLabel label;
-		protected Shape background = new Rectangle2D.Double(SIZE.getWidth() / 4, 0, SIZE.getWidth() / 2, SIZE.getHeight());
-		
+		protected Shape background = new Rectangle2D.Double(SIZE.getWidth() / 4, 0, SIZE.getWidth() / 2,
+				SIZE.getHeight());
+
 		public MapComponent() {
 			this.label = new JLabel();
 			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
@@ -125,8 +152,9 @@ public class MapFrame extends JFrame {
 
 	public class InformationComponent extends JComponent {
 		private JLabel label;
-		protected Shape background = new Rectangle2D.Double(3*SIZE.getWidth() / 4,0,SIZE.getWidth() / 4, SIZE.getHeight());
-		
+		protected Shape background = new Rectangle2D.Double(3 * SIZE.getWidth() / 4, 0, SIZE.getWidth() / 4,
+				SIZE.getHeight());
+
 		public InformationComponent() {
 			this.label = new JLabel();
 			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
