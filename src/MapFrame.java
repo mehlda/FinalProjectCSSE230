@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -18,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
 
 public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
@@ -30,6 +30,7 @@ public class MapFrame extends JFrame {
 		MapPanel content = new MapPanel();
 		this.add(content);
 		this.pack();
+
 		this.setVisible(true);
 	}
 
@@ -94,20 +95,47 @@ public class MapFrame extends JFrame {
 		private BorderLayout layout = new BorderLayout();
 		private GridBagConstraints c = new GridBagConstraints();
 		private JPanel userInputPanel = new JPanel();
+		private JPanel routeInfoPanel = new JPanel();
+		private ArrayList<JButton> routeButtons = new ArrayList<JButton>();
 
 		public TripPlanner() {
 			super();
 			this.setLayout(this.layout);
 			setupUserInputPanel();
-			this.add(this.userInputPanel,BorderLayout.NORTH);
-			JPanel routeInfo = new JPanel();
-			this.add(routeInfo);
-			routeInfo.add(new JButton("Test Route Info"),BorderLayout.SOUTH);
+			this.add(this.userInputPanel, BorderLayout.NORTH);
+			buildAndAddButton(50, 50, 200,10);
+			setupRouteInfoPanel();
+			this.add(routeInfoPanel);
+
 			this.setVisible(true);
 		}
-		
-		public void setupUserInputPanel(){
-			GridLayout bui = new GridLayout(0,2);
+
+		private void buildAndAddButton(int distance, int time, int width, int routeNumber) {
+			String content1 = "<html>" + "<body style='background-color: green; width: ";
+			String content2 = "'>" + "<h1>Route ";
+			String content6 = "</h1>";
+
+			String content3 = "<p>Distance: ";
+			String content4 = "<p>Time: ";
+			String content5 = "</p>";
+			String content = content1 +  width + content2 +routeNumber + content6 + content3 + distance + content5
+					+ content4 + time + content5;
+			this.routeButtons.add(new JButton(content));
+		}
+
+		private void setupRouteInfoPanel() {
+
+			GridLayout rifLayout = new GridLayout(0, 1);
+			routeInfoPanel.setLayout(rifLayout);
+			routeInfoPanel.add(new JButton("Test Route Info"), BorderLayout.SOUTH);
+			routeButtons.add(new JButton("TestButton\nDisance:  50\nTime: 50 minutes"));
+			for (int i = 0; i < routeButtons.size(); i++)
+				routeInfoPanel.add(routeButtons.get(i));
+
+		}
+
+		private void setupUserInputPanel() {
+			GridLayout bui = new GridLayout(0, 2);
 			this.userInputPanel.setLayout(bui);
 			JButton startTripButton = new JButton("Start Trip");
 			JRadioButton distance = new JRadioButton("Shortest Distance", true);
