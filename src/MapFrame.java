@@ -23,13 +23,16 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
 public class MapFrame extends JFrame {
@@ -43,7 +46,7 @@ public class MapFrame extends JFrame {
 		super.setJMenuBar(content.menuBar);
 		this.add(content);
 
-		// this.pack();
+		this.pack();
 
 		this.setVisible(true);
 	}
@@ -87,21 +90,67 @@ public class MapFrame extends JFrame {
 			new Thread(repainter).start();
 		}
 
-		private void buildMenu() {
-			this.menu = new JMenu();
-			this.menuBar = new JMenuBar();
+		public void buildMenu() {
+			// Create the menu bar.
+			JMenuItem menuItem;
+
+			menuBar = new JMenuBar();
+
+			// Build the first menu.
+			menu = new JMenu("Admin");
+			menu.setMnemonic(KeyEvent.VK_A);
+			menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
 			menuBar.add(menu);
-			JMenuItem menuItem = new JMenuItem("A text-only menu item");
-			menuItem.getAccessibleContext().setAccessibleDescription("This doesn't really do anything");
+
+			// a group of JMenuItems
+			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_T);
+			menuItem.getAccessibleContext().setAccessibleDescription("Insert a Destination");
+			menuItem.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String name = JOptionPane.showInputDialog("Enter the destination name:");
+					ArrayList<String> neighbors = new ArrayList<String>();
+					String neighbor = "";
+					while (!neighbor.equals("DONE")) {
+						if (!neighbor.equals(""))
+							neighbors.add(neighbor);
+						neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
+					}
+					System.out.println(name + " " + neighbors);
+
+				}
+			});
 			menu.add(menuItem);
-			menuItem = new JMenuItem("Both text and icon");
+
+			menuItem = new JMenuItem("Delete Destination");
 			menuItem.setMnemonic(KeyEvent.VK_B);
+			menuItem.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String name = JOptionPane.showInputDialog("Enter the destination name:");
+
+				}
+			});
 			menu.add(menuItem);
+
+			// Build second menu in the menu bar.
+			menu = new JMenu("User");
+			menu.setMnemonic(KeyEvent.VK_N);
+			menuItem = new JMenuItem("Print Instructions");
+			menuItem.getAccessibleContext().setAccessibleDescription("Print the route information");
+			menu.add(menuItem);
+			menuItem = new JMenuItem("Other");
+			menu.add(menuItem);
+			menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
+			menuBar.add(menu);
+
 		}
 
 		public void timePassed() {
 			// Update graphics here
-			System.out.println("time passed");
+			// System.out.println("time passed");
 		}
 
 		/**
@@ -128,6 +177,7 @@ public class MapFrame extends JFrame {
 		private JPanel routeInfoPanel = new JPanel();
 		private JPanel routeInstructionPanel = new JPanel();
 		private ArrayList<JButton> routeButtons = new ArrayList<JButton>();
+		private JTextArea routeWords;
 
 		private static final int WIDTH = 300;
 
@@ -139,8 +189,8 @@ public class MapFrame extends JFrame {
 
 			setupRouteInfoPanel();
 			setupRouteInstructionPanel();
-			//this.add(routeInfoPanel, BorderLayout.CENTER);
-			 this.add(routeInstructionPanel,BorderLayout.CENTER);
+			// this.add(routeInfoPanel, BorderLayout.CENTER);
+			this.add(routeInstructionPanel, BorderLayout.CENTER);
 
 			this.setVisible(true);
 		}
@@ -159,13 +209,14 @@ public class MapFrame extends JFrame {
 				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel, BorderLayout.CENTER);
 				TripPlanner.this.routeInstructionPanel.repaint();
 				TripPlanner.this.validate();
-
 			}
 		}
 
 		private void setupRouteInstructionPanel() {
-			JTextArea text = new JTextArea("testing", 35, 25);
-			JScrollPane scroll = new JScrollPane(text,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			this.routeWords = new JTextArea("testing", 35, 25);
+			JScrollPane scroll = new JScrollPane(this.routeWords, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			this.routeWords.setLineWrap(true);
 			this.routeInstructionPanel.add(scroll);
 		}
 
@@ -184,11 +235,10 @@ public class MapFrame extends JFrame {
 
 			GridLayout rifLayout = new GridLayout(0, 1);
 			routeInfoPanel.setLayout(rifLayout);
-			// routeInfoPanel.setBackground(Color.black);
 			routeInfoPanel.setVisible(true);
-//			for (int k = 0; k < 5; k++) {
-//				buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
-//			}
+			// for (int k = 0; k < 5; k++) {
+			// buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
+			// }
 			for (int i = 0; i < routeButtons.size(); i++)
 				routeInfoPanel.add(routeButtons.get(i));
 		}
