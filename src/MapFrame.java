@@ -116,6 +116,17 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					try{
+						String password = "125TREE";
+						String entered = "";
+						while(!entered.equals(password)){
+							entered = JOptionPane.showInputDialog("Enter Admin Password: ");
+						}
+					} catch(Exception err){
+						JOptionPane.showMessageDialog(null, "Failure. Exiting");
+						return;
+					}
+					try{
 					String name = JOptionPane.showInputDialog("Enter the destination name:");
 					ArrayList<String> neighbors = new ArrayList<String>();
 					String neighbor = "";
@@ -124,7 +135,15 @@ public class MapFrame extends JFrame {
 							neighbors.add(neighbor);
 						neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
 					}
+					String imageLocation = JOptionPane.showInputDialog("Enter Picture Address: ");
+					int rating = Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
+					int xCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter x Coordinate: "));
+					int yCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter y Coordinate: "));
 					System.out.println(name + " " + neighbors);
+					} catch(Exception err){
+						JOptionPane.showMessageDialog(null,"Failure. Cancelling");
+						return;
+					}
 
 				}
 			});
@@ -166,7 +185,6 @@ public class MapFrame extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
-
 
 		}
 	}
@@ -299,32 +317,36 @@ public class MapFrame extends JFrame {
 	public class InformationComponent extends JPanel {
 		private JLabel label;
 		GridLayout icLayout;
-		
+
 		public InformationComponent() {
 			super();
-			this.icLayout = new GridLayout(0,1);
+			this.icLayout = new GridLayout(0, 1);
 			this.setLayout(icLayout);
+			this.setBounds(500, 500, 300, 300);
 			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File("C:/Users/David Mehl/Documents/GitHub/FinalProjectCSSE230/src/detPic.jpg"));
+				image = ImageIO
+						.read(new File("C:/Users/David Mehl/Documents/GitHub/FinalProjectCSSE230/src/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
 
-			Destination d = new Destination(new Coordinate(0,0),"Detroit","123 Detroit Ave",2,image,new LinkedList<Connection>());
-			
+			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
+					new LinkedList<Connection>());
+
 			displayDestination(d);
 			this.validate();
 		}
-		
-		public void displayDestination(Destination d){
+
+		public void displayDestination(Destination d) {
 			this.removeAll();
-			this.add(new JLabel(d.name));
+			String name = "<html>" + "<h1>" + d.name + "</h1>";
+			this.add(new JLabel(name));
+			this.add(new JLabel(""));
 			this.add(new JLabel(new ImageIcon(d.picture)));
 			this.add(new JLabel(d.address));
 			this.add(new JLabel("" + d.rating));
-			
-			
+
 		}
 	}
 }
