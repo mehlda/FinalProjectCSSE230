@@ -211,7 +211,6 @@ public class MapFrame extends JFrame {
 			setupRouteInfoPanel();
 			setupRouteInstructionPanel();
 			this.add(routeInfoPanel, BorderLayout.CENTER);
-			// this.add(routeInstructionPanel, BorderLayout.CENTER);
 
 			this.setVisible(true);
 		}
@@ -245,7 +244,21 @@ public class MapFrame extends JFrame {
 			JScrollPane scroll = new JScrollPane(this.routeWords, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			this.routeWords.setLineWrap(true);
-			this.routeInstructionPanel.add(scroll);
+			BorderLayout riLayout = new BorderLayout();
+			this.routeInstructionPanel.setLayout(riLayout);
+			this.routeInstructionPanel.add(scroll,BorderLayout.CENTER);
+			JButton back = new JButton("Back");
+			back.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
+					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
+					TripPlanner.this.validate();
+					
+				}
+			});
+			this.routeInstructionPanel.add(back,BorderLayout.SOUTH);
 		}
 
 		private void buildAndAddButton(Route r, int routeNumber) {
@@ -275,7 +288,12 @@ public class MapFrame extends JFrame {
 			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 					new LinkedList<Connection>());
 			Route r = new Route(d);
+			Route r2 = new Route();
+			Route r3 = new Route();
 			buildAndAddButton(r, 1);
+			buildAndAddButton(r2,2);
+			buildAndAddButton(r3,3);
+			
 			// for (int k = 0; k < 5; k++) {
 			// buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
 			// }
@@ -292,20 +310,37 @@ public class MapFrame extends JFrame {
 			ButtonGroup timeOrDistance = new ButtonGroup();
 			timeOrDistance.add(distance);
 			timeOrDistance.add(time);
+			
+			final JTextField start = new JTextField();
+			final JTextField waypoints = new JTextField();
+			final JTextField destination = new JTextField();
 			this.userInputPanel.add(new JLabel("Trip Planner"));
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(new JLabel("Start: "));
-			this.userInputPanel.add(new JTextField());
+			this.userInputPanel.add(start);
 			this.userInputPanel.add(new JLabel("Waypoints: "));
-			this.userInputPanel.add(new JTextField());
+			this.userInputPanel.add(waypoints);
 			this.userInputPanel.add(new JLabel("Destination: "));
-			this.userInputPanel.add(new JTextField());
+			this.userInputPanel.add(destination);
 			this.userInputPanel.add(new JLabel("Select Criteria:"));
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(distance);
 			this.userInputPanel.add(time);
 			this.userInputPanel.add(startTripButton);
-			this.userInputPanel.add(new JLabel(""));
+			JButton clear = new JButton("Clear");
+			this.userInputPanel.add(clear);
+			clear.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub.
+					start.setText("");
+					waypoints.setText("");
+					destination.setText("");
+					
+					
+				}
+			});
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(new JSeparator(JSeparator.HORIZONTAL));
