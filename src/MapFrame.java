@@ -12,8 +12,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,6 +50,7 @@ public class MapFrame extends JFrame {
 		MapPanel content = new MapPanel();
 		super.setJMenuBar(content.menuBar);
 		this.add(content);
+		this.validate();
 
 		this.pack();
 
@@ -74,6 +80,7 @@ public class MapFrame extends JFrame {
 			this.add(this.tripPlanner, BorderLayout.WEST);
 			this.add(this.map, BorderLayout.CENTER);
 			this.add(this.info, BorderLayout.EAST);
+			this.validate();
 
 			// This should be only thread in program
 			Runnable repainter = new Runnable() {
@@ -159,12 +166,8 @@ public class MapFrame extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
-			g2.setColor(Color.BLUE);
 
-			g2.setColor(Color.RED);
-			g2.fill(this.map.background);
-			g2.setColor(Color.GREEN);
-			g2.fill(this.info.background);
+
 		}
 	}
 
@@ -213,7 +216,7 @@ public class MapFrame extends JFrame {
 		}
 
 		private void setupRouteInstructionPanel() {
-			this.routeWords = new JTextArea("testing", 35, 25);
+			this.routeWords = new JTextArea("testing", 30, 25);
 			JScrollPane scroll = new JScrollPane(this.routeWords, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			this.routeWords.setLineWrap(true);
@@ -293,18 +296,35 @@ public class MapFrame extends JFrame {
 		}
 	}
 
-	public class InformationComponent extends JComponent {
+	public class InformationComponent extends JPanel {
 		private JLabel label;
-		protected Shape background = new Rectangle2D.Double(3 * SIZE.getWidth() / 4, 0, SIZE.getWidth() / 4,
-				SIZE.getHeight());
-
+		GridLayout icLayout;
+		
 		public InformationComponent() {
-			this.label = new JLabel();
-			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
-			this.label.setForeground(Color.RED);
-			this.label.setText("Information Component");
-			this.add(this.label, BorderLayout.NORTH);
-			this.label.setVisible(true);
+			super();
+			this.icLayout = new GridLayout(0,1);
+			this.setLayout(icLayout);
+			BufferedImage image = null;
+			try {
+				image = ImageIO.read(new File("C:/Users/David Mehl/Documents/GitHub/FinalProjectCSSE230/src/detPic.jpg"));
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
+
+			Destination d = new Destination(new Coordinate(0,0),"Detroit","123 Detroit Ave",2,image,new LinkedList<Connection>());
+			
+			displayDestination(d);
+			this.validate();
+		}
+		
+		public void displayDestination(Destination d){
+			this.removeAll();
+			this.add(new JLabel(d.name));
+			this.add(new JLabel(new ImageIcon(d.picture)));
+			this.add(new JLabel(d.address));
+			this.add(new JLabel("" + d.rating));
+			
+			
 		}
 	}
 }
