@@ -35,6 +35,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
@@ -46,13 +47,13 @@ public class MapFrame extends JFrame {
 	private static final int REPAINT_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
 	private static final int FONT_SIZE = 70;
 	private static final Dimension SIZE = new Dimension(1080, 850);
+	MapPanel content;
 
 	public MapFrame() {
-		MapPanel content = new MapPanel();
+		content = new MapPanel();
 		super.setJMenuBar(content.menuBar);
 		this.add(content);
 		this.validate();
-		
 
 		this.setVisible(true);
 	}
@@ -63,6 +64,8 @@ public class MapFrame extends JFrame {
 		InformationComponent info;
 		JMenu menu;
 		JMenuBar menuBar;
+		JSplitPane full;
+		JSplitPane plannerMap;
 
 		public MapPanel() {
 			// Define GUI layout
@@ -77,9 +80,27 @@ public class MapFrame extends JFrame {
 			buildMenu();
 
 			// Add components to GUI
-			this.add(this.tripPlanner, BorderLayout.WEST);
-			this.add(this.map, BorderLayout.CENTER);
-			this.add(this.info, BorderLayout.EAST);
+			full = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.map, this.info);
+			plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, full);
+			plannerMap.setOneTouchExpandable(true);
+			plannerMap.setDividerLocation(300);
+
+			// Provide minimum sizes for the two components in the split pane
+			Dimension minimumSize = new Dimension(0, 0);
+			this.tripPlanner.setMinimumSize(minimumSize);
+			Dimension maximumSize = new Dimension(100, 300);
+			this.tripPlanner.setMaximumSize(maximumSize);
+
+			minimumSize = new Dimension(0, 0);
+			this.info.setMinimumSize(minimumSize);
+			maximumSize = new Dimension(300,500);
+			this.info.setMaximumSize(maximumSize);
+			
+			full.setDividerLocation(1200);
+			full.setOneTouchExpandable(true);
+			this.add(plannerMap,BorderLayout.CENTER);
+			//this.add(full, BorderLayout.EAST);
+			// this.add(this.info, BorderLayout.EAST);
 			this.validate();
 
 			// This should be only thread in program
@@ -178,6 +199,9 @@ public class MapFrame extends JFrame {
 			// Update graphics here
 			// System.out.println("time passed");
 			MapFrame.this.validate();
+			MapFrame.this.repaint();
+			System.out.println(MapFrame.this.content.plannerMap.getDividerLocation());
+			
 		}
 
 		/**
@@ -215,8 +239,8 @@ public class MapFrame extends JFrame {
 
 			this.setVisible(true);
 		}
-		
-		private void setRouteInstructionPanelText(Route r){
+
+		private void setRouteInstructionPanelText(Route r) {
 			JScrollPane textScroll = (JScrollPane) this.routeInstructionPanel.getComponent(0);
 			JViewport view = (JViewport) textScroll.getComponent(0);
 			JTextArea text = (JTextArea) view.getView();
@@ -247,19 +271,19 @@ public class MapFrame extends JFrame {
 			this.routeWords.setLineWrap(true);
 			BorderLayout riLayout = new BorderLayout();
 			this.routeInstructionPanel.setLayout(riLayout);
-			this.routeInstructionPanel.add(scroll,BorderLayout.CENTER);
+			this.routeInstructionPanel.add(scroll, BorderLayout.CENTER);
 			JButton back = new JButton("Back");
 			back.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.validate();
-					
+
 				}
 			});
-			this.routeInstructionPanel.add(back,BorderLayout.SOUTH);
+			this.routeInstructionPanel.add(back, BorderLayout.SOUTH);
 		}
 
 		private void buildAndAddButton(Route r, int routeNumber) {
@@ -292,9 +316,9 @@ public class MapFrame extends JFrame {
 			Route r2 = new Route();
 			Route r3 = new Route();
 			buildAndAddButton(r, 1);
-			buildAndAddButton(r2,2);
-			buildAndAddButton(r3,3);
-			
+			buildAndAddButton(r2, 2);
+			buildAndAddButton(r3, 3);
+
 			// for (int k = 0; k < 5; k++) {
 			// buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
 			// }
@@ -311,7 +335,7 @@ public class MapFrame extends JFrame {
 			ButtonGroup timeOrDistance = new ButtonGroup();
 			timeOrDistance.add(distance);
 			timeOrDistance.add(time);
-			
+
 			final JTextField start = new JTextField();
 			final JTextField waypoints = new JTextField();
 			final JTextField destination = new JTextField();
@@ -331,15 +355,14 @@ public class MapFrame extends JFrame {
 			JButton clear = new JButton("Clear");
 			this.userInputPanel.add(clear);
 			clear.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub.
 					start.setText("");
 					waypoints.setText("");
 					destination.setText("");
-					
-					
+
 				}
 			});
 			this.userInputPanel.add(new JLabel(""));
