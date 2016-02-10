@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 
@@ -216,7 +217,9 @@ public class MapFrame extends JFrame {
 		}
 		
 		private void setRouteInstructionPanelText(Route r){
-			JTextArea text = (JTextArea) this.routeInstructionPanel.getComponent(1);
+			JScrollPane textScroll = (JScrollPane) this.routeInstructionPanel.getComponent(0);
+			JViewport view = (JViewport) textScroll.getComponent(0);
+			JTextArea text = (JTextArea) view.getView();
 			text.setText(r.toString());
 		}
 
