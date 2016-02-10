@@ -381,6 +381,7 @@ public class MapFrame extends JFrame {
 
 	public class MapComponent extends JPanel implements MouseMotionListener, MouseListener {
 		private JLabel label;
+		private JPanel map;
 		protected Shape background = new Rectangle2D.Double(SIZE.getWidth() / 4, 0, SIZE.getWidth() / 2,
 				SIZE.getHeight());
 		private int startLocationX;
@@ -391,7 +392,9 @@ public class MapFrame extends JFrame {
 			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
 			this.label.setForeground(Color.BLUE);
 			this.label.setText("Map Component");
-			this.add(this.label, BorderLayout.NORTH);
+			this.map = new JPanel();
+			this.map.add(this.label);
+			this.add(this.map, BorderLayout.CENTER);
 			this.label.setVisible(true);
 			this.startLocationX = this.getLocation().x;
 			this.startLocationY = this.getLocation().y;
@@ -403,12 +406,12 @@ public class MapFrame extends JFrame {
 		@Override
 		public void mouseDragged(MouseEvent arg0) {
 			// TODO Auto-generated method stub.
-//			JComponent jc = (JComponent)arg0.getSource();
-//	        jc.setLocation(jc.getX()+arg0.getX(), jc.getY()+arg0.getY());
-			this.setLocation(this.getLocation().x - (this.startLocationX - arg0.getX()),
-					this.getLocation().y - (this.startLocationY - arg0.getY()));
-	        this.startLocationX = arg0.getX();
-	        this.startLocationY = arg0.getY();
+			JComponent jc = (JComponent)arg0.getSource();
+	        jc.setLocation(jc.getX()+arg0.getX() - this.startLocationX, jc.getY()+arg0.getY()-this.startLocationY);
+//			this.map.setLocation(this.map.getLocation().x - (this.startLocationX - arg0.getX()),
+//					this.map.getLocation().y - (this.startLocationY - arg0.getY()));
+//	        this.startLocationX = arg0.getX();
+//	        this.startLocationY = arg0.getY();
 
 		}
 
@@ -446,8 +449,6 @@ public class MapFrame extends JFrame {
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
 			// TODO Auto-generated method stub.
-			this.setLocation(this.getLocation().x - (this.startLocationX - arg0.getX()),
-					this.getLocation().y - (this.startLocationY - arg0.getY()));
 
 		}
 	}
@@ -464,7 +465,7 @@ public class MapFrame extends JFrame {
 			BufferedImage image = null;
 			try {
 				image = ImageIO
-						.read(new File("C:/Users/David Mehl/Documents/GitHub/FinalProjectCSSE230/src/detPic.jpg"));
+						.read(new File("src/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
