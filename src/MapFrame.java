@@ -52,8 +52,6 @@ public class MapFrame extends JFrame {
 		this.add(content);
 		this.validate();
 
-		this.pack();
-
 		this.setVisible(true);
 	}
 
@@ -110,38 +108,38 @@ public class MapFrame extends JFrame {
 			menuBar.add(menu);
 
 			// a group of JMenuItems
-			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_T);
+			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_I);
 			menuItem.getAccessibleContext().setAccessibleDescription("Insert a Destination");
 			menuItem.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					try{
+					try {
 						String password = "125TREE";
 						String entered = "";
-						while(!entered.equals(password)){
+						while (!entered.equals(password)) {
 							entered = JOptionPane.showInputDialog("Enter Admin Password: ");
 						}
-					} catch(Exception err){
+					} catch (Exception err) {
 						JOptionPane.showMessageDialog(null, "Failure. Exiting");
 						return;
 					}
-					try{
-					String name = JOptionPane.showInputDialog("Enter the destination name:");
-					ArrayList<String> neighbors = new ArrayList<String>();
-					String neighbor = "";
-					while (!neighbor.equals("DONE")) {
-						if (!neighbor.equals(""))
-							neighbors.add(neighbor);
-						neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
-					}
-					String imageLocation = JOptionPane.showInputDialog("Enter Picture Address: ");
-					int rating = Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
-					int xCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter x Coordinate: "));
-					int yCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter y Coordinate: "));
-					System.out.println(name + " " + neighbors);
-					} catch(Exception err){
-						JOptionPane.showMessageDialog(null,"Failure. Cancelling");
+					try {
+						String name = JOptionPane.showInputDialog("Enter the destination name:");
+						ArrayList<String> neighbors = new ArrayList<String>();
+						String neighbor = "";
+						while (!neighbor.equals("DONE")) {
+							if (!neighbor.equals(""))
+								neighbors.add(neighbor);
+							neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
+						}
+						String imageLocation = JOptionPane.showInputDialog("Enter Picture Address: ");
+						int rating = Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
+						int xCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter x Coordinate: "));
+						int yCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter y Coordinate: "));
+						System.out.println(name + " " + neighbors);
+					} catch (Exception err) {
+						JOptionPane.showMessageDialog(null, "Failure. Cancelling");
 						return;
 					}
 
@@ -150,7 +148,7 @@ public class MapFrame extends JFrame {
 			menu.add(menuItem);
 
 			menuItem = new JMenuItem("Delete Destination");
-			menuItem.setMnemonic(KeyEvent.VK_B);
+			menuItem.setMnemonic(KeyEvent.VK_D);
 			menuItem.addActionListener(new ActionListener() {
 
 				@Override
@@ -177,6 +175,7 @@ public class MapFrame extends JFrame {
 		public void timePassed() {
 			// Update graphics here
 			// System.out.println("time passed");
+			MapFrame.this.validate();
 		}
 
 		/**
@@ -210,10 +209,15 @@ public class MapFrame extends JFrame {
 
 			setupRouteInfoPanel();
 			setupRouteInstructionPanel();
-			// this.add(routeInfoPanel, BorderLayout.CENTER);
-			this.add(routeInstructionPanel, BorderLayout.CENTER);
+			this.add(routeInfoPanel, BorderLayout.CENTER);
+			// this.add(routeInstructionPanel, BorderLayout.CENTER);
 
 			this.setVisible(true);
+		}
+		
+		private void setRouteInstructionPanelText(Route r){
+			JTextArea text = (JTextArea) this.routeInstructionPanel.getComponent(1);
+			text.setText(r.toString());
 		}
 
 		private class RouteButtonAction implements ActionListener {
@@ -226,9 +230,8 @@ public class MapFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
-				setupRouteInstructionPanel();
 				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel, BorderLayout.CENTER);
-				TripPlanner.this.routeInstructionPanel.repaint();
+				TripPlanner.this.setRouteInstructionPanelText(route);
 				TripPlanner.this.validate();
 			}
 		}
@@ -257,6 +260,18 @@ public class MapFrame extends JFrame {
 			GridLayout rifLayout = new GridLayout(0, 1);
 			routeInfoPanel.setLayout(rifLayout);
 			routeInfoPanel.setVisible(true);
+			BufferedImage image = null;
+			try {
+				image = ImageIO
+						.read(new File("C:/Users/David Mehl/Documents/GitHub/FinalProjectCSSE230/src/detPic.jpg"));
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
+
+			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
+					new LinkedList<Connection>());
+			Route r = new Route(d);
+			buildAndAddButton(r, 1);
 			// for (int k = 0; k < 5; k++) {
 			// buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
 			// }
@@ -316,11 +331,11 @@ public class MapFrame extends JFrame {
 
 	public class InformationComponent extends JPanel {
 		private JLabel label;
-		GridLayout icLayout;
+		BorderLayout icLayout;
 
 		public InformationComponent() {
 			super();
-			this.icLayout = new GridLayout(0, 1);
+			this.icLayout = new BorderLayout();
 			this.setLayout(icLayout);
 			this.setBounds(500, 500, 300, 300);
 			BufferedImage image = null;
@@ -341,11 +356,15 @@ public class MapFrame extends JFrame {
 		public void displayDestination(Destination d) {
 			this.removeAll();
 			String name = "<html>" + "<h1>" + d.name + "</h1>";
-			this.add(new JLabel(name));
-			this.add(new JLabel(""));
-			this.add(new JLabel(new ImageIcon(d.picture)));
-			this.add(new JLabel(d.address));
-			this.add(new JLabel("" + d.rating));
+			JPanel stuff = new JPanel();
+			stuff.setLayout(new GridLayout(0, 1));
+			stuff.add(new JLabel(name));
+			// stuff.add(new JLabel(""));
+			stuff.add(new JLabel(new ImageIcon(d.picture)));
+			stuff.add(new JLabel(d.address));
+			stuff.add(new JLabel("" + d.rating));
+			stuff.setBounds(0, 0, 300, 300);
+			this.add(stuff, BorderLayout.CENTER);
 
 		}
 	}
