@@ -11,6 +11,9 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -84,7 +87,6 @@ public class MapFrame extends JFrame {
 			plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, full);
 			plannerMap.setOneTouchExpandable(true);
 			plannerMap.setDividerLocation(300);
-			
 
 			// Provide minimum sizes for the two components in the split pane
 			Dimension minimumSize = new Dimension(0, 0);
@@ -94,13 +96,13 @@ public class MapFrame extends JFrame {
 
 			minimumSize = new Dimension(0, 0);
 			this.info.setMinimumSize(minimumSize);
-			maximumSize = new Dimension(300,500);
+			maximumSize = new Dimension(300, 500);
 			this.info.setMaximumSize(maximumSize);
-			
+
 			full.setDividerLocation(1200);
 			full.setOneTouchExpandable(true);
-			this.add(plannerMap,BorderLayout.CENTER);
-			//this.add(full, BorderLayout.EAST);
+			this.add(plannerMap, BorderLayout.CENTER);
+			// this.add(full, BorderLayout.EAST);
 			// this.add(this.info, BorderLayout.EAST);
 			this.validate();
 
@@ -200,7 +202,7 @@ public class MapFrame extends JFrame {
 			// Update graphics here
 			// System.out.println("time passed");
 			MapFrame.this.validate();
-			
+
 		}
 
 		/**
@@ -305,8 +307,7 @@ public class MapFrame extends JFrame {
 			routeInfoPanel.setVisible(true);
 			BufferedImage image = null;
 			try {
-				image = ImageIO
-						.read(new File("src/detPic.jpg"));
+				image = ImageIO.read(new File("src/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
@@ -378,10 +379,12 @@ public class MapFrame extends JFrame {
 		}
 	}
 
-	public class MapComponent extends JComponent {
+	public class MapComponent extends JPanel implements MouseMotionListener, MouseListener {
 		private JLabel label;
 		protected Shape background = new Rectangle2D.Double(SIZE.getWidth() / 4, 0, SIZE.getWidth() / 2,
 				SIZE.getHeight());
+		private int startLocationX;
+		private int startLocationY;
 
 		public MapComponent() {
 			this.label = new JLabel();
@@ -390,6 +393,62 @@ public class MapFrame extends JFrame {
 			this.label.setText("Map Component");
 			this.add(this.label, BorderLayout.NORTH);
 			this.label.setVisible(true);
+			this.startLocationX = this.getLocation().x;
+			this.startLocationY = this.getLocation().y;
+			this.addMouseListener(this);
+			this.addMouseMotionListener(this);
+
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+//			JComponent jc = (JComponent)arg0.getSource();
+//	        jc.setLocation(jc.getX()+arg0.getX(), jc.getY()+arg0.getY());
+			this.setLocation(this.getLocation().x - (this.startLocationX - arg0.getX()),
+					this.getLocation().y - (this.startLocationY - arg0.getY()));
+	        this.startLocationX = arg0.getX();
+	        this.startLocationY = arg0.getY();
+
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+			this.startLocationX = arg0.getX();
+			this.startLocationY = arg0.getY();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub.
+			this.setLocation(this.getLocation().x - (this.startLocationX - arg0.getX()),
+					this.getLocation().y - (this.startLocationY - arg0.getY()));
+
 		}
 	}
 
