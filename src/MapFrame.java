@@ -258,6 +258,7 @@ public class MapFrame extends JFrame {
 				TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
 				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel, BorderLayout.CENTER);
 				TripPlanner.this.setRouteInstructionPanelText(route);
+				TripPlanner.this.repaint();
 				TripPlanner.this.validate();
 			}
 		}
@@ -278,6 +279,7 @@ public class MapFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
+					TripPlanner.this.repaint();
 					TripPlanner.this.validate();
 
 				}
