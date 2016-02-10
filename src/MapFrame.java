@@ -52,6 +52,7 @@ public class MapFrame extends JFrame {
 		super.setJMenuBar(content.menuBar);
 		this.add(content);
 		this.validate();
+		
 
 		this.setVisible(true);
 	}

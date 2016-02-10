@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ public class Main {
 		frame.setTitle("Our Map Title");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setResizable(true);
 	}
 }
