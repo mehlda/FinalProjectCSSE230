@@ -304,7 +304,7 @@ public class MapFrame extends JFrame {
 			BufferedImage image = null;
 			try {
 				image = ImageIO
-						.read(new File("C:/Users/David Mehl/Documents/GitHub/FinalProjectCSSE230/src/detPic.jpg"));
+						.read(new File("src/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
