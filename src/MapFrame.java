@@ -241,6 +241,7 @@ public class MapFrame extends JFrame {
 
 		private void setupRouteInstructionPanel() {
 			this.routeWords = new JTextArea("testing", 30, 25);
+			this.routeWords.setEditable(false);
 			JScrollPane scroll = new JScrollPane(this.routeWords, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			this.routeWords.setLineWrap(true);
