@@ -84,6 +84,7 @@ public class MapFrame extends JFrame {
 			plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, full);
 			plannerMap.setOneTouchExpandable(true);
 			plannerMap.setDividerLocation(300);
+			
 
 			// Provide minimum sizes for the two components in the split pane
 			Dimension minimumSize = new Dimension(0, 0);
@@ -199,8 +200,6 @@ public class MapFrame extends JFrame {
 			// Update graphics here
 			// System.out.println("time passed");
 			MapFrame.this.validate();
-			MapFrame.this.repaint();
-			System.out.println(MapFrame.this.content.plannerMap.getDividerLocation());
 			
 		}
 
