@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +41,7 @@ import javax.swing.SwingConstants;
  * 
  * Constructs the GUI
  *
- * @author David Mehl.
- *         Created Feb 10, 2016.
+ * @author David Mehl. Created Feb 10, 2016.
  */
 public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
@@ -66,8 +66,7 @@ public class MapFrame extends JFrame {
 	 * 
 	 * Creates the main GUI panel
 	 *
-	 * @author David Mehl.
-	 *         Created Feb 10, 2016.
+	 * @author David Mehl. Created Feb 10, 2016.
 	 */
 	public class MapPanel extends JPanel {
 		private TripPlanner tripPlanner;
@@ -129,7 +128,7 @@ public class MapFrame extends JFrame {
 							timePassed();
 						}
 					} catch (InterruptedException e) {
-						//TODO determine if we need handling
+						// TODO determine if we need handling
 					}
 				}
 			};
@@ -206,6 +205,7 @@ public class MapFrame extends JFrame {
 			});
 			this.menu.add(menuItem);
 
+			// TODO work on menus
 			// Build second menu in the menu bar.
 			this.menu = new JMenu("User");
 			this.menu.setMnemonic(KeyEvent.VK_N);
@@ -227,7 +227,7 @@ public class MapFrame extends JFrame {
 		public void timePassed() {
 			// Update graphics here
 			// System.out.println("time passed");
-			//MapFrame.this.validate();
+			// MapFrame.this.validate();
 
 		}
 	}
@@ -236,8 +236,7 @@ public class MapFrame extends JFrame {
 	 * 
 	 * Creates the trip planner, with map, UI, and info panel
 	 *
-	 * @author David Mehl.
-	 *         Created Feb 10, 2016.
+	 * @author David Mehl. Created Feb 10, 2016.
 	 */
 	public class TripPlanner extends JComponent {
 		private BorderLayout layout = new BorderLayout();
@@ -262,7 +261,6 @@ public class MapFrame extends JFrame {
 			setupRouteInstructionPanel();
 			this.setVisible(true);
 		}
-
 
 		/**
 		 * 
@@ -334,8 +332,8 @@ public class MapFrame extends JFrame {
 
 		/**
 		 * 
-		 * TODO This function will be cut down and removed when other classes are
-		 * implemented
+		 * TODO This function will be cut down and removed when other classes
+		 * are implemented
 		 *
 		 */
 		private void setupRouteInfoPanel() {
@@ -349,6 +347,7 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 
+			// TODO
 			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 					new LinkedList<Connection>());
 			Route r = new Route(d);
@@ -408,6 +407,41 @@ public class MapFrame extends JFrame {
 			JButton startTripButton = new JButton("Start Trip");
 			final JTextField start = new JTextField();
 			final JTextField waypoints = new JTextField();
+			final String defaultWaypoints = "Waypt1:Waypt2:W...";
+			waypoints.setText(defaultWaypoints);
+			waypoints.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// none
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// none
+
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					if (waypoints.getText().equals(""))
+						waypoints.setText(defaultWaypoints);
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// none
+
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					if (waypoints.getText().equals(defaultWaypoints))
+						waypoints.setText("");
+
+				}
+			});
 			final JTextField destination = new JTextField();
 			startTripButton.addActionListener(new ActionListener() {
 
@@ -417,8 +451,16 @@ public class MapFrame extends JFrame {
 					TripPlanner.this.setupRouteInfoPanel(); // Remove this line
 															// when other stuff
 															// is implemented
-					// TripPlanner.this.getRoutesAndPlaceButtons(new
-					// RouteQueue(start.getText(), destination.getText()));
+					//TODO uncomment below for actual implementation
+//					if (!start.getText().equals("") && !destination.getText().equals("")) {
+//						if (!waypoints.getText().equals(defaultWaypoints)) {
+//							TripPlanner.this.getRoutesAndPlaceButtons(new RouteQueue(start.getText(),
+//									waypoints.getText().split(":"), destination.getText()));
+//						} else {
+//							TripPlanner.this
+//									.getRoutesAndPlaceButtons(new RouteQueue(start.getText(), destination.getText()));
+//						}
+//					}
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.validate();
 
@@ -468,7 +510,7 @@ public class MapFrame extends JFrame {
 		 *
 		 */
 		public void updateDisplay() {
-			//probably not needed
+			// probably not needed
 		}
 	}
 
@@ -476,8 +518,7 @@ public class MapFrame extends JFrame {
 	 * 
 	 * Map for the trip planner
 	 *
-	 * @author David Mehl.
-	 *         Created Feb 10, 2016.
+	 * @author David Mehl. Created Feb 10, 2016.
 	 */
 	public class MapComponent extends JPanel {
 		private JLabel label;
@@ -553,8 +594,7 @@ public class MapFrame extends JFrame {
 	 * 
 	 * Displays the destination in the info pane
 	 *
-	 * @author David Mehl.
-	 *         Created Feb 10, 2016.
+	 * @author David Mehl. Created Feb 10, 2016.
 	 */
 	public class InformationComponent extends JPanel {
 		private BorderLayout icLayout;
