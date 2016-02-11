@@ -107,17 +107,18 @@ public class MapFrame extends JFrame {
 			this.plannerMap.setDividerLocation(300);
 
 			// Provide minimum sizes for the two components in the split pane
-			Dimension minimumSize = new Dimension(0, 0);
+			Dimension minimumSize = new Dimension(300, 0);
 			this.tripPlanner.setMinimumSize(minimumSize);
-			Dimension maximumSize = new Dimension(100, 300);
+			Dimension maximumSize = new Dimension(500, 10000);
 			this.tripPlanner.setMaximumSize(maximumSize);
 
-			minimumSize = new Dimension(0, 0);
+			minimumSize = new Dimension(300, 0);
 			this.info.setMinimumSize(minimumSize);
-			maximumSize = new Dimension(300, 500);
+			maximumSize = new Dimension(300, 100000);
 			this.info.setMaximumSize(maximumSize);
+			//this.info.setS
 
-			this.full.setDividerLocation(1200);
+			this.full.setDividerLocation(1150);
 			this.full.setOneTouchExpandable(true);
 			this.add(this.plannerMap, BorderLayout.CENTER);
 			// this.add(full, BorderLayout.EAST);
