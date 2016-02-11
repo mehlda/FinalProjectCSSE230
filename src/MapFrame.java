@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -10,6 +12,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -134,6 +140,35 @@ public class MapFrame extends JFrame {
 			};
 			new Thread(repainter).start();
 		}
+		
+		private class RoutePrinter implements Printable{
+
+			@Override
+			public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
+				// TODO Auto-generated method stub.
+				// We have only one page, and 'page'
+			    // is zero-based
+			    if (page > 0) {
+			         return NO_SUCH_PAGE;
+			    }
+
+			    // User (0,0) is typically outside the
+			    // imageable area, so we must translate
+			    // by the X and Y values in the PageFormat
+			    // to avoid clipping.
+			    Graphics2D g2d = (Graphics2D)g;
+			    g2d.translate(pf.getImageableX(), pf.getImageableY());
+
+			    // Now we perform our rendering
+			    g.drawString(MapPanel.this.tripPlanner.routeWords.getText(), 100, 100);
+
+			    // tell the caller that this page is part
+			    // of the printed document
+			    return PAGE_EXISTS;
+
+			}
+			
+		}
 
 		/**
 		 * 
@@ -210,6 +245,24 @@ public class MapFrame extends JFrame {
 			this.menu = new JMenu("User");
 			this.menu.setMnemonic(KeyEvent.VK_N);
 			menuItem = new JMenuItem("Print Instructions");
+			menuItem.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					PrinterJob job = PrinterJob.getPrinterJob();
+					job.setPrintable(new RoutePrinter());
+					boolean doPrint = job.printDialog();
+					if (doPrint) {
+					    try {
+					        job.print();
+					    } catch (PrinterException pe) {
+					        // The job did not successfully
+					        // complete
+					    }
+					}
+					
+				}
+			});
 			menuItem.getAccessibleContext().setAccessibleDescription("Print the route information");
 			this.menu.add(menuItem);
 			menuItem = new JMenuItem("Other");
