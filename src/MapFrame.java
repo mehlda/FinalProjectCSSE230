@@ -7,10 +7,14 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.ScrollPane;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -44,6 +48,7 @@ import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.plaf.ScrollPaneUI;
 
 public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
@@ -379,78 +384,72 @@ public class MapFrame extends JFrame {
 		}
 	}
 
-	public class MapComponent extends JPanel implements MouseMotionListener, MouseListener {
+	public class MapComponent extends JPanel {
 		private JLabel label;
 		private JPanel map;
 		protected Shape background = new Rectangle2D.Double(SIZE.getWidth() / 4, 0, SIZE.getWidth() / 2,
 				SIZE.getHeight());
 		private int startLocationX;
 		private int startLocationY;
+		private JScrollPane viewer;
 
 		public MapComponent() {
 			this.label = new JLabel();
 			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
 			this.label.setForeground(Color.BLUE);
-			this.label.setText("Map Component");
+			this.label.setText(
+					"Map Component WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 			this.map = new JPanel();
-			this.map.add(this.label);
-			this.add(this.map, BorderLayout.CENTER);
+			this.map.setSize(new Dimension(5000, 5000));
+
+			//this.map.add(new JLabel("Hi there"));
+			//this.map.add(this.label);
+			BufferedImage image = null;
+			try {
+				image = ImageIO.read(new File("src/mapPic.jpg"));
+			} catch (IOException exception) {
+				exception.printStackTrace();
+			}
+			
+			this.map.add(new JLabel(new ImageIcon(image)));
+
+			viewer = new JScrollPane(this.map, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+			viewer.setPreferredSize(new Dimension(2000, 975));
+			JViewport port = viewer.getViewport();
+			this.add(viewer);
 			this.label.setVisible(true);
 			this.startLocationX = this.getLocation().x;
 			this.startLocationY = this.getLocation().y;
-			this.addMouseListener(this);
-			this.addMouseMotionListener(this);
+			PanListener pl = new PanListener();
+			port.addMouseListener(pl);
+			port.addMouseMotionListener(pl);
+			// this.addMouseListener(this);
+			// this.addMouseMotionListener(this);
+		}
+
+		private class PanListener extends MouseAdapter {
+			private final Point pp = new Point();
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				JViewport vport = (JViewport) e.getSource();
+				JComponent label = (JComponent) vport.getView();
+				Point cp = e.getPoint();
+				Point vp = vport.getViewPosition();
+				vp.translate(pp.x - cp.x, pp.y - cp.y);
+				label.scrollRectToVisible(new Rectangle(vp, vport.getSize()));
+				pp.setLocation(cp);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				pp.setLocation(e.getPoint());
+			}
 
 		}
 
-		@Override
-		public void mouseDragged(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-			JComponent jc = (JComponent)arg0.getSource();
-	        jc.setLocation(jc.getX()+arg0.getX() - this.startLocationX, jc.getY()+arg0.getY()-this.startLocationY);
-//			this.map.setLocation(this.map.getLocation().x - (this.startLocationX - arg0.getX()),
-//					this.map.getLocation().y - (this.startLocationY - arg0.getY()));
-//	        this.startLocationX = arg0.getX();
-//	        this.startLocationY = arg0.getY();
-
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-			this.startLocationX = arg0.getX();
-			this.startLocationY = arg0.getY();
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub.
-
-		}
 	}
 
 	public class InformationComponent extends JPanel {
@@ -464,8 +463,7 @@ public class MapFrame extends JFrame {
 			this.setBounds(500, 500, 300, 300);
 			BufferedImage image = null;
 			try {
-				image = ImageIO
-						.read(new File("src/detPic.jpg"));
+				image = ImageIO.read(new File("src/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
