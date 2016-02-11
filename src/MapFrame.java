@@ -492,9 +492,8 @@ public class MapFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					start.setText("");
-					waypoints.setText("");
+					waypoints.setText(defaultWaypoints);
 					destination.setText("");
-
 				}
 			});
 			this.userInputPanel.add(new JLabel(""));
@@ -616,7 +615,7 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 
-			// TODO remove this sample destination
+			// TODO remove this sample destination and its display
 			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 					new LinkedList<Connection>());
 
