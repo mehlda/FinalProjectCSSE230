@@ -7,22 +7,26 @@ import java.util.ArrayList;
  *
  */
 public class RouteQueue extends ArrayList<Destination> {
-	public String start;
-	public String end;
+	public Destination start;
+	public Destination end;
+	public Destination[] waypoints;
 	public Route bestRoute;
+	public boolean useTime; // if true, use time as cost
 
 	/**
-	 * Constructs a new RouteQueue object.
+	 * Constructs a new RouteQueue object with start, end, and waypoint
+	 * destinations.
 	 * 
-	 * @param start
-	 *            - name of starting location
+	 * @param start - name of 
 	 * @param end
-	 *            - name of ending location
+	 * @param waypoints
 	 */
-	public RouteQueue(String start, String end) {
-		// TODO: implement this method
+	public RouteQueue(Destination start,Destination end, Destination[] waypoints, boolean useTime) {
 		this.start = start;
 		this.end = end;
+		this.waypoints = waypoints;
+		this.useTime = useTime;
+		this.buildQueue();
 	}
 
 	/**
@@ -44,7 +48,7 @@ public class RouteQueue extends ArrayList<Destination> {
 	}
 
 	/**
-	 * Take the top element off priority queue
+	 * Take the top element off priority queue. Returns the next best route that has not been accessed yet.
 	 * 
 	 * @return Route from top of PriorityQueue
 	 */

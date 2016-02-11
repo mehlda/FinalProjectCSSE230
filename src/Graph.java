@@ -131,5 +131,20 @@ public class Graph {
 		// TODO: implement this method
 		return -1;
 	}
+	
+	/**
+	 * TODO: write description
+	 * @param start
+	 * @param end
+	 * @param waypoints
+	 * @return
+	 */
+	public RouteQueue getRouteQueue(String start, String end, String[] waypoints, boolean useTime) {
+		Destination[] midpoints = new Destination[waypoints.length];
+		for(int i = 0; i < waypoints.length; i++) {
+			midpoints[i] = this.find(waypoints[i]);
+		}
+		return new RouteQueue(this.find(start), this.find(end), midpoints, useTime);
+	}
 
 }
