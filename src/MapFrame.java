@@ -43,6 +43,11 @@ import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.web.WebView;
+
 /**
  * 
  * Constructs the GUI
@@ -116,7 +121,7 @@ public class MapFrame extends JFrame {
 			this.info.setMinimumSize(minimumSize);
 			maximumSize = new Dimension(300, 100000);
 			this.info.setMaximumSize(maximumSize);
-			//this.info.setS
+			// this.info.setS
 
 			this.full.setDividerLocation(1150);
 			this.full.setOneTouchExpandable(true);
@@ -276,14 +281,14 @@ public class MapFrame extends JFrame {
 			this.menu.add(menuItem);
 			menuItem = new JMenuItem("Exit");
 			menuItem.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.exit(0);
-					
+
 				}
 			});
-			//menuItem.setAccelerator();
+			// menuItem.setAccelerator();
 			this.menu.add(menuItem);
 			this.menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
 			this.menuBar.add(this.menu);
@@ -671,6 +676,7 @@ public class MapFrame extends JFrame {
 	 */
 	public class InformationComponent extends JPanel {
 		private BorderLayout icLayout;
+		private WebView browser;
 
 		/**
 		 * 
@@ -679,6 +685,7 @@ public class MapFrame extends JFrame {
 		 */
 		public InformationComponent() {
 			super();
+
 			this.icLayout = new BorderLayout();
 			this.setLayout(this.icLayout);
 			this.setBounds(500, 500, 300, 300);
@@ -707,14 +714,24 @@ public class MapFrame extends JFrame {
 		public void displayDestination(Destination d) {
 			this.removeAll();
 			String name = "<html>" + "<h1>" + d.name + "</h1>";
-			JPanel stuff = new JPanel();
-			stuff.setLayout(new GridLayout(0, 1));
-			stuff.add(new JLabel(name));
-			stuff.add(new JLabel(new ImageIcon(d.picture)));
-			stuff.add(new JLabel(d.address));
-			stuff.add(new JLabel("" + d.rating));
-			stuff.setBounds(0, 0, 300, 300);
-			this.add(stuff, BorderLayout.CENTER);
+//			JPanel stuff = new JPanel();
+//			stuff.setLayout(new GridLayout(0, 1));
+//			stuff.add(new JLabel(name));
+//			stuff.add(new JLabel(new ImageIcon(d.picture)));
+//			stuff.add(new JLabel(d.address));
+//			stuff.add(new JLabel("" + d.rating));
+//			stuff.setBounds(0, 0, 300, 300);
+//			this.add(stuff, BorderLayout.CENTER);
+			//this.icLayout = new BorderLayout();
+			JFXPanel jfx = new JFXPanel();
+			Platform.runLater(() -> {
+
+				this.browser = new WebView();
+				jfx.setScene(new Scene(this.browser));
+				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
+				
+			});
+			this.add(jfx,BorderLayout.CENTER);
 			this.validate();
 
 		}
