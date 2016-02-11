@@ -1,24 +1,13 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.ScrollPane;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,26 +26,33 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
-import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.plaf.ScrollPaneUI;
+import javax.swing.SwingConstants;
 
+/**
+ * 
+ * Constructs the GUI
+ *
+ * @author David Mehl.
+ *         Created Feb 10, 2016.
+ */
 public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
 	private static final int REPAINT_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
-	private static final int FONT_SIZE = 70;
-	private static final Dimension SIZE = new Dimension(1080, 850);
-	MapPanel content;
+	private MapPanel content;
 
+	/**
+	 * 
+	 * Creates the GUI frame
+	 *
+	 */
 	public MapFrame() {
 		this.content = new MapPanel();
 		super.setJMenuBar(this.content.menuBar);
@@ -66,15 +62,27 @@ public class MapFrame extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * 
+	 * Creates the main GUI panel
+	 *
+	 * @author David Mehl.
+	 *         Created Feb 10, 2016.
+	 */
 	public class MapPanel extends JPanel {
-		TripPlanner tripPlanner;
-		MapComponent map;
-		InformationComponent info;
-		JMenu menu;
-		JMenuBar menuBar;
-		JSplitPane full;
-		JSplitPane plannerMap;
+		private TripPlanner tripPlanner;
+		private MapComponent map;
+		private InformationComponent info;
+		private JMenu menu;
+		private JMenuBar menuBar;
+		private JSplitPane full;
+		private JSplitPane plannerMap;
 
+		/**
+		 * 
+		 * Constructs the main panel
+		 *
+		 */
 		public MapPanel() {
 			// Define GUI layout
 
@@ -113,6 +121,7 @@ public class MapFrame extends JFrame {
 
 			// This should be only thread in program
 			Runnable repainter = new Runnable() {
+				@Override
 				public void run() {
 					try {
 						while (true) {
@@ -120,12 +129,18 @@ public class MapFrame extends JFrame {
 							timePassed();
 						}
 					} catch (InterruptedException e) {
+						//TODO determine if we need handling
 					}
 				}
 			};
 			new Thread(repainter).start();
 		}
 
+		/**
+		 * 
+		 * Builds the menu. Java tutorial used as reference
+		 *
+		 */
 		public void buildMenu() {
 			// Create the menu bar.
 			JMenuItem menuItem;
@@ -135,7 +150,8 @@ public class MapFrame extends JFrame {
 			// Build the first menu.
 			this.menu = new JMenu("Admin");
 			this.menu.setMnemonic(KeyEvent.VK_A);
-			this.menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
+			this.menu.getAccessibleContext()
+					.setAccessibleDescription("The only menu in this program that has menu items");
 			this.menuBar.add(this.menu);
 
 			// a group of JMenuItems
@@ -164,10 +180,10 @@ public class MapFrame extends JFrame {
 								neighbors.add(neighbor);
 							neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
 						}
-						String imageLocation = JOptionPane.showInputDialog("Enter Picture Address: ");
-						int rating = Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
-						int xCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter x Coordinate: "));
-						int yCoord = Integer.parseInt(JOptionPane.showInputDialog("Enter y Coordinate: "));
+						JOptionPane.showInputDialog("Enter Picture Address: ");
+						Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
+						Integer.parseInt(JOptionPane.showInputDialog("Enter x Coordinate: "));
+						Integer.parseInt(JOptionPane.showInputDialog("Enter y Coordinate: "));
 						System.out.println(name + " " + neighbors);
 					} catch (Exception err) {
 						JOptionPane.showMessageDialog(null, "Failure. Cancelling");
@@ -184,7 +200,7 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					String name = JOptionPane.showInputDialog("Enter the destination name:");
+					JOptionPane.showInputDialog("Enter the destination name:");
 
 				}
 			});
@@ -203,45 +219,58 @@ public class MapFrame extends JFrame {
 
 		}
 
+		/**
+		 * 
+		 * TODO Determine if we need this
+		 *
+		 */
 		public void timePassed() {
 			// Update graphics here
 			// System.out.println("time passed");
-			MapFrame.this.validate();
+			//MapFrame.this.validate();
 
 		}
 	}
 
+	/**
+	 * 
+	 * Creates the trip planner, with map, UI, and info panel
+	 *
+	 * @author David Mehl.
+	 *         Created Feb 10, 2016.
+	 */
 	public class TripPlanner extends JComponent {
-		private JLabel label;
-		protected Shape background = new Rectangle2D.Double(0, 0, SIZE.getWidth() / 4, SIZE.getHeight());
 		private BorderLayout layout = new BorderLayout();
-		private GridBagConstraints c = new GridBagConstraints();
 		private JPanel userInputPanel = new JPanel();
 		private JPanel routeInfoPanel = new JPanel();
 		private JPanel routeInstructionPanel = new JPanel();
-		private ArrayList<JButton> routeButtons = new ArrayList<JButton>();
 		private JTextArea routeWords;
 
+		@SuppressWarnings("hiding")
 		private static final int WIDTH = 300;
 
+		/**
+		 * 
+		 * Creates the trip planner
+		 *
+		 */
 		public TripPlanner() {
 			super();
 			this.setLayout(this.layout);
 			setupUserInputPanel();
 			this.add(this.userInputPanel, BorderLayout.NORTH);
-
-			
 			setupRouteInstructionPanel();
-			
 			this.setVisible(true);
 		}
-		
-		private void placeRouteButtons(){
-			setupRouteInfoPanel();
-			this.add(this.routeInfoPanel, BorderLayout.CENTER);
 
-		}
 
+		/**
+		 * 
+		 * Places the routes toString output into the text area
+		 *
+		 * @param r
+		 *            route
+		 */
 		private void setRouteInstructionPanelText(Route r) {
 			JScrollPane textScroll = (JScrollPane) this.routeInstructionPanel.getComponent(0);
 			JViewport view = (JViewport) textScroll.getComponent(0);
@@ -249,6 +278,13 @@ public class MapFrame extends JFrame {
 			text.setText(r.toString());
 		}
 
+		/**
+		 * 
+		 * Button ActionListener that displays a route instruction to the
+		 * routeInstruction panel
+		 *
+		 * @author David Mehl. Created Feb 10, 2016.
+		 */
 		private class RouteButtonAction implements ActionListener {
 			Route route;
 
@@ -263,9 +299,15 @@ public class MapFrame extends JFrame {
 				TripPlanner.this.setRouteInstructionPanelText(this.route);
 				TripPlanner.this.repaint();
 				TripPlanner.this.validate();
+				MapFrame.this.validate();
 			}
 		}
 
+		/**
+		 * 
+		 * Initializes the routeInstructionPanel
+		 *
+		 */
 		private void setupRouteInstructionPanel() {
 			this.routeWords = new JTextArea("testing", 30, 25);
 			this.routeWords.setEditable(false);
@@ -284,25 +326,19 @@ public class MapFrame extends JFrame {
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.repaint();
 					TripPlanner.this.validate();
-
+					MapFrame.this.validate();
 				}
 			});
 			this.routeInstructionPanel.add(back, BorderLayout.SOUTH);
 		}
 
-		private void buildAndAddButton(Route r, int routeNumber) {
-			String formatting = "<html>" + "<body style= width: " + WIDTH + "'>";
-			String routeLabel = "<h1>Route " + routeNumber + "</h1>";
-			String routeDistance = "<p>Distance: " + r.distanceCost + "</p>";
-			String routeTime = "<p>Time: " + r.timeCost + "</p>";
-			String buttonText = formatting + routeLabel + routeDistance + routeTime;
-			JButton button = new JButton(buttonText);
-			button.addActionListener(new RouteButtonAction(r));
-			this.routeButtons.add(button);
-		}
-
+		/**
+		 * 
+		 * TODO This function will be cut down and removed when other classes are
+		 * implemented
+		 *
+		 */
 		private void setupRouteInfoPanel() {
-
 			GridLayout rifLayout = new GridLayout(0, 1);
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
@@ -321,24 +357,71 @@ public class MapFrame extends JFrame {
 			buildAndAddButton(r, 1);
 			buildAndAddButton(r2, 2);
 			buildAndAddButton(r3, 3);
-
-			// for (int k = 0; k < 5; k++) {
-			// buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
-			// }
-			for (int i = 0; i < this.routeButtons.size(); i++)
-				this.routeInfoPanel.add(this.routeButtons.get(i));
 		}
 
+		/**
+		 * 
+		 * Places the route option buttons using the given RouteQueue
+		 *
+		 * @param rQ
+		 *            routeQueue to get routes from
+		 */
+		@SuppressWarnings("unused")
+		private void getRoutesAndPlaceButtons(RouteQueue rQ) {
+			GridLayout rifLayout = new GridLayout(0, 1);
+			this.routeInfoPanel.setLayout(rifLayout);
+			this.routeInfoPanel.setVisible(true);
+			buildAndAddButton(rQ.bestRoute, 1);
+			buildAndAddButton(rQ.bestRoute, 2);
+			buildAndAddButton(rQ.bestRoute, 3);
+		}
+
+		/**
+		 * 
+		 * Creates an HTML formatted string, places it into a button, and places
+		 * that button onto the routeInfoPanel
+		 *
+		 * @param r
+		 *            route
+		 * @param routeNumber
+		 *            number for labeling the route
+		 */
+		private void buildAndAddButton(Route r, int routeNumber) {
+			String formatting = "<html>" + "<body style= width: " + WIDTH + "'>";
+			String routeLabel = "<h1>Route " + routeNumber + "</h1>";
+			String routeDistance = "<p>Distance: " + r.distanceCost + "</p>";
+			String routeTime = "<p>Time: " + r.timeCost + "</p>";
+			String buttonText = formatting + routeLabel + routeDistance + routeTime;
+			JButton button = new JButton(buttonText);
+			button.addActionListener(new RouteButtonAction(r));
+			this.routeInfoPanel.add(button);
+		}
+
+		/**
+		 * 
+		 * Builds the User Input panel of the TripPlanner
+		 *
+		 */
 		private void setupUserInputPanel() {
 			GridLayout bui = new GridLayout(0, 2);
 			this.userInputPanel.setLayout(bui);
 			JButton startTripButton = new JButton("Start Trip");
+			final JTextField start = new JTextField();
+			final JTextField waypoints = new JTextField();
+			final JTextField destination = new JTextField();
 			startTripButton.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					TripPlanner.this.placeRouteButtons();
-					
+					TripPlanner.this.routeInfoPanel.removeAll();
+					TripPlanner.this.setupRouteInfoPanel(); // Remove this line
+															// when other stuff
+															// is implemented
+					// TripPlanner.this.getRoutesAndPlaceButtons(new
+					// RouteQueue(start.getText(), destination.getText()));
+					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
+					TripPlanner.this.validate();
+
 				}
 			});
 			JRadioButton distance = new JRadioButton("Shortest Distance", true);
@@ -347,9 +430,6 @@ public class MapFrame extends JFrame {
 			timeOrDistance.add(distance);
 			timeOrDistance.add(time);
 
-			final JTextField start = new JTextField();
-			final JTextField waypoints = new JTextField();
-			final JTextField destination = new JTextField();
 			this.userInputPanel.add(new JLabel("Trip Planner"));
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(new JLabel("Start: "));
@@ -377,32 +457,44 @@ public class MapFrame extends JFrame {
 			});
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(new JLabel(""));
-			this.userInputPanel.add(new JSeparator(JSeparator.HORIZONTAL));
-			this.userInputPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+			this.userInputPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
+			this.userInputPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
 
 		}
 
+		/**
+		 * 
+		 * TODO Determine if this is needed
+		 *
+		 */
 		public void updateDisplay() {
-
+			//probably not needed
 		}
 	}
 
+	/**
+	 * 
+	 * Map for the trip planner
+	 *
+	 * @author David Mehl.
+	 *         Created Feb 10, 2016.
+	 */
 	public class MapComponent extends JPanel {
 		private JLabel label;
 		private JPanel map;
-		protected Shape background = new Rectangle2D.Double(SIZE.getWidth() / 4, 0, SIZE.getWidth() / 2,
-				SIZE.getHeight());
-		private int startLocationX;
-		private int startLocationY;
 		private JScrollPane viewer;
 
+		/**
+		 * 
+		 * Creates the map component
+		 *
+		 */
 		public MapComponent() {
 			this.label = new JLabel();
 			this.map = new JPanel();
 			this.map.setSize(new Dimension(5000, 5000));
 
-			//this.map.add(new JLabel("Hi there"));
-			//this.map.add(this.label);
+			// TODO remove this sample image and replace with actual map
 			BufferedImage image = null;
 			try {
 				image = ImageIO.read(new File("src/mapPic.jpg"));
@@ -410,24 +502,30 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 			JLabel imageLabel = new JLabel(new ImageIcon(image));
-			
+
 			this.map.add(imageLabel);
 
-			this.viewer = new JScrollPane(this.map, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			this.viewer = new JScrollPane(this.map, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			this.viewer.setPreferredSize(new Dimension(2000, 975));
 			JViewport port = this.viewer.getViewport();
-			
+
 			this.add(this.viewer);
 			this.label.setVisible(true);
-			this.startLocationX = this.getLocation().x;
-			this.startLocationY = this.getLocation().y;
 			PanListener pl = new PanListener();
 			port.addMouseListener(pl);
 			port.addMouseMotionListener(pl);
 		}
 
+		/**
+		 * 
+		 * Controls panning of the map. Source:
+		 * http://stackoverflow.com/questions/13341857/how-to-pan-an-image-using
+		 * -your-mouse-in-java-swing
+		 * 
+		 * @author David Mehl. Created Feb 10, 2016.
+		 */
 		private class PanListener extends MouseAdapter {
 			private final Point pp = new Point();
 
@@ -451,10 +549,21 @@ public class MapFrame extends JFrame {
 
 	}
 
+	/**
+	 * 
+	 * Displays the destination in the info pane
+	 *
+	 * @author David Mehl.
+	 *         Created Feb 10, 2016.
+	 */
 	public class InformationComponent extends JPanel {
-		private JLabel label;
-		BorderLayout icLayout;
+		private BorderLayout icLayout;
 
+		/**
+		 * 
+		 * Creates the info pane
+		 *
+		 */
 		public InformationComponent() {
 			super();
 			this.icLayout = new BorderLayout();
@@ -467,6 +576,7 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 
+			// TODO remove this sample destination
 			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 					new LinkedList<Connection>());
 
@@ -474,18 +584,25 @@ public class MapFrame extends JFrame {
 			this.validate();
 		}
 
+		/**
+		 * 
+		 * Displays the given destination on this infoPane
+		 *
+		 * @param d
+		 *            destination
+		 */
 		public void displayDestination(Destination d) {
 			this.removeAll();
 			String name = "<html>" + "<h1>" + d.name + "</h1>";
 			JPanel stuff = new JPanel();
 			stuff.setLayout(new GridLayout(0, 1));
 			stuff.add(new JLabel(name));
-			// stuff.add(new JLabel(""));
 			stuff.add(new JLabel(new ImageIcon(d.picture)));
 			stuff.add(new JLabel(d.address));
 			stuff.add(new JLabel("" + d.rating));
 			stuff.setBounds(0, 0, 300, 300);
 			this.add(stuff, BorderLayout.CENTER);
+			this.validate();
 
 		}
 	}
