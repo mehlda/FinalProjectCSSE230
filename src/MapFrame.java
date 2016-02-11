@@ -140,34 +140,42 @@ public class MapFrame extends JFrame {
 			};
 			new Thread(repainter).start();
 		}
-		
-		private class RoutePrinter implements Printable{
+
+		/**
+		 * 
+		 * Printing utility class. Source:
+		 * http://docs.oracle.com/javase/tutorial/displayCode.html?code=http://
+		 * docs.oracle.com/javase/tutorial/2d/printing/examples/
+		 * HelloWorldPrinter.java
+		 *
+		 * @author David Mehl. Created Feb 11, 2016.
+		 */
+		private class RoutePrinter implements Printable {
 
 			@Override
 			public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
-				// TODO Auto-generated method stub.
 				// We have only one page, and 'page'
-			    // is zero-based
-			    if (page > 0) {
-			         return NO_SUCH_PAGE;
-			    }
+				// is zero-based
+				if (page > 0) {
+					return NO_SUCH_PAGE;
+				}
 
-			    // User (0,0) is typically outside the
-			    // imageable area, so we must translate
-			    // by the X and Y values in the PageFormat
-			    // to avoid clipping.
-			    Graphics2D g2d = (Graphics2D)g;
-			    g2d.translate(pf.getImageableX(), pf.getImageableY());
+				// User (0,0) is typically outside the
+				// imageable area, so we must translate
+				// by the X and Y values in the PageFormat
+				// to avoid clipping.
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.translate(pf.getImageableX(), pf.getImageableY());
 
-			    // Now we perform our rendering
-			    g.drawString(MapPanel.this.tripPlanner.routeWords.getText(), 100, 100);
+				// Now we perform our rendering
+				g.drawString(MapPanel.this.tripPlanner.routeWords.getText(), 100, 100);
 
-			    // tell the caller that this page is part
-			    // of the printed document
-			    return PAGE_EXISTS;
+				// tell the caller that this page is part
+				// of the printed document
+				return PAGE_EXISTS;
 
 			}
-			
+
 		}
 
 		/**
@@ -243,29 +251,38 @@ public class MapFrame extends JFrame {
 			// TODO work on menus
 			// Build second menu in the menu bar.
 			this.menu = new JMenu("User");
-			this.menu.setMnemonic(KeyEvent.VK_N);
+			this.menu.setMnemonic(KeyEvent.VK_U);
 			menuItem = new JMenuItem("Print Instructions");
 			menuItem.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					PrinterJob job = PrinterJob.getPrinterJob();
 					job.setPrintable(new RoutePrinter());
 					boolean doPrint = job.printDialog();
 					if (doPrint) {
-					    try {
-					        job.print();
-					    } catch (PrinterException pe) {
-					        // The job did not successfully
-					        // complete
-					    }
+						try {
+							job.print();
+						} catch (PrinterException pe) {
+							// The job did not successfully
+							// complete
+						}
 					}
-					
+
 				}
 			});
 			menuItem.getAccessibleContext().setAccessibleDescription("Print the route information");
 			this.menu.add(menuItem);
-			menuItem = new JMenuItem("Other");
+			menuItem = new JMenuItem("Exit");
+			menuItem.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0);
+					
+				}
+			});
+			//menuItem.setAccelerator();
 			this.menu.add(menuItem);
 			this.menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
 			this.menuBar.add(this.menu);
@@ -504,16 +521,19 @@ public class MapFrame extends JFrame {
 					TripPlanner.this.setupRouteInfoPanel(); // Remove this line
 															// when other stuff
 															// is implemented
-					//TODO uncomment below for actual implementation
-//					if (!start.getText().equals("") && !destination.getText().equals("")) {
-//						if (!waypoints.getText().equals(defaultWaypoints)) {
-//							TripPlanner.this.getRoutesAndPlaceButtons(new RouteQueue(start.getText(),
-//									waypoints.getText().split(":"), destination.getText()));
-//						} else {
-//							TripPlanner.this
-//									.getRoutesAndPlaceButtons(new RouteQueue(start.getText(), destination.getText()));
-//						}
-//					}
+					// TODO uncomment below for actual implementation
+					// if (!start.getText().equals("") &&
+					// !destination.getText().equals("")) {
+					// if (!waypoints.getText().equals(defaultWaypoints)) {
+					// TripPlanner.this.getRoutesAndPlaceButtons(new
+					// RouteQueue(start.getText(),
+					// waypoints.getText().split(":"), destination.getText()));
+					// } else {
+					// TripPlanner.this
+					// .getRoutesAndPlaceButtons(new RouteQueue(start.getText(),
+					// destination.getText()));
+					// }
+					// }
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.validate();
 
