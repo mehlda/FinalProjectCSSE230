@@ -58,9 +58,9 @@ public class MapFrame extends JFrame {
 	MapPanel content;
 
 	public MapFrame() {
-		content = new MapPanel();
-		super.setJMenuBar(content.menuBar);
-		this.add(content);
+		this.content = new MapPanel();
+		super.setJMenuBar(this.content.menuBar);
+		this.add(this.content);
 		this.validate();
 
 		this.setVisible(true);
@@ -88,10 +88,10 @@ public class MapFrame extends JFrame {
 			buildMenu();
 
 			// Add components to GUI
-			full = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.map, this.info);
-			plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, full);
-			plannerMap.setOneTouchExpandable(true);
-			plannerMap.setDividerLocation(300);
+			this.full = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.map, this.info);
+			this.plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, this.full);
+			this.plannerMap.setOneTouchExpandable(true);
+			this.plannerMap.setDividerLocation(300);
 
 			// Provide minimum sizes for the two components in the split pane
 			Dimension minimumSize = new Dimension(0, 0);
@@ -104,9 +104,9 @@ public class MapFrame extends JFrame {
 			maximumSize = new Dimension(300, 500);
 			this.info.setMaximumSize(maximumSize);
 
-			full.setDividerLocation(1200);
-			full.setOneTouchExpandable(true);
-			this.add(plannerMap, BorderLayout.CENTER);
+			this.full.setDividerLocation(1200);
+			this.full.setOneTouchExpandable(true);
+			this.add(this.plannerMap, BorderLayout.CENTER);
 			// this.add(full, BorderLayout.EAST);
 			// this.add(this.info, BorderLayout.EAST);
 			this.validate();
@@ -130,13 +130,13 @@ public class MapFrame extends JFrame {
 			// Create the menu bar.
 			JMenuItem menuItem;
 
-			menuBar = new JMenuBar();
+			this.menuBar = new JMenuBar();
 
 			// Build the first menu.
-			menu = new JMenu("Admin");
-			menu.setMnemonic(KeyEvent.VK_A);
-			menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
-			menuBar.add(menu);
+			this.menu = new JMenu("Admin");
+			this.menu.setMnemonic(KeyEvent.VK_A);
+			this.menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
+			this.menuBar.add(this.menu);
 
 			// a group of JMenuItems
 			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_I);
@@ -176,7 +176,7 @@ public class MapFrame extends JFrame {
 
 				}
 			});
-			menu.add(menuItem);
+			this.menu.add(menuItem);
 
 			menuItem = new JMenuItem("Delete Destination");
 			menuItem.setMnemonic(KeyEvent.VK_D);
@@ -188,18 +188,18 @@ public class MapFrame extends JFrame {
 
 				}
 			});
-			menu.add(menuItem);
+			this.menu.add(menuItem);
 
 			// Build second menu in the menu bar.
-			menu = new JMenu("User");
-			menu.setMnemonic(KeyEvent.VK_N);
+			this.menu = new JMenu("User");
+			this.menu.setMnemonic(KeyEvent.VK_N);
 			menuItem = new JMenuItem("Print Instructions");
 			menuItem.getAccessibleContext().setAccessibleDescription("Print the route information");
-			menu.add(menuItem);
+			this.menu.add(menuItem);
 			menuItem = new JMenuItem("Other");
-			menu.add(menuItem);
-			menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
-			menuBar.add(menu);
+			this.menu.add(menuItem);
+			this.menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
+			this.menuBar.add(this.menu);
 
 		}
 
@@ -207,15 +207,6 @@ public class MapFrame extends JFrame {
 			// Update graphics here
 			// System.out.println("time passed");
 			MapFrame.this.validate();
-
-		}
-
-		/**
-		 * Temporary graphics to visualize layout TODO:
-		 */
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			Graphics2D g2 = (Graphics2D) g;
 
 		}
 	}
@@ -239,11 +230,16 @@ public class MapFrame extends JFrame {
 			setupUserInputPanel();
 			this.add(this.userInputPanel, BorderLayout.NORTH);
 
-			setupRouteInfoPanel();
+			
 			setupRouteInstructionPanel();
-			this.add(routeInfoPanel, BorderLayout.CENTER);
-
+			
 			this.setVisible(true);
+		}
+		
+		private void placeRouteButtons(){
+			setupRouteInfoPanel();
+			this.add(this.routeInfoPanel, BorderLayout.CENTER);
+
 		}
 
 		private void setRouteInstructionPanelText(Route r) {
@@ -264,7 +260,7 @@ public class MapFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
 				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel, BorderLayout.CENTER);
-				TripPlanner.this.setRouteInstructionPanelText(route);
+				TripPlanner.this.setRouteInstructionPanelText(this.route);
 				TripPlanner.this.repaint();
 				TripPlanner.this.validate();
 			}
@@ -308,8 +304,8 @@ public class MapFrame extends JFrame {
 		private void setupRouteInfoPanel() {
 
 			GridLayout rifLayout = new GridLayout(0, 1);
-			routeInfoPanel.setLayout(rifLayout);
-			routeInfoPanel.setVisible(true);
+			this.routeInfoPanel.setLayout(rifLayout);
+			this.routeInfoPanel.setVisible(true);
 			BufferedImage image = null;
 			try {
 				image = ImageIO.read(new File("src/detPic.jpg"));
@@ -329,14 +325,22 @@ public class MapFrame extends JFrame {
 			// for (int k = 0; k < 5; k++) {
 			// buildAndAddButton((k + 1) * 50, (k + 1) * 35, k + 1);
 			// }
-			for (int i = 0; i < routeButtons.size(); i++)
-				routeInfoPanel.add(routeButtons.get(i));
+			for (int i = 0; i < this.routeButtons.size(); i++)
+				this.routeInfoPanel.add(this.routeButtons.get(i));
 		}
 
 		private void setupUserInputPanel() {
 			GridLayout bui = new GridLayout(0, 2);
 			this.userInputPanel.setLayout(bui);
 			JButton startTripButton = new JButton("Start Trip");
+			startTripButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TripPlanner.this.placeRouteButtons();
+					
+				}
+			});
 			JRadioButton distance = new JRadioButton("Shortest Distance", true);
 			JRadioButton time = new JRadioButton("Fastest Time");
 			ButtonGroup timeOrDistance = new ButtonGroup();
@@ -365,7 +369,6 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub.
 					start.setText("");
 					waypoints.setText("");
 					destination.setText("");
@@ -395,10 +398,6 @@ public class MapFrame extends JFrame {
 
 		public MapComponent() {
 			this.label = new JLabel();
-			this.label.setFont(new Font("Arial", 0, FONT_SIZE));
-			this.label.setForeground(Color.BLUE);
-			this.label.setText(
-					"Map Component WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 			this.map = new JPanel();
 			this.map.setSize(new Dimension(5000, 5000));
 
@@ -410,23 +409,23 @@ public class MapFrame extends JFrame {
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
+			JLabel imageLabel = new JLabel(new ImageIcon(image));
 			
-			this.map.add(new JLabel(new ImageIcon(image)));
+			this.map.add(imageLabel);
 
-			viewer = new JScrollPane(this.map, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+			this.viewer = new JScrollPane(this.map, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
 					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-			viewer.setPreferredSize(new Dimension(2000, 975));
-			JViewport port = viewer.getViewport();
-			this.add(viewer);
+			this.viewer.setPreferredSize(new Dimension(2000, 975));
+			JViewport port = this.viewer.getViewport();
+			
+			this.add(this.viewer);
 			this.label.setVisible(true);
 			this.startLocationX = this.getLocation().x;
 			this.startLocationY = this.getLocation().y;
 			PanListener pl = new PanListener();
 			port.addMouseListener(pl);
 			port.addMouseMotionListener(pl);
-			// this.addMouseListener(this);
-			// this.addMouseMotionListener(this);
 		}
 
 		private class PanListener extends MouseAdapter {
@@ -438,14 +437,14 @@ public class MapFrame extends JFrame {
 				JComponent label = (JComponent) vport.getView();
 				Point cp = e.getPoint();
 				Point vp = vport.getViewPosition();
-				vp.translate(pp.x - cp.x, pp.y - cp.y);
+				vp.translate(this.pp.x - cp.x, this.pp.y - cp.y);
 				label.scrollRectToVisible(new Rectangle(vp, vport.getSize()));
-				pp.setLocation(cp);
+				this.pp.setLocation(cp);
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				pp.setLocation(e.getPoint());
+				this.pp.setLocation(e.getPoint());
 			}
 
 		}
@@ -459,7 +458,7 @@ public class MapFrame extends JFrame {
 		public InformationComponent() {
 			super();
 			this.icLayout = new BorderLayout();
-			this.setLayout(icLayout);
+			this.setLayout(this.icLayout);
 			this.setBounds(500, 500, 300, 300);
 			BufferedImage image = null;
 			try {
