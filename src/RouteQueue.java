@@ -179,10 +179,34 @@ public class RouteQueue extends ArrayList<Route> {
 	}
 
 	/**
-	 *
+	 * Checks if the Route at the specified indx is larger than one of its
+	 * children Routes, if so then they swap places in the min-heap
+	 * PriorityQueue. Recursively goes down the entire tree until no more swaps
+	 * are needed. Considers both cases of comparing using time or distance
+	 * costs.
+	 * 
+	 * @param index
+	 *            - index of element to check for balancing
 	 */
-	private void removeBalance() {
-
+	private void removeBalance(int index) {
+		int smallest = this.smallestChild(index);
+		if (smallest == -1)
+			return; // specified Route is a leaf
+		Route parent = super.get(index);
+		Route child = super.get(smallest);
+		if (this.useTime) {
+			if (child.compareToTime(parent) < 0) {
+				super.set(index, child);
+				super.set(smallest, parent);
+				this.removeBalance(smallest);
+			}
+		} else {
+			if (child.compareToDistance(parent) < 0) {
+				super.set(index, child);
+				super.set(smallest, parent);
+				this.removeBalance(smallest);
+			}
+		}
 	}
 
 	/**
