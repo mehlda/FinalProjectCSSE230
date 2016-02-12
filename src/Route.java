@@ -104,4 +104,50 @@ public class Route extends LinkedList<Destination> {
 			return this.destination;
 		}
 	}
+
+	/**
+	 * Compares this Route to the given Route by using their distance cost.
+	 * Returns a negative integer, a zero, or a positive integer as the Route's
+	 * distance cost is less than, equal to, or greater than the specified
+	 * Route's distance cost.
+	 * 
+	 * @param route
+	 *            - Route to compare distance costs with this Route
+	 * @return a negative integer, zero, or a positive integer as this Route's
+	 *         distance cost is less than, equal to, or greater than the
+	 *         specified Route's distance cost.
+	 */
+	public int compareToDistance(Route route) {
+		if (route == null)
+			throw new NullPointerException(
+					"Route to compare distance with does not exist!");
+		if (this.distanceCost == route.distanceCost)
+			return 0;
+		if (this.distanceCost < route.distanceCost)
+			return -1;
+		return 1;
+	}
+
+	/**
+	 * Compares this Route to the given Route by using their time cost.
+	 * Returns a negative integer, a zero, or a positive integer as the Route's
+	 * time cost is less than, equal to, or greater than the specified
+	 * Route's time cost.
+	 * 
+	 * @param route
+	 *            - Route to compare time costs with this Route
+	 * @return a negative integer, zero, or a positive integer as this Route's
+	 *         time cost is less than, equal to, or greater than the
+	 *         specified Route's time cost.
+	 */
+	public int compareToTime(Route route) {
+		if (route == null)
+			throw new NullPointerException(
+					"Route to compare time with does not exist!");
+		if (this.timeCost == route.timeCost)
+			return 0;
+		if (this.timeCost < route.timeCost)
+			return -1;
+		return 1;
+	}
 }

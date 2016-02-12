@@ -186,6 +186,38 @@ public class RouteQueue extends ArrayList<Route> {
 	}
 
 	/**
+	 * Returns the smallest child's index of the specified Route by the given
+	 * index.
+	 * Returns -1 if there are no children to the parent element.
+	 * 
+	 * @param index
+	 *            - index of the parent Route to compare the smallest children
+	 *            with
+	 * @return index of the smallest child or -1 if there are no children.
+	 */
+	private int smallestChild(int index) {
+		Route leftChild = (index * 2 + 1) < super.size() ? super
+				.get(index * 2 + 1) : null;
+		Route rightChild = (index * 2 + 2) < super.size() ? super
+				.get(index * 2 + 2) : null;
+		if (rightChild == null) {
+			if (leftChild != null)
+				return index * 2 + 1;
+			return -1;
+		}
+		if (leftChild == null)
+			return index * 2 + 2;
+		if (this.useTime) {
+			if (leftChild.compareToTime(rightChild) <= 0)
+				return index * 2 + 1;
+			return index * 2 + 2;
+		}
+		if (leftChild.compareToDistance(rightChild) <= 0)
+			return index * 2 + 1;
+		return index * 2 + 2;
+	}
+
+	/**
 	 * Swaps the destinations in the ArrayList at these indices.
 	 * If either of the indices are out of range, it will return null.
 	 * If the indices are equal, notifies to console.
