@@ -72,9 +72,12 @@ public class RouteQueue extends ArrayList<Route> {
 	}
 
 	/**
+	 * Removes a single instance of the specified Route element from this queue,
+	 * if it is present.
 	 * 
 	 * @param route
-	 * @return
+	 *            - Route to be removed from this PriorityQueue, if present
+	 * @return true if this PriorityQueue removed the specifed Route
 	 */
 	public boolean remove(Route route) {
 
@@ -262,5 +265,14 @@ public class RouteQueue extends ArrayList<Route> {
 		this.set(index1, this.get(index2));
 		this.set(index2, temp);
 		return true;
+	}
+
+	/**
+	 * Returns an array containing all of the Routes in this PriorityQueue.
+	 * 
+	 * @return an array containing all of the Routes in this PriorityQueue.
+	 */
+	public Route[] toArray() {
+		return (Route[]) super.toArray();
 	}
 }
