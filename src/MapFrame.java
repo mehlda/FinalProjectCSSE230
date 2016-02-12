@@ -110,6 +110,7 @@ public class MapFrame extends JFrame {
 			this.plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, this.full);
 			this.plannerMap.setOneTouchExpandable(true);
 			this.plannerMap.setDividerLocation(300);
+			this.full.setResizeWeight(1);
 
 			// Provide minimum sizes for the two components in the split pane
 			Dimension minimumSize = new Dimension(300, 0);
@@ -713,7 +714,7 @@ public class MapFrame extends JFrame {
 		 */
 		public void displayDestination(Destination d) {
 			this.removeAll();
-			String name = "<html>" + "<h1>" + d.name + "</h1>";
+			//String name = "<html>" + "<h1>" + d.name + "</h1>";
 //			JPanel stuff = new JPanel();
 //			stuff.setLayout(new GridLayout(0, 1));
 //			stuff.add(new JLabel(name));
