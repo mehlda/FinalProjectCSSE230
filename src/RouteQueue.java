@@ -50,8 +50,35 @@ public class RouteQueue extends ArrayList<Route> {
 	public void buildQueue() {
 		// TODO: implement this method
 		while (!this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
-//			Route origin = this.pop();
+			// Route origin = this.pop();
 		}
+	}
+
+	/**
+	 * Adds Route object into PriorityQueue.
+	 * Route with shortest cost percolates to top.
+	 * 
+	 * @param route
+	 *            - new route object to add
+	 * @return true if added successfully
+	 */
+	public boolean add(Route route) {
+		// TODO: implement this method
+		if (route == null)
+			throw new NullPointerException();
+		super.add(route);
+		this.addBalance(super.size() - 1);
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param route
+	 * @return
+	 */
+	public boolean remove(Route route) {
+
+		return false;
 	}
 
 	/**
@@ -81,7 +108,7 @@ public class RouteQueue extends ArrayList<Route> {
 	public Iterator<Route> iterator() {
 		return super.iterator();
 	}
-	
+
 	/**
 	 * Inserts the specified element into this priority queue.
 	 * 
@@ -96,7 +123,7 @@ public class RouteQueue extends ArrayList<Route> {
 	public boolean offer(Route route) {
 		return this.add(route);
 	}
-	
+
 	/**
 	 * Finds the top element in the PriorityQueue
 	 * which is at index 0. Does not remove any objects.
@@ -104,11 +131,11 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @return top Route object in PriorityQueue
 	 */
 	public Route peek() {
-		if(this.isEmpty())
+		if (this.isEmpty())
 			return null;
 		return this.get(0);
 	}
-	
+
 	/**
 	 * Take the top element off priority queue. Returns the next best route that
 	 * has not been accessed yet.
@@ -116,7 +143,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @return Route from top of PriorityQueue
 	 */
 	public Route poll() {
-		if(this.isEmpty())
+		if (this.isEmpty())
 			return null;
 		Route route = this.peek();
 		this.remove(route);
@@ -124,37 +151,38 @@ public class RouteQueue extends ArrayList<Route> {
 	}
 
 	/**
+	 * If the Route at the specified index has a smaller cost than the cost of
+	 * the parent, then they swap places. Recursively will adjust all the way
+	 * through the min-heap PriorityQueue until it no longer needs adjusting.
+	 * Considers both cases of using distance or time cost.
 	 * 
-	 * @param route
-	 * @return
+	 * @param index
+	 *            - index of element to check for balancing with parent
 	 */
-	public boolean remove(Route route) {
-		
-		return false;
+	private void addBalance(int index) {
+		Route end = super.get(index);
+		Route parent = super.get((index - 1) / 2);
+		if (this.useTime) {
+			if (parent.timeCost > end.timeCost) {
+				super.set((index - 1) / 2, end);
+				super.set(index, parent);
+				this.addBalance((index - 1) / 2);
+			}
+		} else {
+			if (parent.distanceCost > end.distanceCost) {
+				super.set((index - 1) / 2, end);
+				super.set(index, parent);
+				this.addBalance((index - 1) / 2);
+			}
+		}
+
 	}
-	
+
 	/**
-	 * Adds Route object into PriorityQueue.
-	 * Route with shortest cost percolates to top.
-	 * 
-	 * @param route
-	 *            - new route object to add
-	 * @return true if added successfully
+	 *
 	 */
-	public boolean add(Route route) {
-		// TODO: implement this method
-		if (route == null)
-			throw new NullPointerException();
-		super.add(route);
-		this.addBalance(super.size() - 1);
-		return true;
-	}
+	private void removeBalance() {
 
-	
-
-	private void addBalance(int i) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/**
