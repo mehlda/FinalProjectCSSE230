@@ -15,10 +15,9 @@ public class Route extends LinkedList<Destination> {
 	public DestinationNode last;
 
 	/**
-	 * Constructs a new Route object
+	 * Constructs a new Route object of null values
 	 */
 	public Route() {
-		// TODO: implement this method
 		this.first = null;
 		this.last = null;
 		timeCost = distanceCost = 0;

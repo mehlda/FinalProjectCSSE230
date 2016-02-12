@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * MinHeap Implementation of a PriorityQueue to store possible routes.
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * @author derrowap
  *
  */
-public class RouteQueue extends ArrayList<Destination> {
+public class RouteQueue extends ArrayList<Route> {
 	public Destination start;
 	public Destination end;
 	public Destination[] waypoints;
@@ -17,15 +18,18 @@ public class RouteQueue extends ArrayList<Destination> {
 	 * Constructs a new RouteQueue object with start, end, and waypoint
 	 * destinations.
 	 * 
-	 * @param start - name of 
+	 * @param start
+	 *            - name of
 	 * @param end
 	 * @param waypoints
 	 */
-	public RouteQueue(Destination start,Destination end, Destination[] waypoints, boolean useTime) {
+	public RouteQueue(Destination start, Destination end,
+			Destination[] waypoints, boolean useTime) {
 		this.start = start;
 		this.end = end;
 		this.waypoints = waypoints;
 		this.useTime = useTime;
+		this.add(new Route(this.start));
 		this.buildQueue();
 	}
 
@@ -45,18 +49,90 @@ public class RouteQueue extends ArrayList<Destination> {
 	 */
 	public void buildQueue() {
 		// TODO: implement this method
+		while (!this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
+//			Route origin = this.pop();
+		}
 	}
 
 	/**
-	 * Take the top element off priority queue. Returns the next best route that has not been accessed yet.
+	 * Removes all of the elements from this priority queue. The queue will be
+	 * empty after this call returns.
+	 */
+	public void clear() {
+		super.clear();
+	}
+
+	/**
+	 * Checks if this Priority Queue contains the specified element
+	 * 
+	 * @param route
+	 *            - object to be checked for containment in this queue
+	 * @return true if this Priority Queue contains this Route
+	 */
+	public boolean contains(Route route) {
+		return super.contains(route);
+	}
+
+	/**
+	 * Builds an iterator over the elements in this queue.
+	 * 
+	 * @return an iterator over the routes in this Priority Queue
+	 */
+	public Iterator<Route> iterator() {
+		return super.iterator();
+	}
+	
+	/**
+	 * Inserts the specified element into this priority queue.
+	 * 
+	 * @param route
+	 *            - the element to add
+	 * 
+	 * @return true if specified element was added
+	 * 
+	 * @throws NullPointerException
+	 *             - if the specified element is null
+	 */
+	public boolean offer(Route route) {
+		return this.add(route);
+	}
+	
+	/**
+	 * Finds the top element in the PriorityQueue
+	 * which is at index 0. Does not remove any objects.
+	 * 
+	 * @return top Route object in PriorityQueue
+	 */
+	public Route peek() {
+		if(this.isEmpty())
+			return null;
+		return this.get(0);
+	}
+	
+	/**
+	 * Take the top element off priority queue. Returns the next best route that
+	 * has not been accessed yet.
 	 * 
 	 * @return Route from top of PriorityQueue
 	 */
-	public Route pop() {
-		// TODO: implement this method
-		return null;
+	public Route poll() {
+		if(this.isEmpty())
+			return null;
+		Route route = this.peek();
+		this.remove(route);
+		return route;
 	}
 
+	/**
+	 * 
+	 * @param route
+	 * @return
+	 */
+	public boolean remove(Route route) {
+		
+		return false;
+	}
+	
 	/**
 	 * Adds Route object into PriorityQueue.
 	 * Route with shortest cost percolates to top.
@@ -65,20 +141,20 @@ public class RouteQueue extends ArrayList<Destination> {
 	 *            - new route object to add
 	 * @return true if added successfully
 	 */
-	public boolean push(Route route) {
+	public boolean add(Route route) {
 		// TODO: implement this method
-		return false;
+		if (route == null)
+			throw new NullPointerException();
+		super.add(route);
+		this.addBalance(super.size() - 1);
+		return true;
 	}
 
-	/**
-	 * Finds the top element in the PriorityQueue
-	 * which is at index 0. Does not remove any objects.
-	 * 
-	 * @return top Route object in PriorityQueue
-	 */
-	public Route peek() {
-		// TODO: implement this method
-		return null;
+	
+
+	private void addBalance(int i) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -98,7 +174,7 @@ public class RouteQueue extends ArrayList<Destination> {
 		if (index1 == index2)
 			System.out.println("Swapping indexes " + index1 + " and " + index2
 					+ " does nothing.");
-		Destination temp = this.get(index1);
+		Route temp = this.get(index1);
 		this.set(index1, this.get(index2));
 		this.set(index2, temp);
 		return true;
