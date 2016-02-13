@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.sound.midi.MidiDevice.Info;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -46,6 +47,7 @@ import javax.swing.SwingConstants;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import javafx.scene.layout.Border;
 import javafx.scene.web.WebView;
 
 /**
@@ -678,6 +680,8 @@ public class MapFrame extends JFrame {
 	public class InformationComponent extends JPanel {
 		private BorderLayout icLayout;
 		private WebView browser;
+		private JFXPanel jfx;
+		private JPanel info;
 
 		/**
 		 * 
@@ -696,10 +700,18 @@ public class MapFrame extends JFrame {
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
-
-			// TODO remove this sample destination and its display
+			this.jfx = new JFXPanel();
 			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 					new LinkedList<Connection>());
+			Platform.runLater(() -> {
+
+				this.browser = new WebView();
+				this.jfx.setScene(new Scene(this.browser));
+				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
+				
+			});
+
+			// TODO remove this sample destination and its display
 
 			displayDestination(d);
 			this.validate();
@@ -714,25 +726,58 @@ public class MapFrame extends JFrame {
 		 */
 		public void displayDestination(Destination d) {
 			this.removeAll();
-			//String name = "<html>" + "<h1>" + d.name + "</h1>";
-//			JPanel stuff = new JPanel();
-//			stuff.setLayout(new GridLayout(0, 1));
-//			stuff.add(new JLabel(name));
-//			stuff.add(new JLabel(new ImageIcon(d.picture)));
-//			stuff.add(new JLabel(d.address));
-//			stuff.add(new JLabel("" + d.rating));
-//			stuff.setBounds(0, 0, 300, 300);
-//			this.add(stuff, BorderLayout.CENTER);
-			//this.icLayout = new BorderLayout();
-			JFXPanel jfx = new JFXPanel();
-			Platform.runLater(() -> {
-
-				this.browser = new WebView();
-				jfx.setScene(new Scene(this.browser));
-				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
+			String name = "<html>" + "<h1>" + d.name + "</h1>";
+			this.info = new JPanel();
+			this.info.setLayout(new GridLayout(0, 1));
+			this.info.add(new JLabel(name));
+			this.info.add(new JLabel(new ImageIcon(d.picture)));
+			this.info.add(new JLabel(d.address));
+			this.info.add(new JLabel("" + d.rating));
+			this.info.setBounds(0, 0, 300, 300);
+			this.add(this.info, BorderLayout.CENTER);
+			JButton wiki = new JButton("Wikipedia");
+			JButton back = new JButton("Back");
+			back.addActionListener(new ActionListener() {
 				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub.
+					InformationComponent.this.remove(InformationComponent.this.jfx);
+					InformationComponent.this.remove(back);
+					InformationComponent.this.add(InformationComponent.this.info,BorderLayout.CENTER);
+					InformationComponent.this.add(wiki,BorderLayout.SOUTH);
+					
+					InformationComponent.this.validate();
+					InformationComponent.this.repaint();
+				}
 			});
-			this.add(jfx,BorderLayout.CENTER);
+			wiki.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					InformationComponent.this.remove(InformationComponent.this.info);
+					InformationComponent.this.remove(wiki);
+					InformationComponent.this.add(InformationComponent.this.jfx,BorderLayout.CENTER);
+					Platform.runLater(() -> {
+
+						InformationComponent.this.browser = new WebView();
+						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
+						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
+						
+					});
+					InformationComponent.this.add(back,BorderLayout.SOUTH);
+					InformationComponent.this.validate();
+					InformationComponent.this.repaint();
+				}
+			});
+			//this.icLayout = new BorderLayout();
+			
+			this.add(wiki,BorderLayout.SOUTH);
+			
+			//this.add(this.jfx,BorderLayout.CENTER);
+
+			//this.add(back);
+
 			this.validate();
 
 		}
