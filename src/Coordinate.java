@@ -65,16 +65,16 @@ public class Coordinate {
 	 * Calculates the straight line distance between the this coordinate point
 	 * and the specified coordinate point. Uses the
 	 * "Great Circle Navigation Formulae" to have best accuracy since the world
-	 * is not flat. Since a straight line distance is not
-	 * always an int, it is rounded to be an int.
+	 * is not flat. Since a straight line distance is not always an int, it is
+	 * rounded to be an int. Units = Miles.
 	 * 
 	 * @param c
 	 *            - specified coordinate point to calculate with
 	 * @return straight line distance between this coordinate point and the
-	 *         specified coordinate point
+	 *         specified coordinate point in miles
 	 */
 	public int straightLineDistance(Coordinate c) {
-		return (int) Math.acos(Math.sin(this.x) * Math.sin(c.x)
-				+ Math.cos(this.x) * Math.cos(c.x) * Math.cos(this.y - c.y));
+		return 3959 * ((int) Math.acos(Math.sin(this.x) * Math.sin(c.x)
+				+ Math.cos(this.x) * Math.cos(c.x) * Math.cos(this.y - c.y)));
 	}
 }
