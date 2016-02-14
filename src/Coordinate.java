@@ -60,4 +60,20 @@ public class Coordinate {
 		this.x = x;
 		this.y = y;
 	}
+
+	/**
+	 * Calculates the straight line distance between the this coordinate point
+	 * and the specified coordinate point. Since a straight line distance is not
+	 * always an int, it is rounded to be an int.
+	 * 
+	 * @param c
+	 *            - specified coordinate point to calculate with
+	 * @return straight line distance between this coordinate point and the
+	 *         specified coordinate point
+	 */
+	public int straightLineDistance(Coordinate c) {
+		return (int) Math
+				.sqrt(((this.x - c.x) * (this.x - c.x) + (this.y - c.y)
+						* (this.y - c.y)));
+	}
 }
