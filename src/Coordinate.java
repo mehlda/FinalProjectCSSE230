@@ -63,7 +63,9 @@ public class Coordinate {
 
 	/**
 	 * Calculates the straight line distance between the this coordinate point
-	 * and the specified coordinate point. Since a straight line distance is not
+	 * and the specified coordinate point. Uses the
+	 * "Great Circle Navigation Formulae" to have best accuracy since the world
+	 * is not flat. Since a straight line distance is not
 	 * always an int, it is rounded to be an int.
 	 * 
 	 * @param c
@@ -72,8 +74,7 @@ public class Coordinate {
 	 *         specified coordinate point
 	 */
 	public int straightLineDistance(Coordinate c) {
-		return (int) Math
-				.sqrt(((this.x - c.x) * (this.x - c.x) + (this.y - c.y)
-						* (this.y - c.y)));
+		return (int) Math.acos(Math.sin(this.x) * Math.sin(c.x)
+				+ Math.cos(this.x) * Math.cos(c.x) * Math.cos(this.y - c.y));
 	}
 }
