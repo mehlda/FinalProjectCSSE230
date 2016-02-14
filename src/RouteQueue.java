@@ -63,7 +63,6 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @return true if added successfully
 	 */
 	public boolean add(Route route) {
-		// TODO: implement this method
 		if (route == null)
 			throw new NullPointerException();
 		super.add(route);
@@ -73,15 +72,24 @@ public class RouteQueue extends ArrayList<Route> {
 
 	/**
 	 * Removes a single instance of the specified Route element from this queue,
-	 * if it is present.
+	 * if it is present. Priority Queue will be balanced back to properties.
 	 * 
 	 * @param route
 	 *            - Route to be removed from this PriorityQueue, if present
 	 * @return true if this PriorityQueue removed the specifed Route
 	 */
 	public boolean remove(Route route) {
-
-		return false;
+		int index = super.indexOf(route);
+		if(index == -1)
+			return false;
+		int lastIndex = super.size() - 1;
+		if(index != lastIndex) {
+			super.set(index, super.get(lastIndex));
+			super.remove(lastIndex);
+			this.removeBalance(index);
+		} else 
+			super.remove(index);
+		return true;
 	}
 
 	/**
