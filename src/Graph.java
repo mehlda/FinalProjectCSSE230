@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -14,8 +15,21 @@ public class Graph {
 	 * Constructs a new Graph object
 	 */
 	public Graph() {
-		// TODO: implement this method
 		this.destinations = new LinkedList[26];
+	}
+
+	/**
+	 * Constructs a new Graph object with all of the given destinations
+	 * inserted.
+	 * 
+	 * @param destinations
+	 *            - array of Destination objects to initialize the Graph with
+	 */
+	public Graph(Destination[] destinations) {
+		this.destinations = new LinkedList[26];
+		for (Destination d : destinations) {
+			this.insert(d);
+		}
 	}
 
 	/**
@@ -55,7 +69,7 @@ public class Graph {
 	 *            Destination to the corresponding neighbor in the neighbor
 	 *            string array
 	 * @return - true if insertion was successful
-	 * @throws ObjectNotFoundException 
+	 * @throws ObjectNotFoundException
 	 */
 	public boolean insert(String name, Coordinate c, String address,
 			int rating, BufferedImage pic, String[] neighbors, int[] times,
@@ -66,8 +80,11 @@ public class Graph {
 				null);
 		for (int i = 0; i < neighbors.length; i++) {
 			Destination location2 = this.find(neighbors[i]);
-			if(location2 == null) throw new ObjectNotFoundException("Neighbor " + neighbors[i] + " was not found as a Destination object.");
-			location1.addConnection(new Connection(location1, location2, distances[i], times[i]));
+			if (location2 == null)
+				throw new ObjectNotFoundException("Neighbor " + neighbors[i]
+						+ " was not found as a Destination object.");
+			location1.addConnection(new Connection(location1, location2,
+					distances[i], times[i]));
 		}
 		return this.insert(location1);
 	}
@@ -80,8 +97,8 @@ public class Graph {
 	 * @return true if destination is added successfully
 	 */
 	public boolean insert(Destination destination) {
-		// TODO: implement this method
-		return false;
+		return this.destinations[this.getHashValue(destination.name)]
+				.add(destination);
 	}
 
 	/**
@@ -92,24 +109,28 @@ public class Graph {
 	 *            - String name of destination to remove
 	 * @return true if destination object was found and removed
 	 */
-	public boolean remove(String name) {
-		// TODO: implement this method
-		return false;
+	public boolean remove(Destination destination) {
+		return this.destinations[this.getHashValue(destination.name)]
+				.remove(destination);
 	}
 
 	/**
 	 * Finds the Destination object with the same name as the parameter passed.
 	 * Uses hash key of name as index in array.
-	 * 
-	 * TODO: If Destination is not found, returns null or throws
-	 * ObjectNotFoundException?
+	 * If no Destination is found with the specified name, return null.
 	 * 
 	 * @param name
 	 *            - name of Destination to find
-	 * @return Destination object with the given name
+	 * @return Destination object with the given name or null if does not exist
 	 */
-	public Destination find(String name) throws ObjectNotFoundException {
-		// TODO: implement this method
+	public Destination find(String name) {
+		Iterator<Destination> i = this.destinations[this.getHashValue(name)]
+				.iterator();
+		while (i.hasNext()) {
+			Destination d = i.next();
+			if (d.name.equals(name))
+				return d;
+		}
 		return null;
 	}
 
@@ -125,8 +146,7 @@ public class Graph {
 	 * @return LinkedList of suggested possibilities similar to this name
 	 */
 	public LinkedList<Destination> findSuggestions(String name) {
-		// TODO: implement this method
-		return null;
+		return this.destinations[this.getHashValue(name)];
 	}
 
 	/**
@@ -138,35 +158,31 @@ public class Graph {
 	 * @return hash key value
 	 */
 	public int getHashValue(String name) {
-		// TODO: implement this method
-		return -1;
+		return (int) name.toLowerCase().charAt(0) - 96;
 	}
 
 	/**
-	 * TODO: write description
+	 * Creates a new RouteQueue object. Will automatically be built so that the
+	 * object that is returned already has the best Route at the top of the
+	 * Queue from the specified start location and to the specified end location
+	 * stopping at each waypoint location in order.
 	 * 
 	 * @param start
+	 *            - name of the starting Destination location
 	 * @param end
+	 *            - name of the ending Destination location
 	 * @param waypoints
-	 * @return
+	 *            - names of all the waypoint Destinations in order
+	 * @return a RouteQueue object already built with the best Route on top
 	 */
 	public RouteQueue getRouteQueue(String start, String end,
 			String[] waypoints, boolean useTime) {
 		Destination[] midpoints = new Destination[waypoints.length];
 		for (int i = 0; i < waypoints.length; i++) {
-			try {
-				midpoints[i] = this.find(waypoints[i]);
-			} catch (ObjectNotFoundException e) {
-				e.printStackTrace();
-			}
+			midpoints[i] = this.find(waypoints[i]);
 		}
-		try {
-			return new RouteQueue(this.find(start), this.find(end), midpoints,
-					useTime);
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return new RouteQueue(this.find(start), this.find(end), midpoints,
+				useTime);
 	}
 
 }
