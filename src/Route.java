@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 /**
  * LinkedList implementation to store a series of destinations that represent a
- * route a user can travel
+ * route a user can travel.
  * 
  * @author derrowap
  *
@@ -11,15 +11,11 @@ public class Route extends LinkedList<Destination> {
 	/* costs include heuristic values */
 	public int timeCost;
 	public int distanceCost;
-	public DestinationNode first;
-	public DestinationNode last;
 
 	/**
 	 * Constructs a new Route object of null values
 	 */
 	public Route() {
-		this.first = null;
-		this.last = null;
 		timeCost = distanceCost = 0;
 	}
 
@@ -31,42 +27,7 @@ public class Route extends LinkedList<Destination> {
 	 */
 	public Route(Destination destination) {
 		this.add(destination);
-		this.first = new DestinationNode(destination);
 		timeCost = distanceCost = 0; // started here, haven't travelled anywhere
-		this.last = this.first;
-	}
-
-	/**
-	 * Adds a new destination to the end of the Route. Updates the time and
-	 * distance cost to appropriate value based off of the connection value to
-	 * the next location.
-	 * 
-	 * Does not add heuristic value to cost!
-	 * 
-	 * @param destination
-	 *            - Destination to add to the end of this Route
-	 * @return true if successfully added
-	 */
-	public boolean addNextLocation(Destination d) {
-		// TODO: This is where I need to be able to find a connection somehow
-		// while only having the last element in the route and the destination
-		// to be inserted
-
-		int oldx = this.last.destination.coordinate.x;
-		int oldy = this.last.destination.coordinate.y;
-
-		this.last.next = new DestinationNode(d);
-		this.last = this.last.next;
-
-		int newx = this.last.destination.coordinate.x;
-		int newy = this.last.destination.coordinate.y;
-
-		int distx = (oldx - newx) * (oldx - newx);
-		int disty = (oldy - newy) * (oldy - newy);
-		int totalDist = (int) Math.sqrt(distx + disty);
-
-		distanceCost += totalDist;
-		return true;
 	}
 
 	/**
@@ -87,22 +48,37 @@ public class Route extends LinkedList<Destination> {
 				&& this.getLast().name.equals(end);
 	}
 
-	public class DestinationNode {
-		private DestinationNode next;
-		private Destination destination;
+	/**
+	 * Calculates the straight line distance between the last destination in
+	 * this Route and the Goal destination. Adds this distance to this distance
+	 * cost. Adds this distance (divided by 40) to the time cost of this Route.
+	 * Dividing the straight line by 40 calculates the straight line cost of
+	 * traveling in timem, assuming average speed is 40 miles per hour.
+	 * 
+	 * @param end
+	 *            - goal destination of this Route
+	 */
+	public void addHeuristicCost(Destination end) {
+		int distance = this.getLast().coordinate
+				.straightLineDistance(end.coordinate);
+		this.distanceCost += distance;
+		// assuming an average of 40 miles per hour.
+		this.timeCost += distance / 40;
+	}
 
-		public DestinationNode(Destination d) {
-			this.next = null;
-			this.destination = d;
-		}
-
-		public DestinationNode getNext() {
-			return this.next;
-		}
-
-		public Destination getDestination() {
-			return this.destination;
-		}
+	/**
+	 * Removes the heuristic cost stored within this route's cost fields. Does
+	 * the exact opposite of what addHeuristicCost(Destination end) does.
+	 * 
+	 * @param end
+	 *            - goal destination of this Route
+	 */
+	public void removeHeuristicCost(Destination end) {
+		int distance = this.getLast().coordinate
+				.straightLineDistance(end.coordinate);
+		this.distanceCost -= distance;
+		// assuming an average of 40 miles per hour.
+		this.timeCost -= distance / 40;
 	}
 
 	/**
