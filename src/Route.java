@@ -11,12 +11,13 @@ public class Route extends LinkedList<Destination> {
 	/* costs include heuristic values */
 	public int timeCost;
 	public int distanceCost;
+	public int waypointsReached;
 
 	/**
 	 * Constructs a new Route object of null values
 	 */
 	public Route() {
-		timeCost = distanceCost = 0;
+		this.timeCost = this.distanceCost = this.waypointsReached = 0;
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class Route extends LinkedList<Destination> {
 	 */
 	public Route(Destination destination) {
 		this.add(destination);
-		timeCost = distanceCost = 0; // started here, haven't travelled anywhere
+		this.timeCost = this.distanceCost = this.waypointsReached = 0; // started here, haven't travelled anywhere
 	}
 
 	/**

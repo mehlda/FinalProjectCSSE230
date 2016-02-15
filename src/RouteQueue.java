@@ -44,10 +44,9 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		for (Destination d : this.waypoints) {
-			this.buildNextWaypoint(d);
+		while (this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
+			buildNextWaypoint(this.nextWaypoint());
 		}
-		this.buildNextWaypoint(this.end);
 		/* finished, the top element is a complete route. */
 	}
 
@@ -70,25 +69,37 @@ public class RouteQueue extends ArrayList<Route> {
 	 *            - goal destination to build Routes to
 	 */
 	private void buildNextWaypoint(Destination waypoint) {
-		while (!this.get(0).isCompleteRoute(this.start.name, waypoint.name)) {
-			Route origin = this.poll();
-			origin.removeHeuristicCost(waypoint);
-			Destination lastOrigin = origin.getLast();
-			for (Connection c : lastOrigin.neighbors) {
-				Route clone = (Route) origin.clone();
-				clone.timeCost = origin.timeCost;
-				clone.distanceCost = origin.distanceCost;
-				if (c.firstLocation.name.equals(lastOrigin.name)) {
-					clone.add(c.secondLocation);
-				} else {
-					clone.add(c.firstLocation);
-				}
-				clone.distanceCost += c.pathDistance;
-				clone.timeCost += c.pathTime;
-				clone.addHeuristicCost(waypoint);
-				this.add(clone);
-			}
+		Route origin = this.poll();
+		origin.removeHeuristicCost(waypoint);
+		Destination last = origin.getLast();
+		for (Connection connection : last.neighbors) {
+			Route clone = (Route) origin.clone();
+			// TODO: does clone also copy over these three fields here?
+			clone.timeCost = origin.timeCost + connection.pathTime;
+			clone.distanceCost = origin.distanceCost + connection.pathDistance;
+			clone.waypointsReached = origin.waypointsReached;
+
+			if (connection.firstLocation.name.equals(last.name))
+				clone.add(connection.secondLocation);
+			else
+				clone.add(connection.firstLocation);
+			clone.addHeuristicCost(waypoint);
+			if (clone.getLast().name.equals(waypoint.name))
+				clone.waypointsReached++; // waypoint has been reached
+			this.add(clone);
 		}
+	}
+
+	/**
+	 * Gives the next waypoint that the top Route needs to go to
+	 * 
+	 * @return next waypoint that the top Route needs to go to
+	 */
+	private Destination nextWaypoint() {
+		int waypointIndex = this.get(0).waypointsReached;
+		if (this.waypoints.length > waypointIndex)
+			return this.waypoints[waypointIndex];
+		return this.end;
 	}
 
 	/**
@@ -126,6 +137,7 @@ public class RouteQueue extends ArrayList<Route> {
 			this.removeBalance(index);
 		} else
 			super.remove(index);
+		this.buildQueue();
 		return true;
 	}
 
