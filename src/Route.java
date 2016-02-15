@@ -60,7 +60,7 @@ public class Route extends LinkedList<Destination> {
 	 *            - goal destination of this Route
 	 */
 	public void addHeuristicCost(Destination end) {
-		int distance = this.getLast().coordinate
+		int distance = (int) this.getLast().coordinate
 				.straightLineDistance(end.coordinate);
 		this.distanceCost += distance;
 		// assuming an average of 40 miles per hour.
@@ -75,7 +75,7 @@ public class Route extends LinkedList<Destination> {
 	 *            - goal destination of this Route
 	 */
 	public void removeHeuristicCost(Destination end) {
-		int distance = this.getLast().coordinate
+		int distance = (int) this.getLast().coordinate
 				.straightLineDistance(end.coordinate);
 		this.distanceCost -= distance;
 		// assuming an average of 40 miles per hour.
