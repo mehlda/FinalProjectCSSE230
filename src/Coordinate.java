@@ -5,7 +5,7 @@
  *
  */
 public class Coordinate {
-	public int x, y;
+	public double x, y;
 
 	/**
 	 * Constructs x and y to minimum integer value if no parameters are passed.
@@ -22,7 +22,7 @@ public class Coordinate {
 	 * @param y
 	 *            - y value on map of this coordinate
 	 */
-	public Coordinate(int x, int y) {
+	public Coordinate(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -33,7 +33,7 @@ public class Coordinate {
 	 * @param x
 	 *            - new x value of this coordinate
 	 */
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
@@ -43,7 +43,7 @@ public class Coordinate {
 	 * @param y
 	 *            - new y value of this coordinate
 	 */
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -56,8 +56,28 @@ public class Coordinate {
 	 * @param y
 	 *            - new y value of this coordinate
 	 */
-	public void set(int x, int y) {
+	public void set(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	/**
+	 * Calculates the straight line distance between the this coordinate point
+	 * and the specified coordinate point. Uses the
+	 * "Great Circle Navigation Formulae" to have best accuracy since the world
+	 * is not flat. Since a straight line distance is not always an int, it is
+	 * rounded to be an int. Units = Miles.
+	 * 
+	 * @param c
+	 *            - specified coordinate point to calculate with
+	 * @return straight line distance between this coordinate point and the
+	 *         specified coordinate point in miles
+	 */
+	public double straightLineDistance(Coordinate c) {
+		return Math.toDegrees(Math.acos(Math.sin(Math.toRadians(this.x))
+				* Math.sin(Math.toRadians(c.x))
+				+ Math.cos(Math.toRadians(this.x))
+				* Math.cos(Math.toRadians(c.x))
+				* Math.cos(Math.toRadians(this.y - c.y)))) * 60 * 1.1515;
 	}
 }

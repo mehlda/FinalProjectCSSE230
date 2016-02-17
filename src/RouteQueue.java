@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * MinHeap Implementation of a PriorityQueue to store possible routes.
+ * Min-Heap Implementation of a Priority Queue to store possible routes.
  * 
  * @author derrowap
  *
@@ -11,7 +11,6 @@ public class RouteQueue extends ArrayList<Route> {
 	public Destination start;
 	public Destination end;
 	public Destination[] waypoints;
-	public Route bestRoute;
 	public boolean useTime; // if true, use time as cost
 
 	/**
@@ -29,29 +28,78 @@ public class RouteQueue extends ArrayList<Route> {
 		this.end = end;
 		this.waypoints = waypoints;
 		this.useTime = useTime;
-		this.add(new Route(this.start));
+		/* Adds the starting destination with heuristic to first waypoint */
+		Route firstRoute = new Route(this.start);
+		if (this.waypoints == null)
+			firstRoute.addHeuristicCost(this.end);
+		else
+			firstRoute.addHeuristicCost(waypoints[0]);
+		this.add(firstRoute);
 		this.buildQueue();
 	}
 
 	/**
-	 * Pops a route off the priorityQueue
-	 * if last destination is final destination, alert.
-	 * else find next step in route
-	 * 
-	 * Need to subtract heuristic cost, then get new routes, and for each new
-	 * route add in new heuristic values.
-	 * 
-	 * Algorithm of building:
-	 * Store neighbors of the last destination
-	 * for each neighbor, make a clone of the route and add neighbor to end of
-	 * route, then throw all back in PriorityQueue
-	 * 
+	 * Takes routes off and on until this Priority Queue has the first element
+	 * as a complete route from the starting Destination to every waypoint and
+	 * to the final goal Destination in the smallest specified cost.
 	 */
-	public void buildQueue() {
-		// TODO: implement this method
-		while (!this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
-			// Route origin = this.pop();
+	private void buildQueue() {
+		while (this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
+			buildNextWaypoint(this.nextWaypoint());
 		}
+		/* finished, the top element is a complete route. */
+	}
+
+	/**
+	 * Builds this Priority Queue until the top element is a complete route from
+	 * the starting destination to the specified waypoint destination.
+	 * 
+	 * Takes the first element off of this queue and removes the heuristic cost
+	 * that is stored within the cost functions. It then clones an exact object
+	 * for as many connections that the last element in the Route has.
+	 * 
+	 * Each one of these clones adds one of the destinations that it has a
+	 * connection with. The cost functions then increase based off the cost
+	 * stored within the Connection.
+	 * 
+	 * The hueristic cost is added back into each individual clone and then
+	 * added back into this queue.
+	 * 
+	 * @param waypoint
+	 *            - goal destination to build Routes to
+	 */
+	private void buildNextWaypoint(Destination waypoint) {
+		Route origin = this.poll();
+		origin.removeHeuristicCost(waypoint);
+		Destination last = origin.getLast();
+		for (Connection connection : last.neighbors) {
+			Route clone = (Route) origin.clone();
+			// TODO: does clone also copy over these three fields here?
+			clone.timeCost = origin.timeCost + connection.pathTime;
+			clone.distanceCost = origin.distanceCost + connection.pathDistance;
+			clone.waypointsReached = origin.waypointsReached;
+
+			if (connection.firstLocation.name.equals(last.name))
+				clone.add(connection.secondLocation);
+			else
+				clone.add(connection.firstLocation);
+			clone.addHeuristicCost(waypoint);
+			if (clone.getLast().name.equals(waypoint.name))
+				clone.waypointsReached++; // waypoint has been reached
+			this.add(clone);
+		}
+	}
+
+	/**
+	 * Gives the next waypoint that the top Route needs to go to
+	 * 
+	 * @return next waypoint that the top Route needs to go to
+	 */
+	private Destination nextWaypoint() {
+		int waypointIndex = this.get(0).waypointsReached;
+		if (this.waypoints.length > waypointIndex)
+			return this.waypoints[waypointIndex];
+		return this.end;
 	}
 
 	/**
@@ -63,7 +111,6 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @return true if added successfully
 	 */
 	public boolean add(Route route) {
-		// TODO: implement this method
 		if (route == null)
 			throw new NullPointerException();
 		super.add(route);
@@ -73,34 +120,25 @@ public class RouteQueue extends ArrayList<Route> {
 
 	/**
 	 * Removes a single instance of the specified Route element from this queue,
-	 * if it is present.
+	 * if it is present. Priority Queue will be balanced back to properties.
 	 * 
 	 * @param route
 	 *            - Route to be removed from this PriorityQueue, if present
 	 * @return true if this PriorityQueue removed the specifed Route
 	 */
 	public boolean remove(Route route) {
-
-		return false;
-	}
-
-	/**
-	 * Removes all of the elements from this priority queue. The queue will be
-	 * empty after this call returns.
-	 */
-	public void clear() {
-		super.clear();
-	}
-
-	/**
-	 * Checks if this Priority Queue contains the specified element
-	 * 
-	 * @param route
-	 *            - object to be checked for containment in this queue
-	 * @return true if this Priority Queue contains this Route
-	 */
-	public boolean contains(Route route) {
-		return super.contains(route);
+		int index = super.indexOf(route);
+		if (index == -1)
+			return false;
+		int lastIndex = super.size() - 1;
+		if (index != lastIndex) {
+			super.set(index, super.get(lastIndex));
+			super.remove(lastIndex);
+			this.removeBalance(index);
+		} else
+			super.remove(index);
+		this.buildQueue();
+		return true;
 	}
 
 	/**
@@ -110,21 +148,6 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	public Iterator<Route> iterator() {
 		return super.iterator();
-	}
-
-	/**
-	 * Inserts the specified element into this priority queue.
-	 * 
-	 * @param route
-	 *            - the element to add
-	 * 
-	 * @return true if specified element was added
-	 * 
-	 * @throws NullPointerException
-	 *             - if the specified element is null
-	 */
-	public boolean offer(Route route) {
-		return this.add(route);
 	}
 
 	/**
@@ -242,29 +265,6 @@ public class RouteQueue extends ArrayList<Route> {
 		if (leftChild.compareToDistance(rightChild) <= 0)
 			return index * 2 + 1;
 		return index * 2 + 2;
-	}
-
-	/**
-	 * Swaps the destinations in the ArrayList at these indices.
-	 * If either of the indices are out of range, it will return null.
-	 * If the indices are equal, notifies to console.
-	 * 
-	 * @param index1
-	 *            - index of first destination to swap
-	 * @param index2
-	 *            - index of second destination to swap
-	 * @return true if elements were swapped
-	 */
-	private boolean swap(int index1, int index2) {
-		if (index1 >= this.size() || index2 >= this.size())
-			return false;
-		if (index1 == index2)
-			System.out.println("Swapping indexes " + index1 + " and " + index2
-					+ " does nothing.");
-		Route temp = this.get(index1);
-		this.set(index1, this.get(index2));
-		this.set(index2, temp);
-		return true;
 	}
 
 	/**
