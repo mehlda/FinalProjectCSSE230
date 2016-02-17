@@ -1,0 +1,15 @@
+//FORMAT EXAMPLE
+Detroit:123,456:7654 bool st.:50:src/pic.jpg
+Indianapolis:Washington D.C.:Springfield
+230:500:300
+400:800:400
+//New destination
+
+Detroit:123,456:7654 bool st.:50:src/pic.jpg
+Indianapolies......
+Houston,,,
+Detroit....
+connections
+
+Detroit:Houston:400:200
+Detroit:Houston:200:300
