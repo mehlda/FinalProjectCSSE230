@@ -64,5 +64,12 @@ public class Destination {
 		neighbors.add(connection);
 		return true;
 	}
+	
+	/**
+	 * Returns the name of this destination
+	 */
+	public String toString(){
+		return this.name;
+	}
 
 }
