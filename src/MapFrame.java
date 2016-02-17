@@ -60,6 +60,7 @@ public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
 	private static final int REPAINT_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
 	private MapPanel content;
+	private Graph graph = new Graph();
 
 	/**
 	 * 
@@ -210,6 +211,8 @@ public class MapFrame extends JFrame {
 			menuItem.getAccessibleContext().setAccessibleDescription("Insert a Destination");
 			menuItem.addActionListener(new ActionListener() {
 
+				@SuppressWarnings("unused") // TODO remove this when insert
+											// method is finalized
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
@@ -224,6 +227,7 @@ public class MapFrame extends JFrame {
 					}
 					try {
 						String name = JOptionPane.showInputDialog("Enter the destination name:");
+						String addr = JOptionPane.showInputDialog("Enter the destination address:");
 						ArrayList<String> neighbors = new ArrayList<String>();
 						String neighbor = "";
 						while (!neighbor.equals("DONE")) {
@@ -231,11 +235,16 @@ public class MapFrame extends JFrame {
 								neighbors.add(neighbor);
 							neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
 						}
-						JOptionPane.showInputDialog("Enter Picture Address: ");
-						Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
-						Integer.parseInt(JOptionPane.showInputDialog("Enter x Coordinate: "));
-						Integer.parseInt(JOptionPane.showInputDialog("Enter y Coordinate: "));
+						double lattitude = Double.parseDouble(JOptionPane.showInputDialog("Enter the Lattitude:"));
+						double longitude = Double.parseDouble(JOptionPane.showInputDialog("Enter the Longitude:"));
+						String picAddr = JOptionPane.showInputDialog("Enter Picture Address: ");
+						int interest = Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
 						System.out.println(name + " " + neighbors);
+						String[] a;
+						// TODO finish this insert method
+						// MapFrame.this.graph.insert(name,new
+						// Coordinate(lattitude,longitude),addr,interest,ImageIO.read(new
+						// File(picAddr)),neighbors.toArray(a),);
 					} catch (Exception err) {
 						JOptionPane.showMessageDialog(null, "Failure. Cancelling");
 						return;
@@ -251,8 +260,8 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					JOptionPane.showInputDialog("Enter the destination name:");
-
+					String placeToDelete = JOptionPane.showInputDialog("Enter the destination name:");
+					MapFrame.this.graph.remove(MapFrame.this.graph.find(placeToDelete));
 				}
 			});
 			this.menu.add(menuItem);
@@ -363,7 +372,7 @@ public class MapFrame extends JFrame {
 		 * @author David Mehl. Created Feb 10, 2016.
 		 */
 		private class RouteButtonAction implements ActionListener {
-			Route route;
+			private Route route;
 
 			public RouteButtonAction(Route r) {
 				this.route = r;
@@ -426,7 +435,7 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 
-			// TODO
+			// TODO need to remove
 			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 					new LinkedList<Connection>());
 			Route r = new Route(d);
@@ -449,9 +458,9 @@ public class MapFrame extends JFrame {
 			GridLayout rifLayout = new GridLayout(0, 1);
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
-			buildAndAddButton(rQ.bestRoute, 1);
-			buildAndAddButton(rQ.bestRoute, 2);
-			buildAndAddButton(rQ.bestRoute, 3);
+			buildAndAddButton(rQ.poll(), 1);
+			buildAndAddButton(rQ.poll(), 2);
+			buildAndAddButton(rQ.poll(), 3);
 		}
 
 		/**
@@ -521,38 +530,34 @@ public class MapFrame extends JFrame {
 
 				}
 			});
+			final JRadioButton distance = new JRadioButton("Shortest Distance", true);
+			final JRadioButton time = new JRadioButton("Fastest Time");
+			final ButtonGroup timeOrDistance = new ButtonGroup();
+			timeOrDistance.add(distance);
+			timeOrDistance.add(time);
 			final JTextField destination = new JTextField();
 			startTripButton.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					TripPlanner.this.routeInfoPanel.removeAll();
-					TripPlanner.this.setupRouteInfoPanel(); // Remove this line
+					//TripPlanner.this.setupRouteInfoPanel(); // Remove this line
 															// when other stuff
 															// is implemented
 					// TODO uncomment below for actual implementation
-					// if (!start.getText().equals("") &&
-					// !destination.getText().equals("")) {
-					// if (!waypoints.getText().equals(defaultWaypoints)) {
-					// TripPlanner.this.getRoutesAndPlaceButtons(new
-					// RouteQueue(start.getText(),
-					// waypoints.getText().split(":"), destination.getText()));
-					// } else {
-					// TripPlanner.this
-					// .getRoutesAndPlaceButtons(new RouteQueue(start.getText(),
-					// destination.getText()));
-					// }
-					// }
+					if (!start.getText().equals("") && !destination.getText().equals("")) {
+						if (!waypoints.getText().equals(defaultWaypoints)) {
+							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),destination.getText(),waypoints.getText().split(":"),time.isSelected()));
+						} else {
+							String[] emptyArray = {};
+							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),destination.getText(),emptyArray,time.isSelected()));	}
+					}
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.validate();
 
 				}
 			});
-			JRadioButton distance = new JRadioButton("Shortest Distance", true);
-			JRadioButton time = new JRadioButton("Fastest Time");
-			ButtonGroup timeOrDistance = new ButtonGroup();
-			timeOrDistance.add(distance);
-			timeOrDistance.add(time);
+
 
 			this.userInputPanel.add(new JLabel("Trip Planner"));
 			this.userInputPanel.add(new JLabel(""));
@@ -708,7 +713,7 @@ public class MapFrame extends JFrame {
 				this.browser = new WebView();
 				this.jfx.setScene(new Scene(this.browser));
 				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
-				
+
 			});
 
 			// TODO remove this sample destination and its display
@@ -738,45 +743,45 @@ public class MapFrame extends JFrame {
 			JButton wiki = new JButton("Wikipedia");
 			JButton back = new JButton("Back");
 			back.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub.
 					InformationComponent.this.remove(InformationComponent.this.jfx);
 					InformationComponent.this.remove(back);
-					InformationComponent.this.add(InformationComponent.this.info,BorderLayout.CENTER);
-					InformationComponent.this.add(wiki,BorderLayout.SOUTH);
-					
+					InformationComponent.this.add(InformationComponent.this.info, BorderLayout.CENTER);
+					InformationComponent.this.add(wiki, BorderLayout.SOUTH);
+
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
 				}
 			});
 			wiki.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
-					InformationComponent.this.add(InformationComponent.this.jfx,BorderLayout.CENTER);
+					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					Platform.runLater(() -> {
 
 						InformationComponent.this.browser = new WebView();
 						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
-						
+
 					});
-					InformationComponent.this.add(back,BorderLayout.SOUTH);
+					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
 				}
 			});
-			//this.icLayout = new BorderLayout();
-			
-			this.add(wiki,BorderLayout.SOUTH);
-			
-			//this.add(this.jfx,BorderLayout.CENTER);
+			// this.icLayout = new BorderLayout();
 
-			//this.add(back);
+			this.add(wiki, BorderLayout.SOUTH);
+
+			// this.add(this.jfx,BorderLayout.CENTER);
+
+			// this.add(back);
 
 			this.validate();
 
