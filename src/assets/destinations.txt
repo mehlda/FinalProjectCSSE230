@@ -1,15 +1,8 @@
-//FORMAT EXAMPLE
-Detroit:123,456:7654 bool st.:50:src/pic.jpg
-Indianapolis:Washington D.C.:Springfield
-230:500:300
-400:800:400
-//New destination
-
-Detroit:123,456:7654 bool st.:50:src/pic.jpg
-Indianapolies......
-Houston,,,
-Detroit....
-connections
-
-Detroit:Houston:400:200
-Detroit:Houston:200:300
+Detroit:42.358459,-83.064848:7654 bool st.:50
+Montgomery
+815
+732
+Montgomery:32.366691,-86.317481:630 High St:35
+Detroit
+815
+732
