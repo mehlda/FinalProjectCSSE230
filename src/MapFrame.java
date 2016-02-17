@@ -68,11 +68,11 @@ public class MapFrame extends JFrame {
 	 *
 	 */
 	public MapFrame() {
+		//TODO have graph read xml file
 		this.content = new MapPanel();
 		super.setJMenuBar(this.content.menuBar);
 		this.add(this.content);
 		this.validate();
-
 		this.setVisible(true);
 	}
 
@@ -130,8 +130,6 @@ public class MapFrame extends JFrame {
 			this.full.setDividerLocation(1150);
 			this.full.setOneTouchExpandable(true);
 			this.add(this.plannerMap, BorderLayout.CENTER);
-			// this.add(full, BorderLayout.EAST);
-			// this.add(this.info, BorderLayout.EAST);
 			this.validate();
 
 			// This should be only thread in program
@@ -624,7 +622,7 @@ public class MapFrame extends JFrame {
 			// TODO remove this sample image and replace with actual map
 			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File("src/mapPic.jpg"));
+				image = ImageIO.read(new File("src/assets/mapPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
@@ -701,7 +699,7 @@ public class MapFrame extends JFrame {
 			this.setBounds(500, 500, 300, 300);
 			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File("src/detPic.jpg"));
+				image = ImageIO.read(new File("src/assets/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
@@ -751,6 +749,7 @@ public class MapFrame extends JFrame {
 					InformationComponent.this.remove(back);
 					InformationComponent.this.add(InformationComponent.this.info, BorderLayout.CENTER);
 					InformationComponent.this.add(wiki, BorderLayout.SOUTH);
+					
 
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
@@ -762,7 +761,6 @@ public class MapFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
-					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					Platform.runLater(() -> {
 
 						InformationComponent.this.browser = new WebView();
@@ -770,6 +768,7 @@ public class MapFrame extends JFrame {
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
 
 					});
+					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
