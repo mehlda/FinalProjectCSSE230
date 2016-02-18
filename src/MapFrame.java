@@ -78,6 +78,13 @@ public class MapFrame extends JFrame {
 		this.add(this.content);
 		this.validate();
 		this.setVisible(true);
+		for (LinkedList<Destination> l : this.graph.destinations) {
+			if (l == null)
+				continue;
+			for (Destination d : l) {
+				d.picture = ImageIO.read(new File("src/assets/" + d.name + ".jpg"));
+			}
+		}
 	}
 
 	/**
