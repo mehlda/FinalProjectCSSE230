@@ -89,8 +89,6 @@ public class DestinationFileReader {
 					count++;
 				}
 				Destination dest = this.makeDestination();
-				System.out.println(dest.toString());
-				if(dest.name == null) System.out.println("null name");
 				newgraph.insert(dest);
 				
 				
