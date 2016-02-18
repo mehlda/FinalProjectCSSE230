@@ -136,6 +136,7 @@ public class Route extends LinkedList<Destination> {
 		int i = 1;
 		for (Destination d : this) {
 			retString += "" + i + ". " + d.toString() + "\n";
+			i++;
 		}
 		return retString;
 	}
