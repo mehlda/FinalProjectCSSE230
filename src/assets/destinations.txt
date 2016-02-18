@@ -1,8 +1,20 @@
-Detroit:42.358459,-83.064848:7654 bool st.:50
+Springfield:39.6983,-89.6197:Illinois:67
+Detroit:Montgomery
+456:653
+408:571
+Detroit:42.358459,-83.064848:Michigan:50
 Montgomery
 815
 732
-Montgomery:32.366691,-86.317481:630 High St:35
+Montgomery:32.366691,-86.317481:Alabama:35
 Detroit
 815
 732
+Juneau:58.301944,-134.419722:Alaska:40
+Olympia
+1773
+2400
+Olympia:47.037874,-122.900695:Washington:70
+Juneau
+1773
+2400
