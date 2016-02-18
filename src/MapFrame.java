@@ -16,13 +16,15 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.beans.XMLDecoder;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
-import javax.sound.midi.MidiDevice.Info;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -47,7 +49,6 @@ import javax.swing.SwingConstants;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.layout.Border;
 import javafx.scene.web.WebView;
 
 /**
@@ -60,20 +61,38 @@ public class MapFrame extends JFrame {
 	private static final int FRAMES_PER_SECOND = 30;
 	private static final int REPAINT_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
 	private MapPanel content;
-	private Graph graph = new Graph();
+	private Graph graph;
 
 	/**
 	 * 
 	 * Creates the GUI frame
+	 * @throws Exception 
 	 *
 	 */
-	public MapFrame() {
-		//TODO have graph read xml file
+	public MapFrame() throws Exception {
+		// TODO have graph read xml file
+		this.graph = read("src/assets/graph.xml");
 		this.content = new MapPanel();
 		super.setJMenuBar(this.content.menuBar);
 		this.add(this.content);
 		this.validate();
 		this.setVisible(true);
+	}
+
+	/**
+	 * 
+	 * Gets the graph from an xml file
+	 *
+	 * @param filename name of the xml file
+	 * @return the graph with destinations
+	 * @throws Exception when file is not able to be decoded for any reason
+	 */
+	@SuppressWarnings("unused")
+	private static Graph read(String filename) throws Exception {
+		XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(filename)));
+		Graph retGraph = (Graph) decoder.readObject();
+		decoder.close();
+		return retGraph;
 	}
 
 	/**
@@ -428,7 +447,7 @@ public class MapFrame extends JFrame {
 			this.routeInfoPanel.setVisible(true);
 			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File("src/detPic.jpg"));
+				image = ImageIO.read(new File("src/assets/detPic.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
@@ -457,8 +476,8 @@ public class MapFrame extends JFrame {
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
 			buildAndAddButton(rQ.poll(), 1);
-			buildAndAddButton(rQ.poll(), 2);
-			buildAndAddButton(rQ.poll(), 3);
+			//buildAndAddButton(rQ.poll(), 2);
+			//buildAndAddButton(rQ.poll(), 3);
 		}
 
 		/**
@@ -545,17 +564,19 @@ public class MapFrame extends JFrame {
 					// TODO uncomment below for actual implementation
 					if (!start.getText().equals("") && !destination.getText().equals("")) {
 						if (!waypoints.getText().equals(defaultWaypoints)) {
-							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),destination.getText(),waypoints.getText().split(":"),time.isSelected()));
+							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
+									destination.getText(), waypoints.getText().split(":"), time.isSelected()));
 						} else {
 							String[] emptyArray = {};
-							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),destination.getText(),emptyArray,time.isSelected()));	}
+							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
+									destination.getText(), emptyArray, time.isSelected()));
+						}
 					}
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.validate();
 
 				}
 			});
-
 
 			this.userInputPanel.add(new JLabel("Trip Planner"));
 			this.userInputPanel.add(new JLabel(""));
@@ -699,7 +720,7 @@ public class MapFrame extends JFrame {
 			this.setBounds(500, 500, 300, 300);
 			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File("src/assets/detPic.jpg"));
+				image = ImageIO.read(new File("src/assets/Detroit.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
@@ -749,7 +770,6 @@ public class MapFrame extends JFrame {
 					InformationComponent.this.remove(back);
 					InformationComponent.this.add(InformationComponent.this.info, BorderLayout.CENTER);
 					InformationComponent.this.add(wiki, BorderLayout.SOUTH);
-					
 
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();

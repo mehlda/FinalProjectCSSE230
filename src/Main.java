@@ -21,8 +21,9 @@ public class Main {
 	 * TODO Put here a description of what this method does.
 	 *
 	 * @param args
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		JFrame frame = new MapFrame();
 		frame.setSize(SIZE);
 		frame.setTitle("Our Map Title");
