@@ -127,4 +127,16 @@ public class Route extends LinkedList<Destination> {
 			return -1;
 		return 1;
 	}
+	
+	/**
+	 * Returns the route in html string format
+	 */
+	public String toString(){
+		String retString = "<html>";
+		int i = 1;
+		for(Destination d:this){
+			retString += "<p>" + i + ". " +  d.toString() + "</p>";
+		}
+		return retString;
+	}
 }
