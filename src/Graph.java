@@ -128,6 +128,7 @@ public class Graph {
 	 * @return Destination object with the given name or null if does not exist
 	 */
 	public Destination find(String name) {
+		if(this.destinations[this.getHashValue(name)] == null) return null;
 		Iterator<Destination> i = this.destinations[this.getHashValue(name)]
 				.iterator();
 		while (i.hasNext()) {
@@ -162,7 +163,7 @@ public class Graph {
 	 * @return hash key value
 	 */
 	public int getHashValue(String name) {
-		return ((int) name.toLowerCase().charAt(0) - 96) % 26;
+		return ((int) name.toLowerCase().charAt(0) - 97) % 26;
 	}
 
 	/**

@@ -69,7 +69,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 *            - goal destination to build Routes to
 	 */
 	private void buildNextWaypoint(Destination waypoint) {
-		Route origin = this.poll();
+		Route origin = this.peek();
 		origin.removeHeuristicCost(waypoint);
 		Destination last = origin.getLast();
 		for (Connection connection : last.neighbors) {
@@ -79,13 +79,21 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.distanceCost = origin.distanceCost + connection.pathDistance;
 			clone.waypointsReached = origin.waypointsReached;
 
-			if (connection.firstLocation.name.equals(last.name))
+			if (connection.firstLocation.name.equals(last.name)) {
+				if(clone.contains(connection.secondLocation))
+					continue;
+				System.out.println("added: " + clone.getLast().name + " => " + connection.secondLocation.name);
 				clone.add(connection.secondLocation);
-			else
+			} else {
+				if(clone.contains(connection.firstLocation))
+					continue;
+				System.out.println("added: " + clone.getLast().name + " => " + connection.firstLocation.name);
 				clone.add(connection.firstLocation);
+			}
 			clone.addHeuristicCost(waypoint);
 			if (clone.getLast().name.equals(waypoint.name))
 				clone.waypointsReached++; // waypoint has been reached
+			this.remove(origin);
 			this.add(clone);
 		}
 	}
@@ -135,6 +143,8 @@ public class RouteQueue extends ArrayList<Route> {
 			super.set(index, super.get(lastIndex));
 			super.remove(lastIndex);
 			this.removeBalance(index);
+			if(this.get(0) == null)
+				System.out.println("index 0 is null");
 		} else
 			super.remove(index);
 		return true;
