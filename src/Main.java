@@ -26,7 +26,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		JFrame frame = new MapFrame();
 		frame.setSize(SIZE);
-		frame.setTitle("Our Map Title");
+		frame.setTitle("Team Vicious and Delicious Map");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
