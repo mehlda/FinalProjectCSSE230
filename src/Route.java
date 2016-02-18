@@ -28,7 +28,11 @@ public class Route extends LinkedList<Destination> {
 	 */
 	public Route(Destination destination) {
 		this.add(destination);
-		this.timeCost = this.distanceCost = this.waypointsReached = 0; // started here, haven't travelled anywhere
+		this.timeCost = this.distanceCost = this.waypointsReached = 0; // started
+																		// here,
+																		// haven't
+																		// travelled
+																		// anywhere
 	}
 
 	/**
@@ -45,8 +49,7 @@ public class Route extends LinkedList<Destination> {
 	public boolean isCompleteRoute(String start, String end) {
 		if (this.isEmpty())
 			return false;
-		return this.getFirst().name.equals(start)
-				&& this.getLast().name.equals(end);
+		return this.getFirst().name.equals(start) && this.getLast().name.equals(end);
 	}
 
 	/**
@@ -60,8 +63,7 @@ public class Route extends LinkedList<Destination> {
 	 *            - goal destination of this Route
 	 */
 	public void addHeuristicCost(Destination end) {
-		int distance = (int) this.getLast().coordinate
-				.straightLineDistance(end.coordinate);
+		int distance = (int) this.getLast().coordinate.straightLineDistance(end.coordinate);
 		this.distanceCost += distance;
 		// assuming an average of 40 miles per hour.
 		this.timeCost += distance / 40;
@@ -75,8 +77,7 @@ public class Route extends LinkedList<Destination> {
 	 *            - goal destination of this Route
 	 */
 	public void removeHeuristicCost(Destination end) {
-		int distance = (int) this.getLast().coordinate
-				.straightLineDistance(end.coordinate);
+		int distance = (int) this.getLast().coordinate.straightLineDistance(end.coordinate);
 		this.distanceCost -= distance;
 		// assuming an average of 40 miles per hour.
 		this.timeCost -= distance / 40;
@@ -96,8 +97,7 @@ public class Route extends LinkedList<Destination> {
 	 */
 	public int compareToDistance(Route route) {
 		if (route == null)
-			throw new NullPointerException(
-					"Route to compare distance with does not exist!");
+			throw new NullPointerException("Route to compare distance with does not exist!");
 		if (this.distanceCost == route.distanceCost)
 			return 0;
 		if (this.distanceCost < route.distanceCost)
@@ -106,36 +106,36 @@ public class Route extends LinkedList<Destination> {
 	}
 
 	/**
-	 * Compares this Route to the given Route by using their time cost.
-	 * Returns a negative integer, a zero, or a positive integer as the Route's
-	 * time cost is less than, equal to, or greater than the specified
-	 * Route's time cost.
+	 * Compares this Route to the given Route by using their time cost. Returns
+	 * a negative integer, a zero, or a positive integer as the Route's time
+	 * cost is less than, equal to, or greater than the specified Route's time
+	 * cost.
 	 * 
 	 * @param route
 	 *            - Route to compare time costs with this Route
 	 * @return a negative integer, zero, or a positive integer as this Route's
-	 *         time cost is less than, equal to, or greater than the
-	 *         specified Route's time cost.
+	 *         time cost is less than, equal to, or greater than the specified
+	 *         Route's time cost.
 	 */
 	public int compareToTime(Route route) {
 		if (route == null)
-			throw new NullPointerException(
-					"Route to compare time with does not exist!");
+			throw new NullPointerException("Route to compare time with does not exist!");
 		if (this.timeCost == route.timeCost)
 			return 0;
 		if (this.timeCost < route.timeCost)
 			return -1;
 		return 1;
 	}
-	
+
 	/**
 	 * Returns the route in html string format
+	 * @return String of the route
 	 */
-	public String toString(){
-		String retString = "<html>";
+	public String toString() {
+		String retString = "";
 		int i = 1;
-		for(Destination d:this){
-			retString += "<p>" + i + ". " +  d.toString() + "</p>";
+		for (Destination d : this) {
+			retString += "" + i + ". " + d.toString() + "\n";
 		}
 		return retString;
 	}
