@@ -97,7 +97,7 @@ public class Graph {
 	 * @return true if destination is added successfully
 	 */
 	public boolean insert(Destination destination) {
-		if(this.destinations[this.getHashValue(destination.name)] == null) {
+		if (this.destinations[this.getHashValue(destination.name)] == null) {
 			this.destinations[this.getHashValue(destination.name)] = new LinkedList<>();
 		}
 		return this.destinations[this.getHashValue(destination.name)]
@@ -180,9 +180,12 @@ public class Graph {
 	 */
 	public RouteQueue getRouteQueue(String start, String end,
 			String[] waypoints, boolean useTime) {
-		Destination[] midpoints = new Destination[waypoints.length];
-		for (int i = 0; i < waypoints.length; i++) {
-			midpoints[i] = this.find(waypoints[i]);
+		Destination[] midpoints = null;
+		if (waypoints != null) {
+			midpoints = new Destination[waypoints.length];
+			for (int i = 0; i < waypoints.length; i++) {
+				midpoints[i] = this.find(waypoints[i]);
+			}
 		}
 		return new RouteQueue(this.find(start), this.find(end), midpoints,
 				useTime);

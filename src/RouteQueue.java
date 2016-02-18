@@ -33,7 +33,7 @@ public class RouteQueue extends ArrayList<Route> {
 		if (this.waypoints == null)
 			firstRoute.addHeuristicCost(this.end);
 		else
-			firstRoute.addHeuristicCost(waypoints[0]);
+			firstRoute.addHeuristicCost(this.waypoints[0]);
 		this.add(firstRoute);
 		this.buildQueue();
 	}
@@ -44,7 +44,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		while (this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
+		while (!this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
 			buildNextWaypoint(this.nextWaypoint());
 		}
 		/* finished, the top element is a complete route. */
@@ -97,7 +97,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	private Destination nextWaypoint() {
 		int waypointIndex = this.get(0).waypointsReached;
-		if (this.waypoints.length > waypointIndex)
+		if (this.waypoints != null && this.waypoints.length > waypointIndex)
 			return this.waypoints[waypointIndex];
 		return this.end;
 	}
@@ -137,7 +137,6 @@ public class RouteQueue extends ArrayList<Route> {
 			this.removeBalance(index);
 		} else
 			super.remove(index);
-		this.buildQueue();
 		return true;
 	}
 
