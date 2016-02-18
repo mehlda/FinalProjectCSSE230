@@ -567,9 +567,9 @@ public class MapFrame extends JFrame {
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
 									destination.getText(), waypoints.getText().split(":"), time.isSelected()));
 						} else {
-							String[] emptyArray = {};
+							//String[] emptyArray = {};
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
-									destination.getText(), emptyArray, time.isSelected()));
+									destination.getText(), null, time.isSelected()));
 						}
 					}
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
