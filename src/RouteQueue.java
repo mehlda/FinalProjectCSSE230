@@ -44,8 +44,14 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		while (!this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
-			buildNextWaypoint(this.nextWaypoint());
+		while (!this.isEmpty()
+				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
+			if ((this.waypoints != null
+					&& this.get(0).waypointsReached != this.waypoints.length) || this.waypoints == null) {
+				System.out.println("last: " + this.get(0).getLast().name
+						+ " next waypoint: " + this.nextWaypoint().name);
+				buildNextWaypoint(this.nextWaypoint());
+			} else return;
 		}
 		/* finished, the top element is a complete route. */
 	}
@@ -80,14 +86,16 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
-				if(clone.contains(connection.secondLocation))
+				if (clone.contains(connection.secondLocation))
 					continue;
-				System.out.println("added: " + clone.getLast().name + " => " + connection.secondLocation.name);
+				System.out.println("added: " + clone.getLast().name + " => "
+						+ connection.secondLocation.name);
 				clone.add(connection.secondLocation);
 			} else {
-				if(clone.contains(connection.firstLocation))
+				if (clone.contains(connection.firstLocation))
 					continue;
-				System.out.println("added: " + clone.getLast().name + " => " + connection.firstLocation.name);
+				System.out.println("added: " + clone.getLast().name + " => "
+						+ connection.firstLocation.name);
 				clone.add(connection.firstLocation);
 			}
 			clone.addHeuristicCost(waypoint);
@@ -143,10 +151,11 @@ public class RouteQueue extends ArrayList<Route> {
 			super.set(index, super.get(lastIndex));
 			super.remove(lastIndex);
 			this.removeBalance(index);
-			if(this.get(0) == null)
+			if (this.get(0) == null)
 				System.out.println("index 0 is null");
 		} else
 			super.remove(index);
+		this.buildQueue();
 		return true;
 	}
 
