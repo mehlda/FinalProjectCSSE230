@@ -114,7 +114,7 @@ public class MapFrame extends JFrame {
 	public class MapPanel extends JPanel {
 		private TripPlanner tripPlanner;
 		private MapComponent map;
-		protected InformationComponent info;
+		private InformationComponent info;
 		private JMenu menu;
 		private JMenuBar menuBar;
 		private JSplitPane full;
@@ -480,18 +480,18 @@ public class MapFrame extends JFrame {
 		 * @param rQ
 		 *            routeQueue to get routes from
 		 */
-		@SuppressWarnings("unused")
 		private void getRoutesAndPlaceButtons(RouteQueue rQ) {
 			GridLayout rifLayout = new GridLayout(0, 1);
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
 			buildAndAddButton(rQ.poll(), 1);
-			try {
-				buildAndAddButton(rQ.poll(), 2);
-				buildAndAddButton(rQ.poll(), 3);
-			} catch (Exception e) {
-				// do nothing, there's no more routes
-			}
+			//TODO uncomment when transitioning to more than one route
+//			try {
+//				buildAndAddButton(rQ.poll(), 2);
+//				buildAndAddButton(rQ.poll(), 3);
+//			} catch (Exception e) {
+//				// do nothing, there's no more routes
+//			}
 		}
 
 		/**
@@ -741,15 +741,15 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 			this.jfx = new JFXPanel();
-			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
-					new LinkedList<Connection>());
-			Platform.runLater(() -> {
-
-				this.browser = new WebView();
-				this.jfx.setScene(new Scene(this.browser));
-				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
-
-			});
+//			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
+//					new LinkedList<Connection>());
+//			Platform.runLater(() -> {
+//
+//				this.browser = new WebView();
+//				this.jfx.setScene(new Scene(this.browser));
+//				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
+//
+//			});
 
 			// TODO remove this sample destination and its display
 
@@ -797,13 +797,16 @@ public class MapFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
+					InformationComponent.this.jfx = new JFXPanel();
 					Platform.runLater(() -> {
 
+						
 						InformationComponent.this.browser = new WebView();
 						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
 
 					});
+					InformationComponent.this.jfx.validate();
 					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
