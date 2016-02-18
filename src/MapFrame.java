@@ -66,7 +66,8 @@ public class MapFrame extends JFrame {
 	/**
 	 * 
 	 * Creates the GUI frame
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 *
 	 */
 	public MapFrame() throws Exception {
@@ -83,9 +84,11 @@ public class MapFrame extends JFrame {
 	 * 
 	 * Gets the graph from an xml file
 	 *
-	 * @param filename name of the xml file
+	 * @param filename
+	 *            name of the xml file
 	 * @return the graph with destinations
-	 * @throws Exception when file is not able to be decoded for any reason
+	 * @throws Exception
+	 *             when file is not able to be decoded for any reason
 	 */
 	@SuppressWarnings("unused")
 	private static Graph read(String filename) throws Exception {
@@ -104,7 +107,7 @@ public class MapFrame extends JFrame {
 	public class MapPanel extends JPanel {
 		private TripPlanner tripPlanner;
 		private MapComponent map;
-		private InformationComponent info;
+		protected InformationComponent info;
 		private JMenu menu;
 		private JMenuBar menuBar;
 		private JSplitPane full;
@@ -476,8 +479,12 @@ public class MapFrame extends JFrame {
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
 			buildAndAddButton(rQ.poll(), 1);
-			//buildAndAddButton(rQ.poll(), 2);
-			//buildAndAddButton(rQ.poll(), 3);
+			try {
+				buildAndAddButton(rQ.poll(), 2);
+				buildAndAddButton(rQ.poll(), 3);
+			} catch (Exception e) {
+				// do nothing, there's no more routes
+			}
 		}
 
 		/**
@@ -558,20 +565,22 @@ public class MapFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					TripPlanner.this.routeInfoPanel.removeAll();
-					//TripPlanner.this.setupRouteInfoPanel(); // Remove this line
-															// when other stuff
-															// is implemented
+					// TripPlanner.this.setupRouteInfoPanel(); // Remove this
+					// line
+					// when other stuff
+					// is implemented
 					// TODO uncomment below for actual implementation
 					if (!start.getText().equals("") && !destination.getText().equals("")) {
 						if (!waypoints.getText().equals(defaultWaypoints)) {
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
 									destination.getText(), waypoints.getText().split(":"), time.isSelected()));
 						} else {
-							//String[] emptyArray = {};
+							// String[] emptyArray = {};
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
 									destination.getText(), null, time.isSelected()));
 						}
 					}
+					MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find(destination.getText()));
 					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
 					TripPlanner.this.validate();
 
@@ -737,7 +746,7 @@ public class MapFrame extends JFrame {
 
 			// TODO remove this sample destination and its display
 
-			displayDestination(d);
+			// displayDestination(d);
 			this.validate();
 		}
 
