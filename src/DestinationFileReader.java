@@ -11,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 
+
 public class DestinationFileReader {
 	// need to create a file reader. the fields in this class will need to be.
 	public String inputFile = "src/assets/destinations.txt";
