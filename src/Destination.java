@@ -60,8 +60,11 @@ public class Destination {
 	public boolean addConnection(Connection connection) {
 		if(connection == null) return false;
 		/* this check causes it to be O(n) */
-		if(neighbors.contains(connection)) return false;
-		neighbors.add(connection);
+		if(this.neighbors == null) {
+			this.neighbors = new LinkedList<>();
+		}
+		if(this.neighbors.contains(connection)) return false;
+		this.neighbors.add(connection);
 		return true;
 	}
 	

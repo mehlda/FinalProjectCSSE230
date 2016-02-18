@@ -97,6 +97,9 @@ public class Graph {
 	 * @return true if destination is added successfully
 	 */
 	public boolean insert(Destination destination) {
+		if(this.destinations[this.getHashValue(destination.name)] == null) {
+			this.destinations[this.getHashValue(destination.name)] = new LinkedList<>();
+		}
 		return this.destinations[this.getHashValue(destination.name)]
 				.add(destination);
 	}
@@ -158,7 +161,7 @@ public class Graph {
 	 * @return hash key value
 	 */
 	public int getHashValue(String name) {
-		return (int) name.toLowerCase().charAt(0) - 96;
+		return ((int) name.toLowerCase().charAt(0) - 96) % 26;
 	}
 
 	/**

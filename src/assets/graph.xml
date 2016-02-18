@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_65" class="java.beans.XMLDecoder">
+ <object class="Graph" id="Graph0"/>
+<void class="java.util.LinkedList" id="LinkedList0">
+ <void method="add">
+  <object class="Destination" id="Destination0">
+   <void class="Destination" method="getField">
+    <string>coordinate</string>
+    <void method="set">
+     <object idref="Destination0"/>
+     <object class="Coordinate" id="Coordinate0">
+      <void class="Coordinate" method="getField">
+       <string>x</string>
+       <void method="set">
+        <object idref="Coordinate0"/>
+        <double>42.358459</double>
+       </void>
+      </void>
+      <void class="Coordinate" method="getField">
+       <string>y</string>
+       <void method="set">
+        <object idref="Coordinate0"/>
+        <double>-83.064848</double>
+       </void>
+      </void>
+     </object>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>name</string>
+    <void method="set">
+     <object idref="Destination0"/>
+     <string>Detroit</string>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>address</string>
+    <void method="set">
+     <object idref="Destination0"/>
+     <string>7654 bool st.</string>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>rating</string>
+    <void method="set">
+     <object idref="Destination0"/>
+     <int>50</int>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>neighbors</string>
+    <void method="set">
+     <object idref="Destination0"/>
+     <object class="java.util.LinkedList">
+      <void method="add">
+       <object class="Connection" id="Connection0">
+        <void class="Connection" method="getField">
+         <string>firstLocation</string>
+         <void method="set">
+          <object idref="Connection0"/>
+          <object idref="Destination0"/>
+         </void>
+        </void>
+        <void class="Connection" method="getField">
+         <string>secondLocation</string>
+         <void method="set">
+          <object idref="Connection0"/>
+          <object class="Destination" id="Destination1">
+           <void class="Destination" method="getField">
+            <string>coordinate</string>
+            <void method="set">
+             <object idref="Destination1"/>
+             <object class="Coordinate" id="Coordinate1">
+              <void class="Coordinate" method="getField">
+               <string>x</string>
+               <void method="set">
+                <object idref="Coordinate1"/>
+                <double>32.366691</double>
+               </void>
+              </void>
+              <void class="Coordinate" method="getField">
+               <string>y</string>
+               <void method="set">
+                <object idref="Coordinate1"/>
+                <double>-86.317481</double>
+               </void>
+              </void>
+             </object>
+            </void>
+           </void>
+           <void class="Destination" method="getField">
+            <string>name</string>
+            <void method="set">
+             <object idref="Destination1"/>
+             <string>Montgomery</string>
+            </void>
+           </void>
+           <void class="Destination" method="getField">
+            <string>address</string>
+            <void method="set">
+             <object idref="Destination1"/>
+             <string>630 High St</string>
+            </void>
+           </void>
+           <void class="Destination" method="getField">
+            <string>rating</string>
+            <void method="set">
+             <object idref="Destination1"/>
+             <int>35</int>
+            </void>
+           </void>
+           <void class="Destination" method="getField">
+            <string>neighbors</string>
+            <void method="set">
+             <object idref="Destination1"/>
+             <object class="java.util.LinkedList">
+              <void method="add">
+               <object class="Connection" id="Connection1">
+                <void class="Connection" method="getField">
+                 <string>firstLocation</string>
+                 <void method="set">
+                  <object idref="Connection1"/>
+                  <object idref="Destination1"/>
+                 </void>
+                </void>
+                <void class="Connection" method="getField">
+                 <string>secondLocation</string>
+                 <void method="set">
+                  <object idref="Connection1"/>
+                  <object idref="Destination0"/>
+                 </void>
+                </void>
+                <void class="Connection" method="getField">
+                 <string>pathDistance</string>
+                 <void method="set">
+                  <object idref="Connection1"/>
+                  <int>815</int>
+                 </void>
+                </void>
+                <void class="Connection" method="getField">
+                 <string>pathTime</string>
+                 <void method="set">
+                  <object idref="Connection1"/>
+                  <int>732</int>
+                 </void>
+                </void>
+               </object>
+              </void>
+             </object>
+            </void>
+           </void>
+          </object>
+         </void>
+        </void>
+        <void class="Connection" method="getField">
+         <string>pathDistance</string>
+         <void method="set">
+          <object idref="Connection0"/>
+          <int>815</int>
+         </void>
+        </void>
+        <void class="Connection" method="getField">
+         <string>pathTime</string>
+         <void method="set">
+          <object idref="Connection0"/>
+          <int>732</int>
+         </void>
+        </void>
+       </object>
+      </void>
+     </object>
+    </void>
+   </void>
+  </object>
+ </void>
+</void>
+<void class="Graph" id="Field0" method="getField">
+ <string>destinations</string>
+ <void id="LinkedListArray0" method="get">
+  <object idref="Graph0"/>
+  <void index="13">
+   <object class="java.util.LinkedList">
+    <void method="add">
+     <object idref="Destination1"/>
+    </void>
+   </object>
+  </void>
+  <void index="4">
+   <object idref="LinkedList0"/>
+  </void>
+ </void>
+</void>
+<void idref="LinkedListArray0"/>
+</java>

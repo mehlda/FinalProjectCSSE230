@@ -1,36 +1,43 @@
+import java.awt.image.BufferedImage;
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
+
+import javax.imageio.ImageIO;
 
 
 public class DestinationFileReader {
 	// need to create a file reader. the fields in this class will need to be.
-	public String inputFile = "src/destinations.txt";
+	public String inputFile = "src/assets/destinations.txt";
 	public String line;
 	public String address;
-	public String image;
 	public String name;
 	public String location;
-	public String[] lineArray;
-	public String[] line2Array;
-	public String[] line3Array;
-	public String[] line4Array;
+	
+	// this one holds for making connections later
+	public Object[][] neighbors;
 	public String[] neighborNames;
-	public Double[] neighborTimeCost;
-	public Double[] neighborDistCost;
+	public int[] neighborTimeCost;
+	public int[] neighborDistCost;
 	public String[] coord;
 	public int rating;
-	public int x;
-	public int y;
+	public Double x;
+	public Double y;
+	public Graph newgraph;
+	public int index;
 	
 	
 	
 	
 	public DestinationFileReader(){
+		neighbors = new Object[50][3];
 		try {
-			Graph newgraph = new Graph();
+			this.newgraph = new Graph();
 			
 			FileReader fileReader = new FileReader(inputFile);
 			
@@ -38,20 +45,20 @@ public class DestinationFileReader {
 			
 			// actually read the inforation into arrays
 			while((line = bufferedReader.readLine()) != null){
-				lineArray = line.split(":");
+				String[] lineArray = line.split(":");
 				name = lineArray[0];
 				location = lineArray[1];
 				coord = location.split(",");
-				x = Integer.parseInt(coord[0]);
-				y = Integer.parseInt(coord[1]);
+				x = Double.parseDouble(coord[0]);
+				y = Double.parseDouble(coord[1]);
 				address = lineArray[2];
 				rating = Integer.parseInt(lineArray[3]);
-				image = lineArray[4];
 				
 				// second line of the destination read in
 				// holds the names of the neighbors
 				line = bufferedReader.readLine();
-				line2Array = line.split(":");
+				String[] line2Array = line.split(":");
+				neighborNames = new String[line2Array.length];
 				int count = 0;
 				for(String names : line2Array){
 					neighborNames[count] = names;
@@ -61,10 +68,11 @@ public class DestinationFileReader {
 				// third line of the destination
 				// holds the distance cost of each of the neighbors
 				line = bufferedReader.readLine();
-				line3Array = line.split(":");
+				String[] line3Array = line.split(":");
+				neighborDistCost = new int[line3Array.length];
 				count = 0;
 				for(String distance : line3Array){
-					neighborDistCost[count] = Double.parseDouble(distance);
+					neighborDistCost[count] = Integer.parseInt(distance);
 					count++;
 				}
 				
@@ -72,23 +80,56 @@ public class DestinationFileReader {
 				// fourth line of the destination
 				// holds the time cost of each of the neighbors
 				line = bufferedReader.readLine();
-				line4Array = line.split(":");
+				String[] line4Array = line.split(":");
+				neighborTimeCost = new int[line4Array.length];
 				count = 0;
 				for(String timecost : line4Array){
-					neighborTimeCost[count] = Double.parseDouble(timecost);
+					neighborTimeCost[count] = Integer.parseInt(timecost);
 					count++;
 				}
+				Destination dest = this.makeDestination();
+				System.out.println(dest.toString());
+				if(dest.name == null) System.out.println("null name");
+				newgraph.insert(dest);
 				
-				newgraph.insert(this.makeDestination());
 				
 			}
+			bufferedReader.close();
 			
 		} catch (FileNotFoundException exception) {
-			// handling the potential read-in error from the filereader
+			System.out.println("error loading the program, missing files");
 			exception.printStackTrace();
 		} catch (IOException ex){
-			// handling the potential read-in error from bufferedreader
 			ex.printStackTrace();
+		}
+		
+		this.makeConnections(newgraph);
+	}
+
+
+
+
+	public void makeConnections(Graph newgraph) {
+		for(Object[] temp : neighbors){
+			
+			// first element in each is the string
+			String thisname = (String) temp[0];
+			if(thisname == null) return;
+			Destination thisdest = newgraph.find(thisname);
+			
+			String[] neighNames = (String[]) temp[1];
+			int[] neighDist = (int[]) temp[2];
+			int[] neighTime = (int[]) temp[3];
+			for(int x = 0 ; x < neighNames.length; x++){
+				Destination a = newgraph.find(neighNames[x]);
+				int thistime = (int) neighTime[x];
+				int thisdist = (int) neighDist[x];
+				
+				Connection con = new Connection(thisdest, a,thisdist,thistime);
+				thisdest.addConnection(con);
+			}
+			
+			
 		}
 	}
 
@@ -98,12 +139,40 @@ public class DestinationFileReader {
 	private Destination makeDestination() {
 		
 		Coordinate thisspot = new Coordinate(x,y);
-		LinkedList<Connection> x = new LinkedList();
-		for(int i = 0; i < this.neighborNames.length; i++){
-			Connection conn = new Connection(name,neighborNames[i], neighborDistCost[i], neighborTimeCost[i]);
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("src/assets/" + name + ".jpg"));
+		} catch (IOException exception) {
+			exception.printStackTrace();
 		}
 		
-		return new Destination(coord, name, address, rating, image, x);
+		Object[] temp = {this.name, neighborNames, neighborDistCost, neighborTimeCost};
+		
+		neighbors[index] = temp;
+		index ++;
+		
+		return new Destination(thisspot, name, address, rating, img, null);
+	}
+	
+	public static void main(String[] args){
+		DestinationFileReader xxl = new DestinationFileReader();
+		Graph thisgraph = xxl.newgraph;
+		
+		try {
+			xxl.write(thisgraph, "src/assets/graph.xml");
+		} catch (Exception exception) {
+			exception.printStackTrace();
+		}
+		
+	}
+	
+	public static void write(Graph g, String filename) throws Exception {
+		XMLEncoder encoder = 
+				new XMLEncoder(
+						new BufferedOutputStream(
+								new FileOutputStream(filename)));
+		encoder.writeObject(g);
+		encoder.close();
 	}
 	
 }
