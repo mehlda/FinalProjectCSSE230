@@ -486,12 +486,12 @@ public class MapFrame extends JFrame {
 			this.routeInfoPanel.setVisible(true);
 			buildAndAddButton(rQ.poll(), 1);
 			//TODO uncomment when transitioning to more than one route
-//			try {
-//				buildAndAddButton(rQ.poll(), 2);
-//				buildAndAddButton(rQ.poll(), 3);
-//			} catch (Exception e) {
-//				// do nothing, there's no more routes
-//			}
+			try {
+				buildAndAddButton(rQ.poll(), 2);
+				buildAndAddButton(rQ.poll(), 3);
+			} catch (Exception e) {
+				// do nothing, there's no more routes
+			}
 		}
 
 		/**
