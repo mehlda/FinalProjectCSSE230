@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="1.8.0_65" class="java.beans.XMLDecoder">
+<java version="1.8.0_66" class="java.beans.XMLDecoder">
  <object class="Graph" id="Graph0"/>
 <void class="java.util.LinkedList" id="LinkedList0">
  <void method="add">
@@ -13,14 +13,14 @@
        <string>x</string>
        <void method="set">
         <object idref="Coordinate0"/>
-        <double>42.358459</double>
+        <double>32.366691</double>
        </void>
       </void>
       <void class="Coordinate" method="getField">
        <string>y</string>
        <void method="set">
         <object idref="Coordinate0"/>
-        <double>-83.064848</double>
+        <double>-86.317481</double>
        </void>
       </void>
      </object>
@@ -30,21 +30,21 @@
     <string>name</string>
     <void method="set">
      <object idref="Destination0"/>
-     <string>Detroit</string>
+     <string>Montgomery</string>
     </void>
    </void>
    <void class="Destination" method="getField">
     <string>address</string>
     <void method="set">
      <object idref="Destination0"/>
-     <string>7654 bool st.</string>
+     <string>Alabama</string>
     </void>
    </void>
    <void class="Destination" method="getField">
     <string>rating</string>
     <void method="set">
      <object idref="Destination0"/>
-     <int>50</int>
+     <int>35</int>
     </void>
    </void>
    <void class="Destination" method="getField">
@@ -75,14 +75,14 @@
                <string>x</string>
                <void method="set">
                 <object idref="Coordinate1"/>
-                <double>32.366691</double>
+                <double>42.358459</double>
                </void>
               </void>
               <void class="Coordinate" method="getField">
                <string>y</string>
                <void method="set">
                 <object idref="Coordinate1"/>
-                <double>-86.317481</double>
+                <double>-83.064848</double>
                </void>
               </void>
              </object>
@@ -92,21 +92,21 @@
             <string>name</string>
             <void method="set">
              <object idref="Destination1"/>
-             <string>Montgomery</string>
+             <string>Detroit</string>
             </void>
            </void>
            <void class="Destination" method="getField">
             <string>address</string>
             <void method="set">
              <object idref="Destination1"/>
-             <string>630 High St</string>
+             <string>Michigan</string>
             </void>
            </void>
            <void class="Destination" method="getField">
             <string>rating</string>
             <void method="set">
              <object idref="Destination1"/>
-             <int>35</int>
+             <int>50</int>
             </void>
            </void>
            <void class="Destination" method="getField">
@@ -174,19 +174,324 @@
   </object>
  </void>
 </void>
+<void class="Connection" method="getField">
+ <string>firstLocation</string>
+ <void method="set">
+  <object class="Connection" id="Connection2">
+   <void class="Connection" method="getField">
+    <string>secondLocation</string>
+    <void method="set">
+     <object idref="Connection2"/>
+     <object class="Destination" id="Destination2">
+      <void class="Destination" method="getField">
+       <string>coordinate</string>
+       <void method="set">
+        <object idref="Destination2"/>
+        <object class="Coordinate" id="Coordinate2">
+         <void class="Coordinate" method="getField">
+          <string>x</string>
+          <void method="set">
+           <object idref="Coordinate2"/>
+           <double>47.037874</double>
+          </void>
+         </void>
+         <void class="Coordinate" method="getField">
+          <string>y</string>
+          <void method="set">
+           <object idref="Coordinate2"/>
+           <double>-122.900695</double>
+          </void>
+         </void>
+        </object>
+       </void>
+      </void>
+      <void class="Destination" method="getField">
+       <string>name</string>
+       <void method="set">
+        <object idref="Destination2"/>
+        <string>Olympia</string>
+       </void>
+      </void>
+      <void class="Destination" method="getField">
+       <string>address</string>
+       <void method="set">
+        <object idref="Destination2"/>
+        <string>Washington</string>
+       </void>
+      </void>
+      <void class="Destination" method="getField">
+       <string>rating</string>
+       <void method="set">
+        <object idref="Destination2"/>
+        <int>70</int>
+       </void>
+      </void>
+      <void class="Destination" method="getField">
+       <string>neighbors</string>
+       <void method="set">
+        <object idref="Destination2"/>
+        <object class="java.util.LinkedList">
+         <void method="add">
+          <object class="Connection" id="Connection3">
+           <void class="Connection" method="getField">
+            <string>firstLocation</string>
+            <void method="set">
+             <object idref="Connection3"/>
+             <object idref="Destination2"/>
+            </void>
+           </void>
+           <void class="Connection" method="getField">
+            <string>secondLocation</string>
+            <void method="set">
+             <object idref="Connection3"/>
+             <object class="Destination" id="Destination3">
+              <void class="Destination" method="getField">
+               <string>coordinate</string>
+               <void method="set">
+                <object idref="Destination3"/>
+                <object class="Coordinate" id="Coordinate3">
+                 <void class="Coordinate" method="getField">
+                  <string>x</string>
+                  <void method="set">
+                   <object idref="Coordinate3"/>
+                   <double>58.301944</double>
+                  </void>
+                 </void>
+                 <void class="Coordinate" method="getField">
+                  <string>y</string>
+                  <void method="set">
+                   <object idref="Coordinate3"/>
+                   <double>-134.419722</double>
+                  </void>
+                 </void>
+                </object>
+               </void>
+              </void>
+              <void class="Destination" method="getField">
+               <string>name</string>
+               <void method="set">
+                <object idref="Destination3"/>
+                <string>Juneau</string>
+               </void>
+              </void>
+              <void class="Destination" method="getField">
+               <string>address</string>
+               <void method="set">
+                <object idref="Destination3"/>
+                <string>Alaska</string>
+               </void>
+              </void>
+              <void class="Destination" method="getField">
+               <string>rating</string>
+               <void method="set">
+                <object idref="Destination3"/>
+                <int>40</int>
+               </void>
+              </void>
+              <void class="Destination" method="getField">
+               <string>neighbors</string>
+               <void method="set">
+                <object idref="Destination3"/>
+                <object class="java.util.LinkedList">
+                 <void method="add">
+                  <object idref="Connection2"/>
+                 </void>
+                </object>
+               </void>
+              </void>
+             </object>
+            </void>
+           </void>
+           <void class="Connection" method="getField">
+            <string>pathDistance</string>
+            <void method="set">
+             <object idref="Connection3"/>
+             <int>1773</int>
+            </void>
+           </void>
+           <void class="Connection" method="getField">
+            <string>pathTime</string>
+            <void method="set">
+             <object idref="Connection3"/>
+             <int>2400</int>
+            </void>
+           </void>
+          </object>
+         </void>
+        </object>
+       </void>
+      </void>
+     </object>
+    </void>
+   </void>
+   <void class="Connection" method="getField">
+    <string>pathDistance</string>
+    <void method="set">
+     <object idref="Connection2"/>
+     <int>1773</int>
+    </void>
+   </void>
+   <void class="Connection" method="getField">
+    <string>pathTime</string>
+    <void method="set">
+     <object idref="Connection2"/>
+     <int>2400</int>
+    </void>
+   </void>
+  </object>
+  <object idref="Destination3"/>
+ </void>
+</void>
+<void class="Coordinate" method="getField">
+ <string>x</string>
+ <void method="set">
+  <object class="Coordinate" id="Coordinate4">
+   <void class="Coordinate" method="getField">
+    <string>y</string>
+    <void method="set">
+     <object idref="Coordinate4"/>
+     <double>-89.6197</double>
+    </void>
+   </void>
+  </object>
+  <double>39.6983</double>
+ </void>
+</void>
+<void class="Connection" method="getField">
+ <string>firstLocation</string>
+ <void method="set">
+  <object class="Connection" id="Connection4">
+   <void class="Connection" method="getField">
+    <string>secondLocation</string>
+    <void method="set">
+     <object idref="Connection4"/>
+     <object idref="Destination0"/>
+    </void>
+   </void>
+   <void class="Connection" method="getField">
+    <string>pathDistance</string>
+    <void method="set">
+     <object idref="Connection4"/>
+     <int>653</int>
+    </void>
+   </void>
+   <void class="Connection" method="getField">
+    <string>pathTime</string>
+    <void method="set">
+     <object idref="Connection4"/>
+     <int>571</int>
+    </void>
+   </void>
+  </object>
+  <object class="Destination" id="Destination4">
+   <void class="Destination" method="getField">
+    <string>coordinate</string>
+    <void method="set">
+     <object idref="Destination4"/>
+     <object idref="Coordinate4"/>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>name</string>
+    <void method="set">
+     <object idref="Destination4"/>
+     <string>Springfield</string>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>address</string>
+    <void method="set">
+     <object idref="Destination4"/>
+     <string>Illinois</string>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>rating</string>
+    <void method="set">
+     <object idref="Destination4"/>
+     <int>67</int>
+    </void>
+   </void>
+   <void class="Destination" method="getField">
+    <string>neighbors</string>
+    <void method="set">
+     <object idref="Destination4"/>
+     <object class="java.util.LinkedList">
+      <void method="add">
+       <object class="Connection" id="Connection5">
+        <void class="Connection" method="getField">
+         <string>firstLocation</string>
+         <void method="set">
+          <object idref="Connection5"/>
+          <object idref="Destination4"/>
+         </void>
+        </void>
+        <void class="Connection" method="getField">
+         <string>secondLocation</string>
+         <void method="set">
+          <object idref="Connection5"/>
+          <object idref="Destination1"/>
+         </void>
+        </void>
+        <void class="Connection" method="getField">
+         <string>pathDistance</string>
+         <void method="set">
+          <object idref="Connection5"/>
+          <int>456</int>
+         </void>
+        </void>
+        <void class="Connection" method="getField">
+         <string>pathTime</string>
+         <void method="set">
+          <object idref="Connection5"/>
+          <int>408</int>
+         </void>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object idref="Connection4"/>
+      </void>
+     </object>
+    </void>
+   </void>
+  </object>
+ </void>
+</void>
 <void class="Graph" id="Field0" method="getField">
  <string>destinations</string>
  <void id="LinkedListArray0" method="get">
   <object idref="Graph0"/>
+  <void index="10">
+   <object class="java.util.LinkedList">
+    <void method="add">
+     <object idref="Destination3"/>
+    </void>
+   </object>
+  </void>
   <void index="13">
+   <object idref="LinkedList0"/>
+  </void>
+  <void index="15">
+   <object class="java.util.LinkedList">
+    <void method="add">
+     <object idref="Destination2"/>
+    </void>
+   </object>
+  </void>
+  <void index="19">
+   <object class="java.util.LinkedList">
+    <void method="add">
+     <object idref="Destination4"/>
+    </void>
+   </object>
+  </void>
+  <void index="4">
    <object class="java.util.LinkedList">
     <void method="add">
      <object idref="Destination1"/>
     </void>
    </object>
-  </void>
-  <void index="4">
-   <object idref="LinkedList0"/>
   </void>
  </void>
 </void>
