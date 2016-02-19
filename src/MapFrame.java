@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+//import com.teamdev.jxbrowser.Browser;import com.teamdev.jxbrowser.BrowserFactory;import com.teamdev.jxbrowser.BrowserType;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -241,7 +242,7 @@ public class MapFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub.
-					System.out.println(MapFrame.this.rq.toArray());
+					System.out.println(MapFrame.this.rq.printStack());
 				}
 			});
 			this.menu.add(menuItem);
