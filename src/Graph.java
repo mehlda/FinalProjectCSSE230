@@ -200,12 +200,8 @@ public class Graph {
 	 * @return LinkedList of all the destinations in this graph
 	 */
 	public LinkedList<Destination> getAllDestinations() {
-		LinkedList<Destination> output = null;
+		LinkedList<Destination> output = new LinkedList<Destination>();
 		for(LinkedList<Destination> list : this.destinations) {
-			if(output == null) {
-				output = list;
-				continue;
-			}
 			for(Destination d : list) {
 				output.add(d);
 			}
