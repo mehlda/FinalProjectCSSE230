@@ -149,7 +149,7 @@ public class RouteQueue extends ArrayList<Route> {
 				System.out.println("index 0 is null");
 		} else
 			super.remove(index);
-//		this.buildQueue();
+		this.buildQueue();
 		return true;
 	}
 

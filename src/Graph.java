@@ -43,7 +43,7 @@ public class Graph {
 	 * 
 	 * Array of Neighbors, times, and distances are assumed to be indexed at
 	 * same number corresponding to values that go together in new Connection
-	 * obejcts.
+	 * objects.
 	 * 
 	 * Adds new Connection objects to both Destinations in that connection.
 	 * 
