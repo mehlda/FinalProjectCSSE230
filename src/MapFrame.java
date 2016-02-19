@@ -62,6 +62,7 @@ public class MapFrame extends JFrame {
 	private static final int REPAINT_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
 	private MapPanel content;
 	private Graph graph;
+	private RouteQueue rq;
 
 	/**
 	 * 
@@ -234,6 +235,16 @@ public class MapFrame extends JFrame {
 			this.menuBar.add(this.menu);
 
 			// a group of JMenuItems
+			menuItem = new JMenuItem("Print Route Q", KeyEvent.VK_I);
+			menuItem.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub.
+					System.out.println(MapFrame.this.rq.toArray());
+				}
+			});
+			this.menu.add(menuItem);
 			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_I);
 			menuItem.getAccessibleContext().setAccessibleDescription("Insert a Destination");
 			menuItem.addActionListener(new ActionListener() {
@@ -463,12 +474,12 @@ public class MapFrame extends JFrame {
 			}
 
 			// TODO need to remove
-			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
-					new LinkedList<Connection>());
-			Route r = new Route(d);
+//			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
+//					new LinkedList<Connection>());
+			//Route r = new Route(d);
 			Route r2 = new Route();
 			Route r3 = new Route();
-			buildAndAddButton(r, 1);
+			//buildAndAddButton(r, 1);
 			buildAndAddButton(r2, 2);
 			buildAndAddButton(r3, 3);
 		}
@@ -485,7 +496,6 @@ public class MapFrame extends JFrame {
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
 			buildAndAddButton(rQ.poll(), 1);
-			//TODO uncomment when transitioning to more than one route
 			try {
 				buildAndAddButton(rQ.poll(), 2);
 				buildAndAddButton(rQ.poll(), 3);
@@ -571,6 +581,7 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					
 					TripPlanner.this.routeInfoPanel.removeAll();
 					// TripPlanner.this.setupRouteInfoPanel(); // Remove this
 					// line
@@ -579,12 +590,14 @@ public class MapFrame extends JFrame {
 					// TODO uncomment below for actual implementation
 					if (!start.getText().equals("") && !destination.getText().equals("")) {
 						if (!waypoints.getText().equals(defaultWaypoints)) {
-							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
-									destination.getText(), waypoints.getText().split(":"), time.isSelected()));
+							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(),
+									destination.getText(), waypoints.getText().split(":"), time.isSelected());
+							TripPlanner.this.getRoutesAndPlaceButtons(rq);
 						} else {
 							// String[] emptyArray = {};
-							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.graph.getRouteQueue(start.getText(),
-									destination.getText(), null, time.isSelected()));
+							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(),
+									destination.getText(), null, time.isSelected());
+							TripPlanner.this.getRoutesAndPlaceButtons(rq);
 						}
 					}
 					MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find(destination.getText()));
@@ -743,13 +756,13 @@ public class MapFrame extends JFrame {
 			this.jfx = new JFXPanel();
 //			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
 //					new LinkedList<Connection>());
-//			Platform.runLater(() -> {
-//
-//				this.browser = new WebView();
-//				this.jfx.setScene(new Scene(this.browser));
-//				this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
-//
-//			});
+			Platform.runLater(() -> {
+
+				this.browser = new WebView();
+				this.jfx.setScene(new Scene(this.browser));
+				this.browser.getEngine().load("https://en.wikipedia.org/wiki/");
+
+			});
 
 			// TODO remove this sample destination and its display
 
@@ -797,12 +810,14 @@ public class MapFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
-					InformationComponent.this.jfx = new JFXPanel();
+					
+					//InformationComponent.this.jfx = new JFXPanel();
+					//InformationComponent.this.browser.
 					Platform.runLater(() -> {
 
 						
-						InformationComponent.this.browser = new WebView();
-						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
+//						InformationComponent.this.browser = new WebView();
+//						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
 
 					});
