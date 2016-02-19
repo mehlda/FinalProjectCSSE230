@@ -100,7 +100,7 @@ public class Graph {
 		if (this.destinations[this.getHashValue(destination.name)] == null) {
 			this.destinations[this.getHashValue(destination.name)] = new LinkedList<>();
 		}
-		System.out.println("insert graph: " + destination.picture.getHeight());
+		System.out.println("insert graph: " + destination.name);
 		return this.destinations[this.getHashValue(destination.name)]
 				.add(destination);
 	}

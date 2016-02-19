@@ -1,20 +1,60 @@
 Springfield:39.6983,-89.6197:Illinois:67
-Detroit:Montgomery:Olympia:Denver
-456:653:2114:911
-408:571:1860:782
+Detroit:Montgomery:Olympia:Denver:Raleigh:Lincoln
+456:653:2114:911:838:433
+408:571:1860:782:766:395
 Detroit:42.358459,-83.064848:Michigan:50
-Montgomery:Springfield:Denver:Olympia
-815:456:1286:2391
-732:408:1095:2100
+Montgomery:Springfield:Denver:Olympia:Austin
+815:456:1286:2391:797
+732:408:1095:2100:699
 Montgomery:32.366691,-86.317481:Alabama:35
-Detroit:Springfield
-815:653
-732:571
+Detroit:Springfield:Tallahassee:Raleigh
+815:653:210:591
+732:571:222:511
 Olympia:47.037874,-122.900695:Washington:70
-Springfield:Denver:Detroit
-2114:1370:2391
-1860:1225:2100
+Springfield:Denver:Detroit:Sacramento:Salem
+2114:1370:2391:693:160
+1860:1225:2100:620:153
 Denver:39.7392,-104.9903:Colorado:71
-Olympia:Detroit:Springfield
-1370:1286:911
-1225:1095:782
+Olympia:Detroit:Springfield:Austin:Lincoln:Sacramento:Santa Fe:Salt Lake City
+1370:1286:911:909:489:1186:392:521
+1225:1095:782:829:416:1033:349:467
+Tallahassee:30.4550,-84.2533:Florida:87
+Montgomery:Austin:Raleigh
+210:873:615
+222:781:535
+Austin:30.2500,-97.7500:Texas:76
+Montgomery:Tallahassee:Denver:Lincoln:Sacramento:Phoenix:Santa Fe
+797:873:909:723:1761:1006:688
+699:781:829:728:1560:861:637
+Raleigh:35.7806,-78.6389:North Carolina:73
+Tallahassee:Montgomery:Springfield
+615:591:838
+535:511:766
+Lincoln:40.8106,-96.6803:Nebraska:32
+Denver:Springfield:Austin:
+489:433:823
+416:395:728
+Sacramento:38.5556,-121.4689:California:86
+Denver:Austin:Olympia:Salem:Phoenix:Carson City
+1186:1761:693:536:758:163
+1033:1560:620:489:690:161
+Salem:44.9308,-123.0289:Oregon:54
+Sacramento:Olympia
+536:160
+489:153
+Phoenix:33.4500,-112.0667:Arizona:28
+Austin:Sacramento:Denver:Santa Fe:Salt Lake City:Carson City
+1006:758:864:480:662:729
+861:690:758:437:597:675
+Santa Fe:35.6627,-105.9644:New Mexico:12
+Phoenix:Denver:Austin:Salt Lake City
+480:392:688:626
+437:349:637:604
+Salt Lake City:40.75,-111.8833:Utah:65
+Denver:Santa Fe:Phoenix:Carson City
+521:626:662:535
+467:604:597:454
+Carson City:39.1608,-119.7539:Nevada:39
+Sacramento:Salt Lake City:Phoenix
+163:535:729
+161:454:675

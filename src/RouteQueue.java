@@ -76,7 +76,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	private void buildNextWaypoint(Destination waypoint) {
 		Route origin = this.peek();
-		origin.removeHeuristicCost(waypoint);
+//		origin.removeHeuristicCost(waypoint);
 		Destination last = origin.getLast();
 		for (Connection connection : last.neighbors) {
 			Route clone = (Route) origin.clone();

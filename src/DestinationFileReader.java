@@ -125,6 +125,7 @@ public class DestinationFileReader {
 				int thisdist = (int) neighDist[x];
 				
 				Connection con = new Connection(thisdest, a,thisdist,thistime);
+				System.out.println("Connection: " + thisdest.name + " -> " + a.name);
 				thisdest.addConnection(con);
 			}
 			
