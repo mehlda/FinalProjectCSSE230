@@ -4,8 +4,8 @@ Detroit:Montgomery:Olympia:Denver:Raleigh:Lincoln
 408:571:1860:782:766:395
 Detroit:42.358459,-83.064848:Michigan:50
 Montgomery:Springfield:Denver:Olympia:Austin
-815:456:1286:2391:797
-732:408:1095:2100:699
+815:456:1286:2391:1382
+732:408:1095:2100:1209
 Montgomery:32.366691,-86.317481:Alabama:35
 Detroit:Springfield:Tallahassee:Raleigh
 815:653:210:591

@@ -86,10 +86,14 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
+				if(clone.contains(connection.secondLocation))
+					continue;
 				System.out.println("added: " + clone.getLast().name + " => "
 						+ connection.secondLocation.name);
 				clone.add(connection.secondLocation);
 			} else {
+				if(clone.contains(connection.firstLocation))
+					continue;
 				System.out.println("added: " + clone.getLast().name + " => "
 						+ connection.firstLocation.name);
 				clone.add(connection.firstLocation);
@@ -296,7 +300,7 @@ public class RouteQueue extends ArrayList<Route> {
 	public String printStack() {
 		String output = "";
 		for(int i = 0; i < this.size(); i++) {
-			output += this.get(0).toString() + " \n ";
+			output += this.get(i).toString() + " \n ";
 		}
 		return output;
 	}
