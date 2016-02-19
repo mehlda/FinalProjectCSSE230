@@ -36,6 +36,7 @@ public class RouteQueue extends ArrayList<Route> {
 			firstRoute.addHeuristicCost(this.waypoints[0]);
 		this.add(firstRoute);
 		this.buildQueue();
+		System.out.println(this.toArray());
 	}
 
 	/**
@@ -284,7 +285,19 @@ public class RouteQueue extends ArrayList<Route> {
 	 * 
 	 * @return an array containing all of the Routes in this PriorityQueue.
 	 */
-	public Route[] toArray() {
-		return (Route[]) super.toArray();
+	public String[] toArray() {
+		String[] output = new String[this.size()];
+		for(int i = 0; i < this.size(); i++) {
+			output[i] = this.get(0).toString();
+		}
+		return output;
+	}
+	
+	public String printStack() {
+		String output = "";
+		for(int i = 0; i < this.size(); i++) {
+			output += this.get(0).toString() + " \n ";
+		}
+		return output;
 	}
 }
