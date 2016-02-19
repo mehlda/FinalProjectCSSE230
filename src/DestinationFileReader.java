@@ -151,7 +151,8 @@ public class DestinationFileReader {
 		neighbors[index] = temp;
 		index ++;
 		
-		return new Destination(thisspot, name, address, rating, img, null);
+		// TODO: add point2D object as last parameter
+		return new Destination(thisspot, name, address, rating, img, null, null);
 	}
 	
 	public static void main(String[] args){

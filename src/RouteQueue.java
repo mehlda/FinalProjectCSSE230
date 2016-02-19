@@ -47,7 +47,7 @@ public class RouteQueue extends ArrayList<Route> {
 		while (!this.isEmpty()
 				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
 			if ((this.waypoints != null
-					&& this.get(0).waypointsReached != this.waypoints.length) || this.waypoints == null) {
+					&& this.get(0).waypointsReached != this.waypoints.length + 1) || this.waypoints == null) {
 				System.out.println("last: " + this.get(0).getLast().name
 						+ " next waypoint: " + this.nextWaypoint().name);
 				buildNextWaypoint(this.nextWaypoint());
@@ -76,24 +76,19 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	private void buildNextWaypoint(Destination waypoint) {
 		Route origin = this.peek();
-//		origin.removeHeuristicCost(waypoint);
 		Destination last = origin.getLast();
+		this.remove(origin);
 		for (Connection connection : last.neighbors) {
 			Route clone = (Route) origin.clone();
-			// TODO: does clone also copy over these three fields here?
 			clone.timeCost = origin.timeCost + connection.pathTime;
 			clone.distanceCost = origin.distanceCost + connection.pathDistance;
 			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
-				if (clone.contains(connection.secondLocation))
-					continue;
 				System.out.println("added: " + clone.getLast().name + " => "
 						+ connection.secondLocation.name);
 				clone.add(connection.secondLocation);
 			} else {
-				if (clone.contains(connection.firstLocation))
-					continue;
 				System.out.println("added: " + clone.getLast().name + " => "
 						+ connection.firstLocation.name);
 				clone.add(connection.firstLocation);
@@ -101,7 +96,6 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.addHeuristicCost(waypoint);
 			if (clone.getLast().name.equals(waypoint.name))
 				clone.waypointsReached++; // waypoint has been reached
-			this.remove(origin);
 			this.add(clone);
 		}
 	}
@@ -155,7 +149,7 @@ public class RouteQueue extends ArrayList<Route> {
 				System.out.println("index 0 is null");
 		} else
 			super.remove(index);
-		this.buildQueue();
+//		this.buildQueue();
 		return true;
 	}
 
@@ -207,13 +201,13 @@ public class RouteQueue extends ArrayList<Route> {
 		Route end = super.get(index);
 		Route parent = super.get((index - 1) / 2);
 		if (this.useTime) {
-			if (parent.timeCost > end.timeCost) {
+			if (parent.compareToTime(end) == 1) {
 				super.set((index - 1) / 2, end);
 				super.set(index, parent);
 				this.addBalance((index - 1) / 2);
 			}
 		} else {
-			if (parent.distanceCost > end.distanceCost) {
+			if (parent.compareToDistance(end) == 1) {
 				super.set((index - 1) / 2, end);
 				super.set(index, parent);
 				this.addBalance((index - 1) / 2);

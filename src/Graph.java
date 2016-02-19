@@ -1,3 +1,4 @@
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -73,11 +74,11 @@ public class Graph {
 	 */
 	public boolean insert(String name, Coordinate c, String address,
 			int rating, BufferedImage pic, String[] neighbors, int[] times,
-			int[] distances) throws ObjectNotFoundException {
+			int[] distances, Point2D point) throws ObjectNotFoundException {
 		if (name == null || c == null || address == null || pic == null)
 			return false;
 		Destination location1 = new Destination(c, name, address, rating, pic,
-				null);
+				null, point);
 		for (int i = 0; i < neighbors.length; i++) {
 			Destination location2 = this.find(neighbors[i]);
 			if (location2 == null)
@@ -192,5 +193,23 @@ public class Graph {
 		return new RouteQueue(this.find(start), this.find(end), midpoints,
 				useTime);
 	}
-
+	
+	/**
+	 * Gets all of the Destinations in this graph, mostly sorted.
+	 * 
+	 * @return LinkedList of all the destinations in this graph
+	 */
+	public LinkedList<Destination> getAllDestinations() {
+		LinkedList<Destination> output = null;
+		for(LinkedList<Destination> list : this.destinations) {
+			if(output == null) {
+				output = list;
+				continue;
+			}
+			for(Destination d : list) {
+				output.add(d);
+			}
+		}
+		return output;
+	}
 }

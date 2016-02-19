@@ -78,6 +78,7 @@ public class Route extends LinkedList<Destination> {
 	 *            - goal destination of this Route
 	 */
 	public void removeHeuristicCost(Destination end) {
+		System.out.println("this method is used, removeHeuristicCost()");
 		int distance = (int) this.getLast().coordinate
 				.straightLineDistance(end.coordinate);
 		this.distanceHeuristic -= distance;
@@ -140,7 +141,7 @@ public class Route extends LinkedList<Destination> {
 		String retString = "";
 		int i = 1;
 		for (Destination d : this) {
-			System.out.println(d.name);
+//			System.out.println(d.name);
 			retString += "" + i + ". " + d.toString() + "\n";
 			i++;
 		}
