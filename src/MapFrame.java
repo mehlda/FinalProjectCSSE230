@@ -594,6 +594,7 @@ public class MapFrame extends JFrame {
 			timeOrDistanceOrInterest.add(time);
 			timeOrDistanceOrInterest.add(interest);
 
+			final JTextField maxWaypoints = new JTextField();
 			final JTextField destination = new JTextField();
 			startTripButton.addActionListener(new ActionListener() {
 
@@ -607,15 +608,28 @@ public class MapFrame extends JFrame {
 					// when other stuff
 					// is implemented
 					// TODO uncomment below for actual implementation
+					RouteQueue.Cost function;
+					if (time.isSelected()) {
+						function = RouteQueue.Cost.TIME;
+					} else if (distance.isSelected()) {
+						function = RouteQueue.Cost.DISTANCE;
+					} else {
+						function = RouteQueue.Cost.INTEREST;
+					}
+					int maxDest;
+					try {
+						maxDest = Integer.parseInt(maxWaypoints.getText());
+					} catch (Exception expc) {
+						maxDest = -1;
+					}
 					if (!start.getText().equals("") && !destination.getText().equals("")) {
 						if (!waypoints.getText().equals(defaultWaypoints)) {
 							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
-									waypoints.getText().split(":"), time.isSelected());
+									waypoints.getText().split(":"), function, maxDest);
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
 						} else {
-							// String[] emptyArray = {};
 							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
-									null, time.isSelected());
+									null, function,maxDest);
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
 						}
 					}
@@ -639,7 +653,6 @@ public class MapFrame extends JFrame {
 			this.userInputPanel.add(distance);
 			this.userInputPanel.add(time);
 			this.userInputPanel.add(interest);
-			final JTextField maxWaypoints = new JTextField();
 			maxWaypoints.setText("Max Waypoints");
 			maxWaypoints.addMouseListener(new MouseListener() {
 
