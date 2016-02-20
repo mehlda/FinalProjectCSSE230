@@ -13,7 +13,7 @@ public class RouteQueue extends ArrayList<Route> {
 	public Destination[] waypoints;
 	public Cost costFunction; // if true, use time as cost
 	public int maxDestinations;
-	
+
 	public enum Cost {
 		DISTANCE, TIME, INTEREST
 	}
@@ -23,9 +23,11 @@ public class RouteQueue extends ArrayList<Route> {
 	 * destinations.
 	 * 
 	 * @param start
-	 *            - name of
+	 *            - name of starting Destination
 	 * @param end
+	 *            - name of goal, ending Destination
 	 * @param waypoints
+	 *            - Destination array of all waypoints
 	 */
 	public RouteQueue(Destination start, Destination end,
 			Destination[] waypoints, Cost costFunction) {
@@ -43,15 +45,17 @@ public class RouteQueue extends ArrayList<Route> {
 		this.add(firstRoute);
 		this.buildQueue();
 	}
-	
+
 	/**
 	 * Constructs a new RouteQueue object with start, end, and waypoint
 	 * destinations.
 	 * 
 	 * @param start
-	 *            - name of
+	 *            - name of starting Destination
 	 * @param end
+	 *            - name of goal, ending Destination
 	 * @param waypoints
+	 *            - Destination array of all waypoints
 	 */
 	public RouteQueue(Destination start, Destination end,
 			Destination[] waypoints, Cost costFunction, int maxDestinations) {
@@ -76,7 +80,8 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		while (!this.isEmpty() && !this.get(0).isCompleteRoute(this.start.name, this.end.name)
+		while (!this.isEmpty()
+				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)
 				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1) || this.waypoints == null)) {
 			buildNextWaypoint(this.nextWaypoint());
 		}
@@ -116,14 +121,15 @@ public class RouteQueue extends ArrayList<Route> {
 					continue;
 				clone.add(connection.secondLocation);
 			} else {
-				if (clone.contains(connection.firstLocation) && this.waypoints == null)
+				if (clone.contains(connection.firstLocation)
+						&& this.waypoints == null)
 					continue;
 				clone.add(connection.firstLocation);
 			}
 			clone.addHeuristicCost(waypoint);
 			if (clone.getLast().name.equals(waypoint.name))
 				clone.waypointsReached++; // waypoint has been reached
-			if(clone.size() <= this.maxDestinations)
+			if (clone.size() <= this.maxDestinations)
 				this.add(clone);
 		}
 	}
@@ -213,11 +219,11 @@ public class RouteQueue extends ArrayList<Route> {
 			return null;
 		Route route = this.peek();
 		this.remove(route);
-		for(Destination d : this.waypoints) {
-			if(!route.contains(d))
+		for (Destination d : this.waypoints) {
+			if (!route.contains(d))
 				return poll();
 		}
-		if(!route.getLast().name.equals(this.end.name))
+		if (!route.getLast().name.equals(this.end.name))
 			return poll();
 		return route;
 	}
@@ -234,7 +240,7 @@ public class RouteQueue extends ArrayList<Route> {
 	private void addBalance(int index) {
 		Route end = super.get(index);
 		Route parent = super.get((index - 1) / 2);
-		if(parent.compareBy(this.costFunction, end) == 1) {
+		if (parent.compareBy(this.costFunction, end) == 1) {
 			super.set((index - 1) / 2, end);
 			super.set(index, parent);
 			this.addBalance((index - 1) / 2);
@@ -257,7 +263,7 @@ public class RouteQueue extends ArrayList<Route> {
 			return; // specified Route is a leaf
 		Route parent = super.get(index);
 		Route child = super.get(smallest);
-		if(child.compareBy(this.costFunction, parent) < 0) {
+		if (child.compareBy(this.costFunction, parent) < 0) {
 			super.set(index, child);
 			super.set(smallest, parent);
 			this.removeBalance(smallest);
@@ -286,7 +292,7 @@ public class RouteQueue extends ArrayList<Route> {
 		}
 		if (leftChild == null)
 			return index * 2 + 2;
-		if(leftChild.compareBy(this.costFunction, rightChild) <= 0) {
+		if (leftChild.compareBy(this.costFunction, rightChild) <= 0) {
 			return index * 2 + 1;
 		}
 		return index * 2 + 2;

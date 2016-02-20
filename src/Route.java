@@ -92,6 +92,7 @@ public class Route extends LinkedList<Destination> {
 	 * functions determined by specified cost.
 	 * If cost == 0, they are compared by distance.
 	 * If cost == 1, they are compared by time.
+	 * if cost == 2, they are compared by interest.
 	 * 
 	 * @param cost
 	 *            - value that indicates what cost function to compare by
