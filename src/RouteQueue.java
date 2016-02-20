@@ -11,7 +11,12 @@ public class RouteQueue extends ArrayList<Route> {
 	public Destination start;
 	public Destination end;
 	public Destination[] waypoints;
-	public byte costFunction; // if true, use time as cost
+	public Cost costFunction; // if true, use time as cost
+	public int maxDestinations;
+	
+	public enum Cost {
+		DISTANCE, TIME, INTEREST
+	}
 
 	/**
 	 * Constructs a new RouteQueue object with start, end, and waypoint
@@ -23,7 +28,34 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 */
 	public RouteQueue(Destination start, Destination end,
-			Destination[] waypoints, byte costFunction) {
+			Destination[] waypoints, Cost costFunction) {
+		this.maxDestinations = Integer.MAX_VALUE;
+		this.start = start;
+		this.end = end;
+		this.waypoints = waypoints;
+		this.costFunction = costFunction;
+		/* Adds the starting destination with heuristic to first waypoint */
+		Route firstRoute = new Route(this.start);
+		if (this.waypoints == null)
+			firstRoute.addHeuristicCost(this.end);
+		else
+			firstRoute.addHeuristicCost(this.waypoints[0]);
+		this.add(firstRoute);
+		this.buildQueue();
+	}
+	
+	/**
+	 * Constructs a new RouteQueue object with start, end, and waypoint
+	 * destinations.
+	 * 
+	 * @param start
+	 *            - name of
+	 * @param end
+	 * @param waypoints
+	 */
+	public RouteQueue(Destination start, Destination end,
+			Destination[] waypoints, Cost costFunction, int maxDestinations) {
+		this.maxDestinations = maxDestinations;
 		this.start = start;
 		this.end = end;
 		this.waypoints = waypoints;
@@ -80,7 +112,7 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
-				if (clone.contains(connection.secondLocation) && this.waypoints == null)
+				if ((clone.contains(connection.secondLocation) && this.waypoints == null))
 					continue;
 				clone.add(connection.secondLocation);
 			} else {
@@ -91,7 +123,8 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.addHeuristicCost(waypoint);
 			if (clone.getLast().name.equals(waypoint.name))
 				clone.waypointsReached++; // waypoint has been reached
-			this.add(clone);
+			if(clone.size() <= this.maxDestinations)
+				this.add(clone);
 		}
 	}
 
