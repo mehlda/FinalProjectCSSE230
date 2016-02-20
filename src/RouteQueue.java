@@ -29,7 +29,8 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	public RouteQueue(Destination start, Destination end, Destination[] waypoints, Cost costFunction) {
+	public RouteQueue(Destination start, Destination end,
+			Destination[] waypoints, Cost costFunction) {
 		this.maxDestinations = Integer.MAX_VALUE;
 		this.start = start;
 		this.end = end;
@@ -56,8 +57,8 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	public RouteQueue(Destination start, Destination end, Destination[] waypoints, Cost costFunction,
-			int maxDestinations) {
+	public RouteQueue(Destination start, Destination end,
+			Destination[] waypoints, Cost costFunction, int maxDestinations) {
 		this.maxDestinations = maxDestinations;
 		this.start = start;
 		this.end = end;
@@ -79,9 +80,9 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		while (!this.isEmpty() && !this.get(0).isCompleteRoute(this.start.name, this.end.name)
-				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1)
-						|| this.waypoints == null)) {
+		while (!this.isEmpty()
+				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)
+				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1) || this.waypoints == null)) {
 			buildNextWaypoint(this.nextWaypoint());
 		}
 		/* finished, the top element is a complete route. */
@@ -113,16 +114,20 @@ public class RouteQueue extends ArrayList<Route> {
 			Route clone = (Route) origin.clone();
 			clone.timeCost = origin.timeCost + connection.pathTime;
 			clone.distanceCost = origin.distanceCost + connection.pathDistance;
+			clone.interestCost = origin.interestCost;
 			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
 				if ((clone.contains(connection.secondLocation) && this.waypoints == null))
 					continue;
 				clone.add(connection.secondLocation);
+				clone.interestCost += connection.secondLocation.rating;
 			} else {
-				if (clone.contains(connection.firstLocation) && this.waypoints == null)
+				if (clone.contains(connection.firstLocation)
+						&& this.waypoints == null)
 					continue;
 				clone.add(connection.firstLocation);
+				clone.interestCost += connection.firstLocation.rating;
 			}
 			clone.addHeuristicCost(waypoint);
 			if (clone.getLast().name.equals(waypoint.name))
@@ -216,15 +221,22 @@ public class RouteQueue extends ArrayList<Route> {
 		if (this.isEmpty())
 			return null;
 		Route route = this.peek();
-		this.remove(route);
-		if (this.waypoints != null) {
-			for (Destination d : this.waypoints) {
-				if (!route.contains(d))
-					return poll();
+		boolean flag = true;
+		while (!this.isEmpty() && flag) {
+			flag = false;
+			route = this.peek();
+			this.remove(route);
+			if (this.waypoints != null) {
+				for (Destination d : this.waypoints) {
+					if (!route.contains(d)) {
+						flag = true;
+						break;
+					}
+				}
 			}
+			if (!route.getLast().name.equals(this.end.name))
+				continue;
 		}
-		if (!route.getLast().name.equals(this.end.name))
-			return poll();
 		return route;
 	}
 
@@ -280,8 +292,10 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @return index of the smallest child or -1 if there are no children.
 	 */
 	private int smallestChild(int index) {
-		Route leftChild = (index * 2 + 1) < super.size() ? super.get(index * 2 + 1) : null;
-		Route rightChild = (index * 2 + 2) < super.size() ? super.get(index * 2 + 2) : null;
+		Route leftChild = (index * 2 + 1) < super.size() ? super
+				.get(index * 2 + 1) : null;
+		Route rightChild = (index * 2 + 2) < super.size() ? super
+				.get(index * 2 + 2) : null;
 		if (rightChild == null) {
 			if (leftChild != null)
 				return index * 2 + 1;
@@ -308,6 +322,12 @@ public class RouteQueue extends ArrayList<Route> {
 		return output;
 	}
 
+	/**
+	 * Used for an admin feature on the GUI.
+	 * Constructs a string of all the Routes in this Priority Queue.
+	 * 
+	 * @return a string of all routes in this Priority Queue.
+	 */
 	public String printStack() {
 		String output = "";
 		for (int i = 0; i < this.size(); i++) {

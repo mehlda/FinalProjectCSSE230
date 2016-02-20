@@ -8,7 +8,6 @@ import java.util.LinkedList;
  *
  */
 public class Route extends LinkedList<Destination> {
-	/* costs include heuristic values */
 	public int timeCost;
 	public int distanceCost;
 	public int interestCost;
@@ -69,22 +68,6 @@ public class Route extends LinkedList<Destination> {
 		this.distanceHeuristic = distance;
 		// assuming an average of 40 miles per hour.
 		this.timeHeuristic = distance / 40;
-	}
-
-	/**
-	 * Removes the heuristic cost stored within this route's cost fields. Does
-	 * the exact opposite of what addHeuristicCost(Destination end) does.
-	 * 
-	 * @param end
-	 *            - goal destination of this Route
-	 */
-	public void removeHeuristicCost(Destination end) {
-		System.out.println("this method is used, removeHeuristicCost()");
-		int distance = (int) this.getLast().coordinate
-				.straightLineDistance(end.coordinate);
-		this.distanceHeuristic -= distance;
-		// assuming an average of 40 miles per hour.
-		this.timeHeuristic -= distance / 40;
 	}
 
 	/**
@@ -160,8 +143,8 @@ public class Route extends LinkedList<Destination> {
 			return 0;
 		if (this.timeCost + this.timeHeuristic < route.timeCost
 				+ route.timeHeuristic)
-			return -1;
-		return 1;
+			return 1;
+		return -1;
 	}
 
 	/**
@@ -195,7 +178,6 @@ public class Route extends LinkedList<Destination> {
 		String retString = "";
 		int i = 1;
 		for (Destination d : this) {
-			// System.out.println(d.name);
 			retString += "" + i + ". " + d.toString() + "\n";
 			i++;
 		}

@@ -72,7 +72,9 @@ public class Destination {
 	}
 	
 	/**
-	 * Returns the name of this destination
+	 * Returns a String of this Destination name.
+	 * 
+	 * @return this destination's name
 	 */
 	public String toString(){
 		return this.name;
