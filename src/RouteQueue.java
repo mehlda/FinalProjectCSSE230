@@ -29,8 +29,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	public RouteQueue(Destination start, Destination end,
-			Destination[] waypoints, Cost costFunction) {
+	public RouteQueue(Destination start, Destination end, Destination[] waypoints, Cost costFunction) {
 		this.maxDestinations = Integer.MAX_VALUE;
 		this.start = start;
 		this.end = end;
@@ -57,8 +56,8 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	public RouteQueue(Destination start, Destination end,
-			Destination[] waypoints, Cost costFunction, int maxDestinations) {
+	public RouteQueue(Destination start, Destination end, Destination[] waypoints, Cost costFunction,
+			int maxDestinations) {
 		this.maxDestinations = maxDestinations;
 		this.start = start;
 		this.end = end;
@@ -80,9 +79,9 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		while (!this.isEmpty()
-				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)
-				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1) || this.waypoints == null)) {
+		while (!this.isEmpty() && !this.get(0).isCompleteRoute(this.start.name, this.end.name)
+				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1)
+						|| this.waypoints == null)) {
 			buildNextWaypoint(this.nextWaypoint());
 		}
 		/* finished, the top element is a complete route. */
@@ -121,8 +120,7 @@ public class RouteQueue extends ArrayList<Route> {
 					continue;
 				clone.add(connection.secondLocation);
 			} else {
-				if (clone.contains(connection.firstLocation)
-						&& this.waypoints == null)
+				if (clone.contains(connection.firstLocation) && this.waypoints == null)
 					continue;
 				clone.add(connection.firstLocation);
 			}
@@ -147,8 +145,8 @@ public class RouteQueue extends ArrayList<Route> {
 	}
 
 	/**
-	 * Adds Route object into PriorityQueue.
-	 * Route with shortest cost percolates to top.
+	 * Adds Route object into PriorityQueue. Route with shortest cost percolates
+	 * to top.
 	 * 
 	 * @param route
 	 *            - new route object to add
@@ -197,8 +195,8 @@ public class RouteQueue extends ArrayList<Route> {
 	}
 
 	/**
-	 * Finds the top element in the PriorityQueue
-	 * which is at index 0. Does not remove any objects.
+	 * Finds the top element in the PriorityQueue which is at index 0. Does not
+	 * remove any objects.
 	 * 
 	 * @return top Route object in PriorityQueue
 	 */
@@ -219,9 +217,11 @@ public class RouteQueue extends ArrayList<Route> {
 			return null;
 		Route route = this.peek();
 		this.remove(route);
-		for (Destination d : this.waypoints) {
-			if (!route.contains(d))
-				return poll();
+		if (this.waypoints != null) {
+			for (Destination d : this.waypoints) {
+				if (!route.contains(d))
+					return poll();
+			}
 		}
 		if (!route.getLast().name.equals(this.end.name))
 			return poll();
@@ -272,8 +272,7 @@ public class RouteQueue extends ArrayList<Route> {
 
 	/**
 	 * Returns the smallest child's index of the specified Route by the given
-	 * index.
-	 * Returns -1 if there are no children to the parent element.
+	 * index. Returns -1 if there are no children to the parent element.
 	 * 
 	 * @param index
 	 *            - index of the parent Route to compare the smallest children
@@ -281,10 +280,8 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @return index of the smallest child or -1 if there are no children.
 	 */
 	private int smallestChild(int index) {
-		Route leftChild = (index * 2 + 1) < super.size() ? super
-				.get(index * 2 + 1) : null;
-		Route rightChild = (index * 2 + 2) < super.size() ? super
-				.get(index * 2 + 2) : null;
+		Route leftChild = (index * 2 + 1) < super.size() ? super.get(index * 2 + 1) : null;
+		Route rightChild = (index * 2 + 2) < super.size() ? super.get(index * 2 + 2) : null;
 		if (rightChild == null) {
 			if (leftChild != null)
 				return index * 2 + 1;
