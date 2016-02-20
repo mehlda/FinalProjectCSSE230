@@ -175,7 +175,7 @@ public class Graph {
 	 *            - names of all the waypoint Destinations in order
 	 * @return a RouteQueue object already built with the best Route on top
 	 */
-	public RouteQueue getRouteQueue(String start, String end, String[] waypoints, boolean useTime) {
+	public RouteQueue getRouteQueue(String start, String end, String[] waypoints, byte costFunction) {
 		Destination[] midpoints = null;
 		if (waypoints != null) {
 			midpoints = new Destination[waypoints.length];
@@ -183,7 +183,7 @@ public class Graph {
 				midpoints[i] = this.find(waypoints[i]);
 			}
 		}
-		return new RouteQueue(this.find(start), this.find(end), midpoints, useTime);
+		return new RouteQueue(this.find(start), this.find(end), midpoints, costFunction);
 	}
 
 	/**
