@@ -23,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-//import com.teamdev.jxbrowser.Browser;import com.teamdev.jxbrowser.BrowserFactory;import com.teamdev.jxbrowser.BrowserType;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -99,7 +98,6 @@ public class MapFrame extends JFrame {
 	 * @throws Exception
 	 *             when file is not able to be decoded for any reason
 	 */
-	@SuppressWarnings("unused")
 	private static Graph read(String filename) throws Exception {
 		XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(filename)));
 		Graph retGraph = (Graph) decoder.readObject();
@@ -238,7 +236,7 @@ public class MapFrame extends JFrame {
 			// a group of JMenuItems
 			menuItem = new JMenuItem("Print Route Q", KeyEvent.VK_I);
 			menuItem.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub.
@@ -370,6 +368,7 @@ public class MapFrame extends JFrame {
 		private JPanel userInputPanel = new JPanel();
 		private JPanel routeInfoPanel = new JPanel();
 		private JPanel routeInstructionPanel = new JPanel();
+		private JPanel interestingDestPanel = new JPanel();
 		private JTextArea routeWords;
 
 		@SuppressWarnings("hiding")
@@ -428,6 +427,20 @@ public class MapFrame extends JFrame {
 			}
 		}
 
+		private class InterestButtonAction implements ActionListener {
+			private Destination d;
+
+			public InterestButtonAction(Destination dest) {
+				this.d = dest;
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MapFrame.this.content.info.displayDestination(this.d);
+				MapFrame.this.validate();
+			}
+		}
+
 		/**
 		 * 
 		 * Initializes the routeInstructionPanel
@@ -475,12 +488,13 @@ public class MapFrame extends JFrame {
 			}
 
 			// TODO need to remove
-//			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
-//					new LinkedList<Connection>());
-			//Route r = new Route(d);
+			// Destination d = new Destination(new Coordinate(0, 0), "Detroit",
+			// "123 Detroit Ave", 2, image,
+			// new LinkedList<Connection>());
+			// Route r = new Route(d);
 			Route r2 = new Route();
 			Route r3 = new Route();
-			//buildAndAddButton(r, 1);
+			// buildAndAddButton(r, 1);
 			buildAndAddButton(r2, 2);
 			buildAndAddButton(r3, 3);
 		}
@@ -574,16 +588,20 @@ public class MapFrame extends JFrame {
 			});
 			final JRadioButton distance = new JRadioButton("Shortest Distance", true);
 			final JRadioButton time = new JRadioButton("Fastest Time");
-			final ButtonGroup timeOrDistance = new ButtonGroup();
-			timeOrDistance.add(distance);
-			timeOrDistance.add(time);
+			final JRadioButton interest = new JRadioButton("Interest");
+			final ButtonGroup timeOrDistanceOrInterest = new ButtonGroup();
+			timeOrDistanceOrInterest.add(distance);
+			timeOrDistanceOrInterest.add(time);
+			timeOrDistanceOrInterest.add(interest);
+
 			final JTextField destination = new JTextField();
 			startTripButton.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+
 					TripPlanner.this.routeInfoPanel.removeAll();
+					TripPlanner.this.remove(TripPlanner.this.interestingDestPanel);
 					// TripPlanner.this.setupRouteInfoPanel(); // Remove this
 					// line
 					// when other stuff
@@ -591,14 +609,14 @@ public class MapFrame extends JFrame {
 					// TODO uncomment below for actual implementation
 					if (!start.getText().equals("") && !destination.getText().equals("")) {
 						if (!waypoints.getText().equals(defaultWaypoints)) {
-							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(),
-									destination.getText(), waypoints.getText().split(":"), time.isSelected());
-							TripPlanner.this.getRoutesAndPlaceButtons(rq);
+							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
+									waypoints.getText().split(":"), time.isSelected());
+							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
 						} else {
 							// String[] emptyArray = {};
-							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(),
-									destination.getText(), null, time.isSelected());
-							TripPlanner.this.getRoutesAndPlaceButtons(rq);
+							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
+									null, time.isSelected());
+							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
 						}
 					}
 					MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find(destination.getText()));
@@ -620,9 +638,51 @@ public class MapFrame extends JFrame {
 			this.userInputPanel.add(new JLabel(""));
 			this.userInputPanel.add(distance);
 			this.userInputPanel.add(time);
+			this.userInputPanel.add(interest);
+			final JTextField maxWaypoints = new JTextField();
+			maxWaypoints.setText("Max Waypoints");
+			maxWaypoints.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// none
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// none
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub.
+					if (maxWaypoints.getText().equals("")) {
+						maxWaypoints.setText("Max Waypoints");
+					}
+
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					if (maxWaypoints.getText().equals("Max Waypoints")) {
+						maxWaypoints.setText("");
+					}
+
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub.
+
+				}
+			});
+			this.userInputPanel.add(maxWaypoints);
 			this.userInputPanel.add(startTripButton);
 			JButton clear = new JButton("Clear");
 			this.userInputPanel.add(clear);
+			this.userInputPanel.add(new JLabel(""));
+			this.userInputPanel.add(new JLabel(""));
+			final JTextField minInterestRating = new JTextField("Minimum Interest");
 			clear.addActionListener(new ActionListener() {
 
 				@Override
@@ -630,10 +690,88 @@ public class MapFrame extends JFrame {
 					start.setText("");
 					waypoints.setText(defaultWaypoints);
 					destination.setText("");
+					maxWaypoints.setText("Max Waypoints");
 				}
 			});
-			this.userInputPanel.add(new JLabel(""));
-			this.userInputPanel.add(new JLabel(""));
+			minInterestRating.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// none
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// none
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					if (minInterestRating.getText().equals(""))
+						minInterestRating.setText("Minimum Interest");
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					if (minInterestRating.getText().equals("Minimum Interest"))
+						minInterestRating.setText("");
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// none
+				}
+			});
+			final JButton interestButton = new JButton("Search By Interest");
+			interestButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int minInterest = 0;
+					try {
+						minInterest = Integer.parseInt(minInterestRating.getText());
+					} catch (Exception excp) {
+						return;
+					}
+					LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
+					for (int k = dest.size() - 1; k > -1; k--) {
+						if (dest.get(k).rating < minInterest) {
+							dest.remove(k);
+						}
+					}
+					LinkedList<Destination> mostInteresting = new LinkedList<Destination>();
+					int finishedSize = dest.size();
+					while (mostInteresting.size() < finishedSize) {
+						Destination bestSoFar = dest.get(dest.size() - 1);
+						int bestRatingSoFar = bestSoFar.rating;
+						for (int j = dest.size() - 2; j > -1; j--) {
+							Destination underTest = dest.get(j);
+							if (underTest.rating > bestRatingSoFar) {
+								bestRatingSoFar = underTest.rating;
+								bestSoFar = underTest;
+							}
+						}
+						dest.remove(bestSoFar);
+						mostInteresting.add(bestSoFar);
+
+					}
+					for (int l = 0; l < mostInteresting.size(); l++)
+						System.out.println("" + mostInteresting.get(l).toString() + "" + mostInteresting.get(l).rating);
+					TripPlanner.this.interestingDestPanel.removeAll();
+					TripPlanner.this.interestingDestPanel.setLayout(new GridLayout(0, 1));
+					for (int b = 0; b < mostInteresting.size(); b++) {
+						JButton button = new JButton(mostInteresting.get(b).name);
+						button.addActionListener(new InterestButtonAction(mostInteresting.get(b)));
+						TripPlanner.this.interestingDestPanel.add(button);
+					}
+					TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
+					TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
+					TripPlanner.this.add(TripPlanner.this.interestingDestPanel);
+					TripPlanner.this.validate();
+				}
+			});
+			this.userInputPanel.add(minInterestRating);
+			this.userInputPanel.add(interestButton);
 			this.userInputPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
 			this.userInputPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
 
@@ -755,13 +893,15 @@ public class MapFrame extends JFrame {
 				exception.printStackTrace();
 			}
 			this.jfx = new JFXPanel();
-//			Destination d = new Destination(new Coordinate(0, 0), "Detroit", "123 Detroit Ave", 2, image,
-//					new LinkedList<Connection>());
+			// Destination d = new Destination(new Coordinate(0, 0), "Detroit",
+			// "123 Detroit Ave", 2, image,
+			// new LinkedList<Connection>());
 			Platform.runLater(() -> {
 
 				this.browser = new WebView();
 				this.jfx.setScene(new Scene(this.browser));
 				this.browser.getEngine().load("https://en.wikipedia.org/wiki/");
+				this.jfx.validate();
 
 			});
 
@@ -811,18 +951,19 @@ public class MapFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
-					
-					//InformationComponent.this.jfx = new JFXPanel();
-					//InformationComponent.this.browser.
+
+					// InformationComponent.this.jfx = new JFXPanel();
+					// InformationComponent.this.browser.
 					Platform.runLater(() -> {
 
-						
-//						InformationComponent.this.browser = new WebView();
-//						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
+						// InformationComponent.this.browser = new WebView();
+						// InformationComponent.this.jfx.setScene(new
+						// Scene(InformationComponent.this.browser));
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
+						InformationComponent.this.jfx.validate();
 
 					});
-					InformationComponent.this.jfx.validate();
+
 					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
@@ -833,12 +974,9 @@ public class MapFrame extends JFrame {
 
 			this.add(wiki, BorderLayout.SOUTH);
 
-			// this.add(this.jfx,BorderLayout.CENTER);
-
-			// this.add(back);
-
 			this.validate();
 
 		}
+
 	}
 }
