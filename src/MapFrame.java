@@ -534,7 +534,8 @@ public class MapFrame extends JFrame {
 			String routeLabel = "<h1>Route " + routeNumber + "</h1>";
 			String routeDistance = "<p>Distance: " + r.distanceCost + "</p>";
 			String routeTime = "<p>Time: " + r.timeCost + "</p>";
-			String buttonText = formatting + routeLabel + routeDistance + routeTime;
+			String routeInterest = "<p>Interest: " + r.interestCost + "</p>";
+			String buttonText = formatting + routeLabel + routeDistance + routeTime + routeInterest;
 			JButton button = new JButton(buttonText);
 			button.addActionListener(new RouteButtonAction(r));
 			this.routeInfoPanel.add(button);
