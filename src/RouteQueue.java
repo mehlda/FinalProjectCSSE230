@@ -36,7 +36,6 @@ public class RouteQueue extends ArrayList<Route> {
 			firstRoute.addHeuristicCost(this.waypoints[0]);
 		this.add(firstRoute);
 		this.buildQueue();
-		System.out.println(this.toArray());
 	}
 
 	/**
@@ -45,14 +44,11 @@ public class RouteQueue extends ArrayList<Route> {
 	 * to the final goal Destination in the smallest specified cost.
 	 */
 	private void buildQueue() {
-		while (!this.isEmpty()
-				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
-			if ((this.waypoints != null
-					&& this.get(0).waypointsReached != this.waypoints.length + 1) || this.waypoints == null) {
-				System.out.println("last: " + this.get(0).getLast().name
-						+ " next waypoint: " + this.nextWaypoint().name);
-				buildNextWaypoint(this.nextWaypoint());
-			} else return;
+		while (!this.isEmpty() && !this.get(0).isCompleteRoute(this.start.name, this.end.name)
+				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1) || this.waypoints == null)) {
+			// System.out.println("last: " + this.get(0).getLast().name
+			// + " next waypoint: " + this.nextWaypoint().name);
+			buildNextWaypoint(this.nextWaypoint());
 		}
 		/* finished, the top element is a complete route. */
 	}
@@ -86,16 +82,16 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
-				if(clone.contains(connection.secondLocation))
+				if (clone.contains(connection.secondLocation) && this.waypoints == null)
 					continue;
-				System.out.println("added: " + clone.getLast().name + " => "
-						+ connection.secondLocation.name);
+				// System.out.println("added: " + clone.getLast().name + " => "
+				// + connection.secondLocation.name);
 				clone.add(connection.secondLocation);
 			} else {
-				if(clone.contains(connection.firstLocation))
+				if (clone.contains(connection.firstLocation) && this.waypoints == null)
 					continue;
-				System.out.println("added: " + clone.getLast().name + " => "
-						+ connection.firstLocation.name);
+				// System.out.println("added: " + clone.getLast().name + " => "
+				// + connection.firstLocation.name);
 				clone.add(connection.firstLocation);
 			}
 			clone.addHeuristicCost(waypoint);
@@ -190,6 +186,14 @@ public class RouteQueue extends ArrayList<Route> {
 			return null;
 		Route route = this.peek();
 		this.remove(route);
+//		System.out.println("ROUTE GIVEN, reached / waypoints: " + route.waypointsReached + " / " + (this.waypoints.length+1));
+		
+		for(Destination d : this.waypoints) {
+			if(!route.contains(d))
+				return poll();
+		}
+		if(!route.getLast().name.equals(this.end.name))
+			return poll();
 		return route;
 	}
 
@@ -291,16 +295,17 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	public String[] toArray() {
 		String[] output = new String[this.size()];
-		for(int i = 0; i < this.size(); i++) {
+		for (int i = 0; i < this.size(); i++) {
 			output[i] = this.get(0).toString();
 		}
 		return output;
 	}
-	
+
 	public String printStack() {
 		String output = "";
-		for(int i = 0; i < this.size(); i++) {
-			output += this.get(i).toString() + " \n ";
+		for (int i = 0; i < this.size(); i++) {
+			output += "i = " + i + " \n";
+			output += this.get(i).toString() + " \n";
 		}
 		return output;
 	}
