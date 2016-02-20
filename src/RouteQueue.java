@@ -11,7 +11,7 @@ public class RouteQueue extends ArrayList<Route> {
 	public Destination start;
 	public Destination end;
 	public Destination[] waypoints;
-	public boolean useTime; // if true, use time as cost
+	public byte costFunction; // if true, use time as cost
 
 	/**
 	 * Constructs a new RouteQueue object with start, end, and waypoint
@@ -23,11 +23,11 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 */
 	public RouteQueue(Destination start, Destination end,
-			Destination[] waypoints, boolean useTime) {
+			Destination[] waypoints, byte costFunction) {
 		this.start = start;
 		this.end = end;
 		this.waypoints = waypoints;
-		this.useTime = useTime;
+		this.costFunction = costFunction;
 		/* Adds the starting destination with heuristic to first waypoint */
 		Route firstRoute = new Route(this.start);
 		if (this.waypoints == null)
@@ -46,8 +46,6 @@ public class RouteQueue extends ArrayList<Route> {
 	private void buildQueue() {
 		while (!this.isEmpty() && !this.get(0).isCompleteRoute(this.start.name, this.end.name)
 				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1) || this.waypoints == null)) {
-			// System.out.println("last: " + this.get(0).getLast().name
-			// + " next waypoint: " + this.nextWaypoint().name);
 			buildNextWaypoint(this.nextWaypoint());
 		}
 		/* finished, the top element is a complete route. */
@@ -84,14 +82,10 @@ public class RouteQueue extends ArrayList<Route> {
 			if (connection.firstLocation.name.equals(last.name)) {
 				if (clone.contains(connection.secondLocation) && this.waypoints == null)
 					continue;
-				// System.out.println("added: " + clone.getLast().name + " => "
-				// + connection.secondLocation.name);
 				clone.add(connection.secondLocation);
 			} else {
 				if (clone.contains(connection.firstLocation) && this.waypoints == null)
 					continue;
-				// System.out.println("added: " + clone.getLast().name + " => "
-				// + connection.firstLocation.name);
 				clone.add(connection.firstLocation);
 			}
 			clone.addHeuristicCost(waypoint);
@@ -186,8 +180,6 @@ public class RouteQueue extends ArrayList<Route> {
 			return null;
 		Route route = this.peek();
 		this.remove(route);
-//		System.out.println("ROUTE GIVEN, reached / waypoints: " + route.waypointsReached + " / " + (this.waypoints.length+1));
-		
 		for(Destination d : this.waypoints) {
 			if(!route.contains(d))
 				return poll();
@@ -209,20 +201,11 @@ public class RouteQueue extends ArrayList<Route> {
 	private void addBalance(int index) {
 		Route end = super.get(index);
 		Route parent = super.get((index - 1) / 2);
-		if (this.useTime) {
-			if (parent.compareToTime(end) == 1) {
-				super.set((index - 1) / 2, end);
-				super.set(index, parent);
-				this.addBalance((index - 1) / 2);
-			}
-		} else {
-			if (parent.compareToDistance(end) == 1) {
-				super.set((index - 1) / 2, end);
-				super.set(index, parent);
-				this.addBalance((index - 1) / 2);
-			}
+		if(parent.compareBy(this.costFunction, end) == 1) {
+			super.set((index - 1) / 2, end);
+			super.set(index, parent);
+			this.addBalance((index - 1) / 2);
 		}
-
 	}
 
 	/**
@@ -241,18 +224,10 @@ public class RouteQueue extends ArrayList<Route> {
 			return; // specified Route is a leaf
 		Route parent = super.get(index);
 		Route child = super.get(smallest);
-		if (this.useTime) {
-			if (child.compareToTime(parent) < 0) {
-				super.set(index, child);
-				super.set(smallest, parent);
-				this.removeBalance(smallest);
-			}
-		} else {
-			if (child.compareToDistance(parent) < 0) {
-				super.set(index, child);
-				super.set(smallest, parent);
-				this.removeBalance(smallest);
-			}
+		if(child.compareBy(this.costFunction, parent) < 0) {
+			super.set(index, child);
+			super.set(smallest, parent);
+			this.removeBalance(smallest);
 		}
 	}
 
@@ -278,13 +253,9 @@ public class RouteQueue extends ArrayList<Route> {
 		}
 		if (leftChild == null)
 			return index * 2 + 2;
-		if (this.useTime) {
-			if (leftChild.compareToTime(rightChild) <= 0)
-				return index * 2 + 1;
-			return index * 2 + 2;
-		}
-		if (leftChild.compareToDistance(rightChild) <= 0)
+		if(leftChild.compareBy(this.costFunction, rightChild) <= 0) {
 			return index * 2 + 1;
+		}
 		return index * 2 + 2;
 	}
 
