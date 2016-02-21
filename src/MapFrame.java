@@ -3,10 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -16,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -38,7 +34,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -66,8 +61,6 @@ import javafx.scene.web.WebView;
  * @author David Mehl. Created Feb 10, 2016.
  */
 public class MapFrame extends JFrame {
-	private static final int FRAMES_PER_SECOND = 30;
-	private static final int REPAINT_INTERVAL_MS = 1000 / FRAMES_PER_SECOND;
 	private MapPanel content;
 	private Graph graph;
 	private RouteQueue rq;
@@ -80,7 +73,6 @@ public class MapFrame extends JFrame {
 	 *
 	 */
 	public MapFrame() throws Exception {
-		// TODO have graph read xml file
 		this.graph = read("src/assets/graph.xml");
 		this.content = new MapPanel();
 		super.setJMenuBar(this.content.menuBar);
@@ -182,20 +174,20 @@ public class MapFrame extends JFrame {
 			this.validate();
 
 			// This should be only thread in program
-			Runnable repainter = new Runnable() {
-				@Override
-				public void run() {
-					try {
-						while (true) {
-							Thread.sleep(REPAINT_INTERVAL_MS);
-							timePassed();
-						}
-					} catch (InterruptedException e) {
-						// TODO determine if we need handling
-					}
-				}
-			};
-			new Thread(repainter).start();
+			// Runnable repainter = new Runnable() {
+			// @Override
+			// public void run() {
+			// try {
+			// while (true) {
+			// Thread.sleep(REPAINT_INTERVAL_MS);
+			// timePassed();
+			// }
+			// } catch (InterruptedException e) {
+			// // TODO determine if we need handling
+			// }
+			// }
+			// };
+			// new Thread(repainter).start();
 		}
 
 		/**
@@ -256,13 +248,13 @@ public class MapFrame extends JFrame {
 				// Now we perform our rendering
 				String printString = MapPanel.this.tripPlanner.routeWords.getText();
 				String printArray[] = printString.split("\n");
-				g.drawString("Instructions:",100,100);
+				g.drawString("Instructions:", 100, 100);
 				int y = 125;
-				for(String s : printArray){
+				for (String s : printArray) {
 					g.drawString(s, 100, y);
-					y+=25;
+					y += 25;
 				}
-				
+
 				// tell the caller that this page is part
 				// of the printed document
 				return PAGE_EXISTS;
@@ -295,17 +287,15 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub.
 					System.out.println(MapFrame.this.rq.printStack());
 				}
 			});
 			this.menu.add(menuItem);
+			menuItem.setEnabled(false);
 			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_I);
 			menuItem.getAccessibleContext().setAccessibleDescription("Insert a Destination");
 			menuItem.addActionListener(new ActionListener() {
 
-				@SuppressWarnings("unused") // TODO remove this when insert
-											// method is finalized
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
@@ -328,16 +318,30 @@ public class MapFrame extends JFrame {
 								neighbors.add(neighbor);
 							neighbor = JOptionPane.showInputDialog("Enter Neighbors. Type DONE to stop");
 						}
+						String times = "";
+						int[] timesToNeighbors = {};
+						while (!times.equals("DONE")) {
+							if (!times.equals(""))
+								timesToNeighbors[timesToNeighbors.length] = (Integer.parseInt(times));
+							times = JOptionPane.showInputDialog("Enter Time To Neighbors. Type DONE to stop");
+						}
+						String distances = "";
+						int[] distanceToNeighbors = {};
+						while (!distances.equals("DONE")) {
+							if (!distances.equals(""))
+								distanceToNeighbors[distanceToNeighbors.length] = (Integer.parseInt(distances));
+							distances = JOptionPane.showInputDialog("Enter Distance To Neighbors. Type DONE to stop");
+						}
 						double lattitude = Double.parseDouble(JOptionPane.showInputDialog("Enter the Lattitude:"));
 						double longitude = Double.parseDouble(JOptionPane.showInputDialog("Enter the Longitude:"));
-						String picAddr = JOptionPane.showInputDialog("Enter Picture Address: ");
 						int interest = Integer.parseInt(JOptionPane.showInputDialog("Enter Interest Rating: "));
-						System.out.println(name + " " + neighbors);
-						String[] a;
-						// TODO finish this insert method
-						// MapFrame.this.graph.insert(name,new
-						// Coordinate(lattitude,longitude),addr,interest,ImageIO.read(new
-						// File(picAddr)),neighbors.toArray(a),);
+						int mapX = Integer.parseInt(JOptionPane.showInputDialog("Enter X coordinate of map point:"));
+						int mapY = Integer.parseInt(JOptionPane.showInputDialog("Enter Y coordinate of map point:"));
+						Point mapPoint = new Point(mapX, mapY);
+						String[] a = {};
+
+						MapFrame.this.graph.insert(name, new Coordinate(lattitude, longitude), addr, interest,
+								neighbors.toArray(a), timesToNeighbors, distanceToNeighbors, mapPoint);
 					} catch (Exception err) {
 						JOptionPane.showMessageDialog(null, "Failure. Cancelling");
 						return;
@@ -397,18 +401,6 @@ public class MapFrame extends JFrame {
 			this.menu.add(menuItem);
 			this.menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
 			this.menuBar.add(this.menu);
-
-		}
-
-		/**
-		 * 
-		 * TODO Determine if we need this
-		 *
-		 */
-		public void timePassed() {
-			// Update graphics here
-			// System.out.println("time passed");
-			// MapFrame.this.validate();
 
 		}
 	}
@@ -529,35 +521,6 @@ public class MapFrame extends JFrame {
 
 		/**
 		 * 
-		 * TODO This function will be cut down and removed when other classes
-		 * are implemented
-		 *
-		 */
-		private void setupRouteInfoPanel() {
-			GridLayout rifLayout = new GridLayout(0, 1);
-			this.routeInfoPanel.setLayout(rifLayout);
-			this.routeInfoPanel.setVisible(true);
-			BufferedImage image = null;
-			try {
-				image = ImageIO.read(new File("src/assets/detPic.jpg"));
-			} catch (IOException exception) {
-				exception.printStackTrace();
-			}
-
-			// TODO need to remove
-			// Destination d = new Destination(new Coordinate(0, 0), "Detroit",
-			// "123 Detroit Ave", 2, image,
-			// new LinkedList<Connection>());
-			// Route r = new Route(d);
-			Route r2 = new Route();
-			Route r3 = new Route();
-			// buildAndAddButton(r, 1);
-			buildAndAddButton(r2, 2);
-			buildAndAddButton(r3, 3);
-		}
-
-		/**
-		 * 
 		 * Places the route option buttons using the given RouteQueue
 		 *
 		 * @param rQ
@@ -567,7 +530,13 @@ public class MapFrame extends JFrame {
 			GridLayout rifLayout = new GridLayout(0, 1);
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
-			buildAndAddButton(rQ.poll(), 1);
+			try {
+				buildAndAddButton(rQ.poll(), 1);
+			} catch (Exception e) {
+				JLabel notPossible = new JLabel("<html><h1>No Possible Routes</h1><p>Try Different Parameters</p>");
+				notPossible.setEnabled(true);
+				this.routeInfoPanel.add(notPossible);
+			}
 			try {
 				buildAndAddButton(rQ.poll(), 2);
 				buildAndAddButton(rQ.poll(), 3);
@@ -661,11 +630,6 @@ public class MapFrame extends JFrame {
 
 					TripPlanner.this.routeInfoPanel.removeAll();
 					TripPlanner.this.remove(TripPlanner.this.interestingDestPanel);
-					// TripPlanner.this.setupRouteInfoPanel(); // Remove this
-					// line
-					// when other stuff
-					// is implemented
-					// TODO uncomment below for actual implementation
 					RouteQueue.Cost function;
 					if (time.isSelected()) {
 						function = RouteQueue.Cost.TIME;
@@ -743,7 +707,7 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub.
+					// none
 
 				}
 			});
@@ -847,15 +811,6 @@ public class MapFrame extends JFrame {
 			this.userInputPanel.add(new JSeparator(SwingConstants.HORIZONTAL));
 
 		}
-
-		/**
-		 * 
-		 * TODO Determine if this is needed
-		 *
-		 */
-		public void updateDisplay() {
-			// probably not needed
-		}
 	}
 
 	/**
@@ -865,10 +820,6 @@ public class MapFrame extends JFrame {
 	 * @author David Mehl. Created Feb 10, 2016.
 	 */
 	public class MapComponent extends JPanel {
-		private JPanel map;
-		private JPanel destinationLabels;
-		private JScrollPane viewer;
-		private JScrollPane secondViewer;
 		private BufferedImage image;
 		private Route r = null;
 
@@ -884,56 +835,55 @@ public class MapFrame extends JFrame {
 				// nothing
 			}
 			this.setSize(5000, 5000);
-			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth()*2, this.image.getHeight()*2,
-					1.45, 1.45);
+			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth() * 2,
+					this.image.getHeight() * 2, 1.45, 1.45);
 			this.setLayout(null);
-//
-//			JLabel olymp = new JLabel("Olympia");
-//			this.add(olymp);
-//			olymp.setLocation(98,45);
-//			olymp.setSize(50,20);
-//			olymp.setForeground(Color.RED);
-//			olymp.addMouseListener(new MouseListener() {
-//
-//				@Override
-//				public void mouseReleased(MouseEvent e) {
-//					// TODO Auto-generated method stub.
-//
-//				}
-//
-//				@Override
-//				public void mousePressed(MouseEvent e) {
-//					// TODO Auto-generated method stub.
-//
-//				}
-//
-//				@Override
-//				public void mouseExited(MouseEvent e) {
-//					// TODO Auto-generated method stub.
-//
-//				}
-//
-//				@Override
-//				public void mouseEntered(MouseEvent e) {
-//					MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find("Olympia"));
-//					MapFrame.this.content.info.validate();
-//
-//				}
-//
-//				@Override
-//				public void mouseClicked(MouseEvent e) {
-//					// TODO Auto-generated method stub.
-//
-//				}
-//			});
+			//
+			// JLabel olymp = new JLabel("Olympia");
+			// this.add(olymp);
+			// olymp.setLocation(98,45);
+			// olymp.setSize(50,20);
+			// olymp.setForeground(Color.RED);
+			// olymp.addMouseListener(new MouseListener() {
+			//
+			// @Override
+			// public void mouseReleased(MouseEvent e) {
+			// // none
+			//
+			// }
+			//
+			// @Override
+			// public void mousePressed(MouseEvent e) {
+			// // none
+			//
+			// }
+			//
+			// @Override
+			// public void mouseExited(MouseEvent e) {
+			// // none
+			//
+			// }
+			//
+			// @Override
+			// public void mouseEntered(MouseEvent e) {
+			// MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find("Olympia"));
+			// MapFrame.this.content.info.validate();
+			//
+			// }
+			//
+			// @Override
+			// public void mouseClicked(MouseEvent e) {
+			// // none
+			//
+			// }
+			// });
 
 			LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
-			int i = 0;
 			for (Destination d : dest) {
 				JLabel label = new JLabel(d.name);
 				this.add(label);
 				label.setForeground(Color.RED);
-				
+
 				// label.setLocation((Point)d.mapPoint);
 				// label.setSize(20,10);
 				label.addMouseListener(new MouseListener() {
@@ -970,7 +920,6 @@ public class MapFrame extends JFrame {
 				});
 			}
 
-
 			this.repaint();
 
 			// TODO determine if we have time to implement panning properly
@@ -992,9 +941,15 @@ public class MapFrame extends JFrame {
 			// port2.addMouseMotionListener(pl);
 			this.validate();
 		}
-		
-		public void drawRoute(Route r){
-			this.r= r;
+
+		/**
+		 * Draws the route on this JPanel
+		 *
+		 * @param r
+		 *            route to be drawn
+		 */
+		public void drawRoute(Route r) {
+			this.r = r;
 			this.repaint();
 		}
 
@@ -1034,27 +989,16 @@ public class MapFrame extends JFrame {
 			super.paintComponent(g);
 			g.drawImage(this.image, 0, 0, null);
 			Graphics2D g2 = (Graphics2D) g;
-			if(this.r != null){
+			if (this.r != null) {
 				Destination prev = this.r.get(0);
-				for(int i = 1; i < this.r.size(); i++){
+				for (int i = 1; i < this.r.size(); i++) {
 					g2.setColor(Color.CYAN);
-					Line2D.Double line = new Line2D.Double(prev.mapPoint,this.r.get(i).mapPoint);
+					Line2D.Double line = new Line2D.Double(prev.mapPoint, this.r.get(i).mapPoint);
 					prev = this.r.get(i);
 					g2.draw(line);
 				}
 			}
-			//Graphics2D g2 = (Graphics2D) g;
-			//LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
-//			int i = 0;
-//			for (Destination d : dest) {
-//				i += 10;
-//				Ellipse2D.Double destDot = new Ellipse2D.Double(i, i, 50, 50);
-//				g2.setColor(Color.red);
-//				g2.fill(destDot);
-//				g2.draw(destDot);
-//			}
 		}
-
 	}
 
 	/**
@@ -1080,16 +1024,12 @@ public class MapFrame extends JFrame {
 			this.icLayout = new BorderLayout();
 			this.setLayout(this.icLayout);
 			this.setBounds(500, 500, 300, 300);
-			BufferedImage image = null;
 			try {
-				image = ImageIO.read(new File("src/assets/Detroit.jpg"));
+				ImageIO.read(new File("src/assets/Detroit.jpg"));
 			} catch (IOException exception) {
 				exception.printStackTrace();
 			}
 			this.jfx = new JFXPanel();
-			// Destination d = new Destination(new Coordinate(0, 0), "Detroit",
-			// "123 Detroit Ave", 2, image,
-			// new LinkedList<Connection>());
 			Platform.runLater(() -> {
 
 				this.browser = new WebView();
@@ -1099,9 +1039,6 @@ public class MapFrame extends JFrame {
 
 			});
 
-			// TODO remove this sample destination and its display
-
-			// displayDestination(d);
 			this.validate();
 		}
 
@@ -1129,7 +1066,6 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub.
 					InformationComponent.this.remove(InformationComponent.this.jfx);
 					InformationComponent.this.remove(back);
 					InformationComponent.this.add(InformationComponent.this.info, BorderLayout.CENTER);
@@ -1164,13 +1100,8 @@ public class MapFrame extends JFrame {
 					InformationComponent.this.repaint();
 				}
 			});
-			// this.icLayout = new BorderLayout();
-
 			this.add(wiki, BorderLayout.SOUTH);
-
 			this.validate();
-
 		}
-
 	}
 }
