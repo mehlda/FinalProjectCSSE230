@@ -76,7 +76,7 @@ public class Graph {
 			int[] distances, Point2D point) throws ObjectNotFoundException {
 		if (name == null || c == null || address == null || pic == null)
 			return false;
-		Destination location1 = new Destination(c, name, address, rating, pic,
+		Destination location1 = new Destination(c, name, address, rating,
 				null, point);
 		for (int i = 0; i < neighbors.length; i++) {
 			Destination location2 = this.find(neighbors[i]);
