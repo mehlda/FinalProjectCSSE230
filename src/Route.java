@@ -175,10 +175,10 @@ public class Route extends LinkedList<Destination> {
 	 * @return String of the route
 	 */
 	public String toString() {
-		String retString = "";
+		String retString = " ";
 		int i = 1;
 		for (Destination d : this) {
-			retString += "" + i + ". " + d.toString() + "\n";
+			retString += " " + i + ". " + d.toString() + "\n";
 			i++;
 		}
 		return retString;
