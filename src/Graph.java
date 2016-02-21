@@ -12,7 +12,7 @@ public class Graph {
 	/**
 	 * List of destinations
 	 */
-	protected LinkedList<Destination>[] destinations;
+	public LinkedList<Destination>[] destinations;
 
 	/**
 	 * Constructs a new Graph object

@@ -3,14 +3,14 @@ Albany:Concord:Boston
 158:117:180
 186:109:168
 Pierre:44.368,-100.3364:South Dakota:2:553,230
-Cheyenne:Bismark:Saint Paul:Des Moines:Lincoln:Helena
+Cheyenne:Bismarck:Saint Paul:Des Moines:Lincoln:Helena
 422:210:399:503:454:700
 407:204:412:433:394:657
 Helena:46.5958,-112.0270:Montana:3:318,107
-Boise:Cheyenne:Pierre:Bismark
+Boise:Cheyenne:Pierre:Bismarck
 490:691:701:612
 454:605:662:568
-Bismark:46.8133,-100.7790:North Dakota:4:553,146
+Bismarck:46.8133,-100.7790:North Dakota:4:553,146
 Saint Paul:Pierre:Helena
 438:210:612
 378:204:568
@@ -87,7 +87,7 @@ Lansing:Indianapolis:Frankfort:Charleston:Harrisburg
 256:176:186:163:368
 242:159:181:158:340
 Saint Paul:44.9442,-93.0936:Minnesota:23:733,218
-Madison:Des Moines:Pierre:Bismark
+Madison:Des Moines:Pierre:Bismarck
 263:249:399:438
 237:219:412:378
 Salt Lake City:40.7500,-111.8833:Utah:24:279,309

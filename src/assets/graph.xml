@@ -8107,7 +8107,7 @@
                                                                                                                             <string>name</string>
                                                                                                                             <void method="set">
                                                                                                                              <object idref="Destination47"/>
-                                                                                                                             <string>Bismark</string>
+                                                                                                                             <string>Bismarck</string>
                                                                                                                             </void>
                                                                                                                            </void>
                                                                                                                            <void class="Destination" method="getField">

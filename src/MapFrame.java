@@ -83,6 +83,7 @@ public class MapFrame extends JFrame {
 			if (l == null)
 				continue;
 			for (Destination d : l) {
+				System.out.println(d.name);
 				d.picture = ImageIO.read(new File("src/assets/" + d.name + ".jpg"));
 			}
 		}
