@@ -1,60 +1,195 @@
-Springfield:39.6983,-89.6197:Illinois:67
-Detroit:Montgomery:Olympia:Denver:Raleigh:Lincoln
-456:653:2114:911:838:433
-408:571:1860:782:766:395
-Detroit:42.358459,-83.064848:Michigan:50
-Montgomery:Springfield:Denver:Olympia:Austin
-815:456:1286:2391:1382
-732:408:1095:2100:1209
-Montgomery:32.366691,-86.317481:Alabama:35
-Detroit:Springfield:Tallahassee:Raleigh
-815:653:210:591
-732:571:222:511
-Olympia:47.037874,-122.900695:Washington:70
-Springfield:Denver:Detroit:Sacramento:Salem
-2114:1370:2391:693:160
-1860:1225:2100:620:153
-Denver:39.7392,-104.9903:Colorado:71
-Olympia:Detroit:Springfield:Austin:Lincoln:Sacramento:Santa Fe:Salt Lake City
-1370:1286:911:909:489:1186:392:521
-1225:1095:782:829:416:1033:349:467
-Tallahassee:30.4550,-84.2533:Florida:87
-Montgomery:Austin:Raleigh
-210:873:615
-222:781:535
-Austin:30.2500,-97.7500:Texas:76
-Montgomery:Tallahassee:Denver:Lincoln:Sacramento:Phoenix:Santa Fe
-797:873:909:723:1761:1006:688
-699:781:829:728:1560:861:637
-Raleigh:35.7806,-78.6389:North Carolina:73
-Tallahassee:Montgomery:Springfield
-615:591:838
-535:511:766
-Lincoln:40.8106,-96.6803:Nebraska:32
-Denver:Springfield:Austin:
-489:433:823
-416:395:728
-Sacramento:38.5556,-121.4689:California:86
-Denver:Austin:Olympia:Salem:Phoenix:Carson City
-1186:1761:693:536:758:163
-1033:1560:620:489:690:161
-Salem:44.9308,-123.0289:Oregon:54
-Sacramento:Olympia
-536:160
-489:153
-Phoenix:33.4500,-112.0667:Arizona:28
-Austin:Sacramento:Denver:Santa Fe:Salt Lake City:Carson City
-1006:758:864:480:662:729
-861:690:758:437:597:675
-Santa Fe:35.6627,-105.9644:New Mexico:12
-Phoenix:Denver:Austin:Salt Lake City
-480:392:688:626
-437:349:637:604
-Salt Lake City:40.75,-111.8833:Utah:65
-Denver:Santa Fe:Phoenix:Carson City
-521:626:662:535
-467:604:597:454
-Carson City:39.1608,-119.7539:Nevada:39
-Sacramento:Salt Lake City:Phoenix
-163:535:729
-161:454:675
+Montpelier:44.25,-72.5667:Vermont:1:1213,170
+Albany:Concord:Boston
+158:117:180
+186:109:168
+Pierre:44.368,-100.3364:South Dakota:2:553,230
+Cheyanne:Bismark:Saint Paul:Des Moines:Lincoln:Helena
+422:210:399:503:454:700
+407:204:412:433:394:657
+Helena:46.5958,-112.0270:Montana:3:318,107
+Boise:Cheyanne:Pierre:Bismark
+490:691:701:612
+454:605:662:568
+Bismark:46.8133,-100.7790:North Dakota:4:553,146
+Saint Paul:Pierre:Helena
+438:210:612
+378:204:568
+Madison:43.0667,-89.4000:Wisconsin:5:836,263
+Saint Paul:Des Moines:Springfield:Lansing
+263:291:264:368
+237:268:239:334
+Concord:43.2067,-71.5381:New Hampshire:6:1239,191
+Augusta:Boston:Montpelier
+164:68118
+150:68:107
+Annapolis:38.9729,-76.5012:Maryland:7:1145,355
+Harrisburg:Dover:Richmond:Charleston
+112:64:143:386
+118:76:135:351
+Boise:43.6167,-116.2000:Idaho:8:224,210
+
+Olympia:Salem:Helena:Cheyenne:Salt Lake City:Carson City
+
+535:475:490:736:340:450
+
+502:454:454:645:290:429
+Austin:30.2500,-97.7500:Texas:9:648,677
+Santa Fe:Oklahoma City:Little Rock:Baton Rouge
+687:389:515:435
+646:350:454:391
+Cheyenne:41.1456,-104.8019:Wyoming:10:455,302
+Pierre:Helena:Boise:Salt Lake City:Denver
+422:691:736:439:102
+407:605:645:399:93
+Lincoln:40.8106,-96.6803:Nebraska:11:658,346
+Des Moines:Pierre:Jefferson City:Topeka:Cheyenne:Denver
+186:454:351:166:446:489
+171:194:329:171:390:417
+Boston:42.3601:-71.0589:Massachusetts:12:1247,216
+Concord:Montpelier:Providence:Hartford:Albany
+68:180:51:102:169
+67:168:56:101:164
+Raleigh:35.7806,-78.6389:North Carolina:13:1135,462
+Richmond:Columbia:Atlanta:Nashville
+170:226:407:539
+149:198:360:485
+Denver:39.7392,-104.9903:Colorado:14:439,368
+Santa Fe:Lincoln:Topeka:Salt Lake City: Cheyenne:Oklahoma City
+390:489:540:520:102:679
+347:417:448:483:93:569
+Santa Fe:35.6672,-105.9644:New Mexico:15:416,483
+Austin:Phoenix:Denver:Oklahoma City
+687:480:390:535
+646:454:347:470
+Carson City:39.1608,-119.7539:Nevada:16:119,321
+Sacramento:Salt Lake City:Phoenix:Boise:Salem
+130:535:738:450:518
+159:477:671:429:530
+Des Moines:41.5908,-93.6208:Iowa:17:710,302
+Madison:Saint Paul:Pierre:Springfield:Jefferson City:Lincoln
+291:249:503:337:266:186
+268:219:433:300:265:171
+Nashville:36.1667,-86.7833:Tennessee:18:926,486
+Richmond:Atlanta:Frankfort:Raleigh:Montgomery:Little Rock:Jefferson City:Jackson
+614:248:211:539:281:349:440:415
+534:223:195:485:244:308:388:359
+Springfield:39.6983,-89.61197:Illinois:19:835,354
+Madison:Des Moines:Jefferson City:Frankfort:Indianapolis
+264:337:193:378:207
+239:300:194:339:196
+Jefferson City:38.5767,-92.1736:Missouri:20:766,421
+Des Moines:Springfield:Frankfort:Nashville:Little Rock:Topeka:Lincoln:Oklahoma City
+266:193:444:440:345:221:351:420
+265:194:396:388:350:201:329:379
+Albany:42.6525,-73.7572:New York:21:1186,217
+Hartford:Boston:Trenton:Harrisburg:Montpelier
+112:169:205:293:158
+109:164:193:265:186
+Columbus:39.9833,-82.9833:Ohio:22:997,339
+Lansing:Indianapolis:FrankFort:Charleston:Harrisburg
+256:176:186:163:368
+242:159:181:158:340
+Saint Paul:44.9442,-93.0936:Minnesota:23:733,218
+Madison:Des Moines:Pierre:Bismark
+263:249:399:438
+237:219:412:378
+Salt Lake City:40.7500,-111.8833:Utah:24:279,309
+Cheyenne:Denver:Phoenix:Carson City:Boise
+439:520:662:546:340
+399:483:606:482:290
+Charleston:38.3972,-81.6333:West Virginia:25:1048,398
+Harrisburg:Columbus:Annapolis:Richmond:Frankfort
+366:163:386:317:198
+330:158:351:267:179
+Olympia:47.0425,-122.8931:Washington:26:102,53
+Boise:Salem
+535:160
+502:151
+Augusta:44.3235,-69.7653:Maine:27:1279,129
+Concord
+164
+150
+Oklahoma City:35.4822,-97.5350:28:649,515
+Topeka:Jefferson City:Little Rock:Austin:Santa Fe:Denver
+294:420:339:389:535:679
+257:379:302:350:470:569
+Salem:44.9308,-123.0289:Oregon:29:71,137
+Olympia:Boise:Carson City:Sacramento
+160:475:518:536
+151:454:531:507
+Phoenix:33.4500,-112.0667:Arizona:30:271,534
+Sacramento:Carson City:Salt Lake City:Santa Fe
+755:738:662:480
+636:671:602:454
+Topeka:39.0558,-95.6894:Kansas:31:677,406
+Jefferson City:Oklahoma City:Denver:Lincoln
+221:294:540:166
+201:257:448:171
+Frankfort:38.1970,-84.8630:Kentucky:32:959,422
+Springfield:Indianapolis:Columbus:Charleston:Richmond:Nashville:Jefferson City
+378:165:186:198:515:211:444
+339:156:181:179:457:195:396
+Richmond:37.5333,-77.4667:Virginia:33:1159,406
+Annapolis:Charleston:Frankfort:Nashville:Raleigh
+143:317:515:614:170
+135:267:457:534:149
+Dover:39.1619,-75.5267:Delaware:34:1186,353
+Trenton:Harrisburg:Annapolis
+112:133:64
+111:148:76
+Little Rock:34.7361,-92.3311:Arkansas:35:755,534
+Nashville:Baton Rouge:Austin:Oklahoma City:Jefferson City:Jackson
+349:344:515:339:345:359
+308:361:454:302:350:260
+Providence:41.8236,-72.4222:Rhode Island:36:1252,240
+Boston:Hartford
+51:74
+56:92
+Atlanta:33.7550,-84.3900:Georgia:37:990,552
+Raleigh:Columbia:Tallahassee:Montgomery:Nashville
+407:214:261:161:248
+360:182:256:136:223
+Sacramento:38.5556,-121.4689:California:38:57,320
+Salem:Carson City:Phoenix
+536:130:755
+507:159:636
+Harrisburg:40.2697,-76.8756:Pennsylvania:39:1134,306
+Albany:Trenton:Dover:Annapolis:Charleston:Columbus
+293:127:129:112:366:368
+265:122:147:118:330:340
+Lansing:42.7336,-84.5467:Michigan:40:943,265
+Columbus:Indianapolis:Madison
+256:254:368
+242:226:334
+Montgomery:32.3617,-86.2792:Alabama:41:934,607
+Atlanta:Tallahassee:Nashville:Jackson
+161:210:281:248
+136:208:244:229
+Indianapolis:39.7910,-86.1480:Indiana:42:913,345
+Lansing:Springfield:Frankfort:Columbus
+254:207:165:176
+226:196:156:159
+Baton Rouge:30.4500,-91.1400:Louisiana:43:820,679
+Austin:Little Rock:Jackson
+435:344:172
+391:361:154
+Hartford:41.7627,-72.6743:Connecticut:44:1226,247
+Albany:Providence:Boston
+112:74:102
+109:92:101
+Jackson:32.2989,-90.1847:Mississippi:45:836,607
+Nashville:Montgomery:Baton Rouge:Little Rock
+415:248:172:259
+351:229:154:260
+Tallahassee:30.4550,-84.2533:Florida:46:1015,660
+Atlanta:Montgomery
+261:210
+256:208
+Columbia:34.0298,-80.8966:South Carolina:47:1079,532
+Raleigh:Atlanta
+226:214
+198:182
+Trenton:40.2237,-74.7640:New Jersey:48:1194,299
+Albany:Harrisburg:Dover
+205:127:112
+193:122:111
