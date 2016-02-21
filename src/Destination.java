@@ -22,7 +22,7 @@ public class Destination {
 	 * Constructs a new Destination object with null values.
 	 */
 	public Destination() {
-		this(null, null, null, -1, null, null, null);
+		this(null, null, null, -1, null, null);
 	}
 
 	/**
@@ -42,12 +42,11 @@ public class Destination {
 	 *            - LinkedList of all neighbor connections of this destination
 	 */
 	public Destination(Coordinate coordinate, String name, String address,
-			int rating, BufferedImage picture, LinkedList<Connection> neighbors, Point2D point) {
+			int rating, LinkedList<Connection> neighbors, Point2D point) {
 		this.coordinate = coordinate;
 		this.name = name;
 		this.address = address;
 		this.rating = rating;
-		this.picture = picture;
 		this.neighbors = neighbors;
 		this.mapPoint = point;
 	}
