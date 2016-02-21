@@ -5,6 +5,9 @@
  *
  */
 public class Coordinate {
+	/**
+	 * Latitude and Longitude coordinates
+	 */
 	public double x, y;
 
 	/**
