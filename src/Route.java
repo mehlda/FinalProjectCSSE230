@@ -13,13 +13,12 @@ public class Route extends LinkedList<Destination> {
 	public int interestCost;
 	public int timeHeuristic;
 	public int distanceHeuristic;
-	public int waypointsReached;
 
 	/**
 	 * Constructs a new Route object of null values
 	 */
 	public Route() {
-		this.timeCost = this.distanceCost = this.waypointsReached = this.distanceHeuristic = this.timeHeuristic = 0;
+		this.timeCost = this.distanceCost = this.distanceHeuristic = this.timeHeuristic = 0;
 	}
 
 	/**
@@ -30,8 +29,32 @@ public class Route extends LinkedList<Destination> {
 	 */
 	public Route(Destination destination) {
 		this.add(destination);
-		this.timeCost = this.distanceCost = this.waypointsReached = this.distanceHeuristic = this.timeHeuristic = 0;
+		this.timeCost = this.distanceCost = this.distanceHeuristic = this.timeHeuristic = 0;
 		// started here, haven't travelled anywhere
+	}
+
+	/**
+	 * Adds on the specified route onto the end of this route.
+	 * Used with waypoints to add the fastest routes in between together.
+	 * 
+	 * @param route
+	 *            - route to add to the end of this route.
+	 */
+	protected Route combineRoute(Route route) {
+		if(route == null) return this;
+		Route output = this;
+		route.remove(0);
+		boolean possible = false;
+		for(Connection c : output.getLast().neighbors) {
+			if(c.firstLocation.name == route.getFirst().name || c.secondLocation.name == route.getFirst().name){
+				possible = true;
+			}
+		}
+		if(!possible) return this;
+		for (Destination d : route) {
+			output.add(d);
+		}
+		return output;
 	}
 
 	/**
@@ -153,9 +176,11 @@ public class Route extends LinkedList<Destination> {
 	 * interest cost is less than, equal to, or greater than the specified
 	 * Route's interest cost.
 	 * 
-	 * @param route - Route to compare interest costs with this Route
+	 * @param route
+	 *            - Route to compare interest costs with this Route
 	 * @return a negative integer, zero, or a positive integer as this Route's
-	 *         interest cost is less than, equal to, or greater than the specified
+	 *         interest cost is less than, equal to, or greater than the
+	 *         specified
 	 *         Route's interest cost.
 	 */
 	private int compareToInterest(Route route) {
