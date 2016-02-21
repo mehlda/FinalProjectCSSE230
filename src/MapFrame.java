@@ -172,22 +172,6 @@ public class MapFrame extends JFrame {
 			this.full.setOneTouchExpandable(true);
 			this.add(this.plannerMap, BorderLayout.CENTER);
 			this.validate();
-
-			// This should be only thread in program
-			// Runnable repainter = new Runnable() {
-			// @Override
-			// public void run() {
-			// try {
-			// while (true) {
-			// Thread.sleep(REPAINT_INTERVAL_MS);
-			// timePassed();
-			// }
-			// } catch (InterruptedException e) {
-			// // TODO determine if we need handling
-			// }
-			// }
-			// };
-			// new Thread(repainter).start();
 		}
 
 		/**
@@ -282,16 +266,21 @@ public class MapFrame extends JFrame {
 			this.menuBar.add(this.menu);
 
 			// a group of JMenuItems
-			menuItem = new JMenuItem("Print Route Q", KeyEvent.VK_I);
+			menuItem = new JMenuItem("Print Route Queue", KeyEvent.VK_I);
 			menuItem.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.out.println(MapFrame.this.rq.printStack());
+					try {
+						System.out.println(MapFrame.this.rq.printStack());
+					} catch (Exception exc) {
+						System.out.println("No RouteQueue Present");
+					}
 				}
 			});
-			this.menu.add(menuItem);
-			menuItem.setEnabled(false);
+			JMenu debug = new JMenu("Debug");
+			this.menu.add(debug);
+			debug.add(menuItem);
 			menuItem = new JMenuItem("Insert Destination", KeyEvent.VK_I);
 			menuItem.getAccessibleContext().setAccessibleDescription("Insert a Destination");
 			menuItem.addActionListener(new ActionListener() {
@@ -690,7 +679,6 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub.
 					if (maxWaypoints.getText().equals("")) {
 						maxWaypoints.setText("Max Waypoints");
 					}
