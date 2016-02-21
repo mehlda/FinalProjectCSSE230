@@ -84,7 +84,6 @@ public class MapFrame extends JFrame {
 			if (l == null)
 				continue;
 			for (Destination d : l) {
-				System.out.println(d.name);
 				d.picture = ImageIO.read(new File("src/assets/" + d.name + ".jpg"));
 			}
 		}
@@ -668,8 +667,43 @@ public class MapFrame extends JFrame {
 						errorMessage.add(new JLabel("<html><p>Could not find Starting Point: " + startDest + "</p>"));
 						errorMessage.add(new JLabel("<html><p>Did you mean: </p>"));
 						LinkedList<Destination> suggStartDests = MapFrame.this.graph.findSuggestions(startDest);
-						for (Destination d : suggStartDests) {
-							errorMessage.add(new JLabel("<html><p>" + "    " + d.name + "</p>"));
+						if (suggStartDests != null) {
+							for (Destination d : suggStartDests) {
+								JLabel label = new JLabel("<html><p>" + "    " + d.name + "</p>");
+								errorMessage.add(label);
+								label.addMouseListener(new MouseListener() {
+
+									@Override
+									public void mouseReleased(MouseEvent arg0) {
+										// none
+
+									}
+
+									@Override
+									public void mousePressed(MouseEvent arg0) {
+										// none
+									}
+
+									@Override
+									public void mouseExited(MouseEvent arg0) {
+										label.setForeground(Color.black);
+
+									}
+
+									@Override
+									public void mouseEntered(MouseEvent arg0) {
+										label.setForeground(Color.RED);
+
+									}
+
+									@Override
+									public void mouseClicked(MouseEvent arg0) {
+										start.setText(d.name);
+									}
+								});
+							}
+						} else {
+							errorMessage.add(new JLabel("No Suggestions"));
 						}
 						errorMessage.add(new JLabel("<html><p></p>"));
 					}
@@ -678,9 +712,55 @@ public class MapFrame extends JFrame {
 							if (MapFrame.this.graph.find(s) == null) {
 								errorMessage.add(new JLabel("<html><p>Could not find Waypoint: " + s + "</p>"));
 								errorMessage.add(new JLabel("<html><p>Did you mean: </p>"));
-								LinkedList<Destination> suggEndDests = MapFrame.this.graph.findSuggestions(s);
-								for (Destination d : suggEndDests) {
-									errorMessage.add(new JLabel("<html><p>" + "    " + d.name + "</p>"));
+								LinkedList<Destination> suggWayDests = MapFrame.this.graph.findSuggestions(s);
+								if (suggWayDests != null) {
+									for (Destination d : suggWayDests) {
+										JLabel label = new JLabel("<html><p>" + "    " + d.name + "</p>");
+										errorMessage.add(label);
+										label.addMouseListener(new MouseListener() {
+
+											@Override
+											public void mouseReleased(MouseEvent arg0) {
+												// none
+											}
+
+											@Override
+											public void mousePressed(MouseEvent arg0) {
+												// none
+											}
+
+											@Override
+											public void mouseExited(MouseEvent arg0) {
+												label.setForeground(Color.black);
+											}
+
+											@Override
+											public void mouseEntered(MouseEvent arg0) {
+												label.setForeground(Color.RED);
+											}
+
+											@Override
+											public void mouseClicked(MouseEvent arg0) {
+												String[] ways = waypoints.getText().split(":");
+												for (int i = 0; i < ways.length; i++) {
+													if (!ways[i].equals(s)) {
+														ways[i] = ways[i];
+													} else {
+														ways[i] = d.name;
+													}
+												}
+												String totalWays = "";
+												for (int j = 0; j < ways.length; j++) {
+													totalWays += ways[j];
+													if (j < ways.length - 1)
+														totalWays += ":";
+												}
+												waypoints.setText(totalWays);
+											}
+										});
+									}
+								} else {
+									errorMessage.add(new JLabel("No Suggestions"));
 								}
 							}
 						}
@@ -695,8 +775,40 @@ public class MapFrame extends JFrame {
 						errorMessage.add(new JLabel("<html><p>Could not find Destination: " + endDest + "</p>"));
 						errorMessage.add(new JLabel("<html><p>Did you mean: </p>"));
 						LinkedList<Destination> suggEndDests = MapFrame.this.graph.findSuggestions(endDest);
-						for (Destination d : suggEndDests) {
-							errorMessage.add(new JLabel("<html><p>" + "    " + d.name + "</p>"));
+						if (suggEndDests != null) {
+							for (Destination d : suggEndDests) {
+								JLabel label = new JLabel("<html><p>" + "    " + d.name + "</p>");
+								errorMessage.add(label);
+								label.addMouseListener(new MouseListener() {
+
+									@Override
+									public void mouseReleased(MouseEvent arg0) {
+										// none
+									}
+
+									@Override
+									public void mousePressed(MouseEvent arg0) {
+										// none
+									}
+
+									@Override
+									public void mouseExited(MouseEvent arg0) {
+										label.setForeground(Color.black);
+									}
+
+									@Override
+									public void mouseEntered(MouseEvent arg0) {
+										label.setForeground(Color.RED);
+									}
+
+									@Override
+									public void mouseClicked(MouseEvent arg0) {
+										destination.setText(d.name);
+									}
+								});
+							}
+						} else {
+							errorMessage.add(new JLabel("No Suggestions"));
 						}
 						errorMessage.add(new JLabel("<html><p></p>"));
 					}
@@ -920,79 +1032,6 @@ public class MapFrame extends JFrame {
 			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth() * 2,
 					this.image.getHeight() * 2, 1.45, 1.45);
 			this.setLayout(null);
-			// this.addMouseListener(new MouseListener() {
-			//
-			// @Override
-			// public void mouseReleased(MouseEvent e) {
-			// // TODO Auto-generated method stub.
-			//
-			// }
-			//
-			// @Override
-			// public void mousePressed(MouseEvent e) {
-			// // TODO Auto-generated method stub.
-			//
-			// }
-			//
-			// @Override
-			// public void mouseExited(MouseEvent e) {
-			// // TODO Auto-generated method stub.
-			//
-			// }
-			//
-			// @Override
-			// public void mouseEntered(MouseEvent e) {
-			// // TODO Auto-generated method stub.
-			//
-			// }
-			//
-			// @Override
-			// public void mouseClicked(MouseEvent e) {
-			// // TODO Auto-generated method stub.
-			// System.out.println(e.getX());
-			// System.out.println(e.getY());
-			//
-			// }
-			// });
-			// TODO remove
-			// JLabel olymp = new JLabel("Olympia");
-			// this.add(olymp);
-			// olymp.setLocation(98,45);
-			// olymp.setSize(50,20);
-			// olymp.setForeground(Color.RED);
-			// olymp.addMouseListener(new MouseListener() {
-			//
-			// @Override
-			// public void mouseReleased(MouseEvent e) {
-			// // none
-			//
-			// }
-			//
-			// @Override
-			// public void mousePressed(MouseEvent e) {
-			// // none
-			//
-			// }
-			//
-			// @Override
-			// public void mouseExited(MouseEvent e) {
-			// // none
-			//
-			// }
-			//
-			// @Override
-			// public void mouseEntered(MouseEvent e) {
-			// MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find("Olympia"));
-			// MapFrame.this.content.info.validate();
-			//
-			// }
-			//
-			// @Override
-			// public void mouseClicked(MouseEvent e) {
-			// // none
-			//
-			// }
-			// });
 
 			LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
 			for (Destination d : dest) {
@@ -1035,26 +1074,7 @@ public class MapFrame extends JFrame {
 					}
 				});
 			}
-
 			this.repaint();
-
-			// TODO determine if we have time to implement panning properly
-			// this.viewer = new JScrollPane(this.map,
-			// ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			// this.secondViewer = new JScrollPane(this.destinationLabels,
-			// ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			//
-			// this.viewer.setPreferredSize(new Dimension(2000, 975));
-			// JViewport port = this.viewer.getViewport();
-			// JViewport port2 = this.secondViewer.getViewport();
-			//
-			// PanListener pl = new PanListener();
-			// port.addMouseListener(pl);
-			// port2.addMouseListener(pl);
-			// port.addMouseMotionListener(pl);
-			// port2.addMouseMotionListener(pl);
 			this.validate();
 		}
 
@@ -1155,7 +1175,6 @@ public class MapFrame extends JFrame {
 				this.jfx.validate();
 
 			});
-
 			this.validate();
 		}
 
@@ -1202,7 +1221,6 @@ public class MapFrame extends JFrame {
 					// InformationComponent.this.jfx = new JFXPanel();
 					// InformationComponent.this.browser.
 					Platform.runLater(() -> {
-
 						// InformationComponent.this.browser = new WebView();
 						// InformationComponent.this.jfx.setScene(new
 						// Scene(InformationComponent.this.browser));
@@ -1210,7 +1228,6 @@ public class MapFrame extends JFrame {
 						InformationComponent.this.jfx.validate();
 
 					});
-
 					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
