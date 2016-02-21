@@ -408,6 +408,7 @@ public class MapFrame extends JFrame {
 		private JPanel userInputPanel = new JPanel();
 		private JPanel routeInfoPanel = new JPanel();
 		private JPanel routeInstructionPanel = new JPanel();
+		private JPanel errorPanel = new JPanel();
 		private JPanel interestingDestPanel = new JPanel();
 		private JTextArea routeWords;
 
@@ -519,7 +520,7 @@ public class MapFrame extends JFrame {
 		 * @param rQ
 		 *            routeQueue to get routes from
 		 */
-		private void getRoutesAndPlaceButtons(RouteQueue rQ) {
+		private boolean getRoutesAndPlaceButtons(RouteQueue rQ) {
 			GridLayout rifLayout = new GridLayout(0, 1);
 			this.routeInfoPanel.setLayout(rifLayout);
 			this.routeInfoPanel.setVisible(true);
@@ -528,7 +529,14 @@ public class MapFrame extends JFrame {
 			} catch (Exception e) {
 				JLabel notPossible = new JLabel("<html><h1>No Possible Routes</h1><p>Try Different Parameters</p>");
 				notPossible.setEnabled(true);
-				this.routeInfoPanel.add(notPossible);
+				TripPlanner.this.errorPanel.removeAll();
+				this.errorPanel.add(notPossible);
+				this.remove(this.routeInfoPanel);
+				this.remove(this.routeInstructionPanel);
+				this.remove(this.interestingDestPanel);
+				this.remove(this.errorPanel);
+				this.add(this.errorPanel);
+				return false;
 			}
 			try {
 				buildAndAddButton(rQ.poll(), 2);
@@ -536,6 +544,7 @@ public class MapFrame extends JFrame {
 			} catch (Exception e) {
 				// do nothing, there's no more routes
 			}
+			return true;
 		}
 
 		/**
@@ -637,21 +646,89 @@ public class MapFrame extends JFrame {
 					} catch (Exception expc) {
 						maxDest = -1;
 					}
-					if (!start.getText().equals("") && !destination.getText().equals("")) {
-						if (!waypoints.getText().equals(defaultWaypoints)) {
-							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
-									waypoints.getText().split(":"), function, maxDest);
-							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
-						} else {
-							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
-									null, function, maxDest);
-							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
+					// Let's see if these are valid inputs
+					String startDest = "";
+					String endDest = "";
+					String[] allWaypoints = { "" };
+					startDest = start.getText();
+					endDest = destination.getText();
+					if (!waypoints.getText().equals(defaultWaypoints) && !waypoints.getText().equals("")) {
+						allWaypoints = waypoints.getText().split(":");
+					}
+					String errorMessage = "";
+					if (startDest.equals("")) {
+						errorMessage += "<p>No Starting Point Entered.</p><p>Everybody's gotta start somewhere in life</p>";
+					} else if (MapFrame.this.graph.find(startDest) == null) {
+						errorMessage += "<p>Could not find Starting Point: " + startDest + "</p>";
+						errorMessage += "<p>Did you mean: </p>";
+						LinkedList<Destination> suggStartDests = MapFrame.this.graph.findSuggestions(startDest);
+						for (Destination d : suggStartDests) {
+							errorMessage += "<p>" + "    " + d.name + "</p>";
+						}
+						errorMessage += "<p></p>";
+					}
+					if (!waypoints.getText().equals(defaultWaypoints) && !waypoints.getText().equals("")) {
+						for (String s : allWaypoints) {
+							if (MapFrame.this.graph.find(s) == null) {
+								errorMessage += "<p>Could not find Waypoint: " + s + "</p>";
+								errorMessage += "<p>Did you mean: </p>";
+								LinkedList<Destination> suggEndDests = MapFrame.this.graph.findSuggestions(s);
+								for (Destination d : suggEndDests) {
+									errorMessage += "<p>" + "    " + d.name + "</p>";
+								}
+							}
 						}
 					}
-					MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find(destination.getText()));
-					TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
-					TripPlanner.this.validate();
+					if (endDest.equals("")) {
+						errorMessage += "<p>No Destination Entered.</p><p>You need to have goals in life,</p><p> and navigation is no exception</p>";
+					} else if (MapFrame.this.graph.find(endDest) == null) {
+						errorMessage += "<p></p>";
+						errorMessage += "<p>Could not find Destination: " + endDest + "</p>";
+						errorMessage += "<p>Did you mean: </p>";
+						LinkedList<Destination> suggEndDests = MapFrame.this.graph.findSuggestions(endDest);
+						for (Destination d : suggEndDests) {
+							errorMessage += "<p>" + "    " + d.name + "</p>";
+						}
+						errorMessage += "<p></p>";
+					}
+					System.out.println(errorMessage);
+					boolean noError = false;
+					if (errorMessage != "") {
+						JLabel notPossible = new JLabel("<html><h1>Uh Oh</h1>" + errorMessage + "</html>");
+						notPossible.setEnabled(true);
+						TripPlanner.this.errorPanel.removeAll();
+						TripPlanner.this.errorPanel.add(notPossible);
+						TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
+						TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
+						TripPlanner.this.remove(TripPlanner.this.interestingDestPanel);
+						TripPlanner.this.remove(TripPlanner.this.errorPanel);
+						TripPlanner.this.add(TripPlanner.this.errorPanel);
+						TripPlanner.this.validate();
+					} else {
+						TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
+						TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
+						if (!waypoints.getText().equals(defaultWaypoints) && !waypoints.getText().equals("")) {
+							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(startDest, endDest, allWaypoints,
+									function, maxDest);
+							noError = TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
+						} else {
+							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(startDest, endDest, null, function,
+									maxDest);
+							noError = TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
+						}
 
+						if (noError) {
+							TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
+							TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
+							TripPlanner.this.remove(TripPlanner.this.interestingDestPanel);
+							TripPlanner.this.remove(TripPlanner.this.errorPanel);
+							MapFrame.this.content.info
+									.displayDestination(MapFrame.this.graph.find(destination.getText()));
+							TripPlanner.this.add(TripPlanner.this.routeInfoPanel);
+							TripPlanner.this.validate();
+						}
+
+					}
 				}
 			});
 
@@ -912,7 +989,6 @@ public class MapFrame extends JFrame {
 
 				label.setLocation(d.mapPoint);
 				label.setSize(80, 35);
-				//label.setFont(new Font("Arial",Font.PLAIN,5));
 				label.addMouseListener(new MouseListener() {
 
 					@Override
