@@ -2,7 +2,6 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -423,6 +422,7 @@ public class MapFrame extends JFrame {
 		public TripPlanner() {
 			super();
 			this.setLayout(this.layout);
+			this.errorPanel.setLayout(new GridLayout(0, 1));
 			setupUserInputPanel();
 			this.add(this.userInputPanel, BorderLayout.NORTH);
 			setupRouteInstructionPanel();
@@ -535,7 +535,10 @@ public class MapFrame extends JFrame {
 				this.remove(this.routeInstructionPanel);
 				this.remove(this.interestingDestPanel);
 				this.remove(this.errorPanel);
-				this.add(this.errorPanel);
+				TripPlanner.this.add(this.errorPanel);
+				this.errorPanel.validate();
+				this.errorPanel.repaint();
+				TripPlanner.this.validate();
 				return false;
 			}
 			try {
@@ -655,55 +658,59 @@ public class MapFrame extends JFrame {
 					if (!waypoints.getText().equals(defaultWaypoints) && !waypoints.getText().equals("")) {
 						allWaypoints = waypoints.getText().split(":");
 					}
-					String errorMessage = "";
+					ArrayList<JLabel> errorMessage = new ArrayList<JLabel>();
 					if (startDest.equals("")) {
-						errorMessage += "<p></p>";
-						errorMessage += "<p>No Starting Point Entered.</p><p>Everybody's gotta start somewhere in life</p>";
-						errorMessage += "<p></p>";
+						errorMessage.add(new JLabel("<html><p></p>"));
+						errorMessage.add(new JLabel(
+								"<html><p>No Starting Point Entered.</p><p>Everybody's gotta start somewhere in life</p>"));
+						errorMessage.add(new JLabel("<html><p></p>"));
 					} else if (MapFrame.this.graph.find(startDest) == null) {
-						errorMessage += "<p>Could not find Starting Point: " + startDest + "</p>";
-						errorMessage += "<p>Did you mean: </p>";
+						errorMessage.add(new JLabel("<html><p>Could not find Starting Point: " + startDest + "</p>"));
+						errorMessage.add(new JLabel("<html><p>Did you mean: </p>"));
 						LinkedList<Destination> suggStartDests = MapFrame.this.graph.findSuggestions(startDest);
 						for (Destination d : suggStartDests) {
-							errorMessage += "<p>" + "    " + d.name + "</p>";
+							errorMessage.add(new JLabel("<html><p>" + "    " + d.name + "</p>"));
 						}
-						errorMessage += "<p></p>";
+						errorMessage.add(new JLabel("<html><p></p>"));
 					}
 					if (!waypoints.getText().equals(defaultWaypoints) && !waypoints.getText().equals("")) {
 						for (String s : allWaypoints) {
 							if (MapFrame.this.graph.find(s) == null) {
-								errorMessage += "<p>Could not find Waypoint: " + s + "</p>";
-								errorMessage += "<p>Did you mean: </p>";
+								errorMessage.add(new JLabel("<html><p>Could not find Waypoint: " + s + "</p>"));
+								errorMessage.add(new JLabel("<html><p>Did you mean: </p>"));
 								LinkedList<Destination> suggEndDests = MapFrame.this.graph.findSuggestions(s);
 								for (Destination d : suggEndDests) {
-									errorMessage += "<p>" + "    " + d.name + "</p>";
+									errorMessage.add(new JLabel("<html><p>" + "    " + d.name + "</p>"));
 								}
 							}
 						}
 					}
 					if (endDest.equals("")) {
-						errorMessage += "<p></p>";
-						errorMessage += "<p>No Destination Entered.</p><p>You need to have goals in life,</p><p> and navigation is no exception</p>";
-						errorMessage += "<p></p>";
+						errorMessage.add(new JLabel("<html><p></p>"));
+						errorMessage.add(new JLabel(
+								"<html><p>No Destination Entered.</p><p>You need to have goals in life,</p><p> and navigation is no exception</p>"));
+						errorMessage.add(new JLabel("<html><p></p>"));
 					} else if (MapFrame.this.graph.find(endDest) == null) {
-						errorMessage += "<p></p>";
-						errorMessage += "<p>Could not find Destination: " + endDest + "</p>";
-						errorMessage += "<p>Did you mean: </p>";
+						errorMessage.add(new JLabel("<html><p></p>"));
+						errorMessage.add(new JLabel("<html><p>Could not find Destination: " + endDest + "</p>"));
+						errorMessage.add(new JLabel("<html><p>Did you mean: </p>"));
 						LinkedList<Destination> suggEndDests = MapFrame.this.graph.findSuggestions(endDest);
 						for (Destination d : suggEndDests) {
-							errorMessage += "<p>" + "    " + d.name + "</p>";
+							errorMessage.add(new JLabel("<html><p>" + "    " + d.name + "</p>"));
 						}
-						errorMessage += "<p></p>";
+						errorMessage.add(new JLabel("<html><p></p>"));
 					}
-					System.out.println(errorMessage);
 					boolean noError = false;
-					if (errorMessage != "") {
-						JLabel notPossible = new JLabel("<html><h1>Uh Oh</h1>" + errorMessage + "</html>");
+					if (!errorMessage.isEmpty()) {
+						JLabel notPossible = new JLabel("<html><h1>Uh Oh</h1></html>");
 						notPossible.setEnabled(true);
 						TripPlanner.this.errorPanel.removeAll();
 						TripPlanner.this.errorPanel.validate();
 						TripPlanner.this.errorPanel.repaint();
 						TripPlanner.this.errorPanel.add(notPossible);
+						for (JLabel l : errorMessage) {
+							TripPlanner.this.errorPanel.add(l);
+						}
 						TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
 						TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
 						TripPlanner.this.remove(TripPlanner.this.interestingDestPanel);
@@ -913,41 +920,41 @@ public class MapFrame extends JFrame {
 			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth() * 2,
 					this.image.getHeight() * 2, 1.45, 1.45);
 			this.setLayout(null);
-			this.addMouseListener(new MouseListener() {
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub.
-					System.out.println(e.getX());
-					System.out.println(e.getY());
-
-				}
-			});
+			// this.addMouseListener(new MouseListener() {
 			//
+			// @Override
+			// public void mouseReleased(MouseEvent e) {
+			// // TODO Auto-generated method stub.
+			//
+			// }
+			//
+			// @Override
+			// public void mousePressed(MouseEvent e) {
+			// // TODO Auto-generated method stub.
+			//
+			// }
+			//
+			// @Override
+			// public void mouseExited(MouseEvent e) {
+			// // TODO Auto-generated method stub.
+			//
+			// }
+			//
+			// @Override
+			// public void mouseEntered(MouseEvent e) {
+			// // TODO Auto-generated method stub.
+			//
+			// }
+			//
+			// @Override
+			// public void mouseClicked(MouseEvent e) {
+			// // TODO Auto-generated method stub.
+			// System.out.println(e.getX());
+			// System.out.println(e.getY());
+			//
+			// }
+			// });
+			// TODO remove
 			// JLabel olymp = new JLabel("Olympia");
 			// this.add(olymp);
 			// olymp.setLocation(98,45);
