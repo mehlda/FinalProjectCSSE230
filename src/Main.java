@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 
 
 /**
- * TODO Put here a description of what this class does.
+ * Launches the application
  *
  * @author David Mehl.
  *         Created Feb 2, 2016.
@@ -15,7 +15,7 @@ public class Main {
 	
 
 	/**
-	 * TODO Put here a description of what this method does.
+	 * Launches the application
 	 *
 	 * @param args
 	 * @throws Exception 
