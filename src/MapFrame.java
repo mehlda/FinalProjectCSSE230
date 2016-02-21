@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -123,6 +126,7 @@ public class MapFrame extends JFrame {
 		private JMenuBar menuBar;
 		private JSplitPane full;
 		private JSplitPane plannerMap;
+		private JScrollPane viewer;
 
 		/**
 		 * 
@@ -135,14 +139,25 @@ public class MapFrame extends JFrame {
 			BorderLayout layout = new BorderLayout(0, 0);
 			setLayout(layout);
 
-			// Create Componenet objects
+			// Create Component objects
 			this.tripPlanner = new TripPlanner();
 			this.map = new MapComponent();
 			this.info = new InformationComponent();
 			buildMenu();
 
+			// create viewer to use for panning
+			this.viewer = new JScrollPane(this.map, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+			this.viewer.setPreferredSize(new Dimension(2000, 975));
+			JViewport port = this.viewer.getViewport();
+
+			PanListener pl = new PanListener();
+			port.addMouseListener(pl);
+			port.addMouseMotionListener(pl);
+
 			// Add components to GUI
-			this.full = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.map, this.info);
+			this.full = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.viewer, this.info);
 			this.plannerMap = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.tripPlanner, this.full);
 			this.plannerMap.setOneTouchExpandable(true);
 			this.plannerMap.setDividerLocation(300);
@@ -180,6 +195,35 @@ public class MapFrame extends JFrame {
 				}
 			};
 			new Thread(repainter).start();
+		}
+
+		/**
+		 * 
+		 * Controls panning of the map. Source:
+		 * http://stackoverflow.com/questions/13341857/how-to-pan-an-image-using
+		 * -your-mouse-in-java-swing
+		 * 
+		 * @author David Mehl. Created Feb 10, 2016.
+		 */
+		private class PanListener extends MouseAdapter {
+			private final Point pp = new Point();
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				JViewport vport = (JViewport) e.getSource();
+				JComponent label = (JComponent) vport.getView();
+				Point cp = e.getPoint();
+				Point vp = vport.getViewPosition();
+				vp.translate(this.pp.x - cp.x, this.pp.y - cp.y);
+				label.scrollRectToVisible(new Rectangle(vp, vport.getSize()));
+				this.pp.setLocation(cp);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				this.pp.setLocation(e.getPoint());
+			}
+
 		}
 
 		/**
@@ -816,7 +860,7 @@ public class MapFrame extends JFrame {
 		private JPanel destinationLabels;
 		private JScrollPane viewer;
 		private JScrollPane secondViewer;
-		private Image image;
+		private BufferedImage image;
 
 		/**
 		 * 
@@ -824,24 +868,133 @@ public class MapFrame extends JFrame {
 		 *
 		 */
 		public MapComponent() {
-			super();
-			this.setPreferredSize(new Dimension(400, 400));
-			this.image = new ImageIcon("src/assets/mapPic.jpg").getImage();
+			try {
+				this.image = ImageIO.read(new File("src/assets/capitalsMap.jpg"));
+			} catch (IOException exception) {
+				// nothing
+			}
+			this.setSize(5000, 5000);
+			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth()*2, this.image.getHeight()*2,
+					1.45, 1.45);
+			this.setLayout(null);
+			// JButton hiButton = new JButton("HI");
+			// this.add(hiButton);
+			// hiButton.setLocation(500, 500);
+			// hiButton.setSize(50, 100);
+//			JLabel olymp = new JLabel("Olympia");
+//			this.add(olymp);
+//			olymp.setLocation(98,45);
+//			olymp.setSize(50,20);
+//			olymp.addMouseListener(new MouseListener() {
+//
+//				@Override
+//				public void mouseReleased(MouseEvent e) {
+//					// TODO Auto-generated method stub.
+//
+//				}
+//
+//				@Override
+//				public void mousePressed(MouseEvent e) {
+//					// TODO Auto-generated method stub.
+//
+//				}
+//
+//				@Override
+//				public void mouseExited(MouseEvent e) {
+//					// TODO Auto-generated method stub.
+//
+//				}
+//
+//				@Override
+//				public void mouseEntered(MouseEvent e) {
+//					MapFrame.this.content.info.displayDestination(MapFrame.this.graph.find("Olympia"));
+//					MapFrame.this.content.info.validate();
+//
+//				}
+//
+//				@Override
+//				public void mouseClicked(MouseEvent e) {
+//					// TODO Auto-generated method stub.
+//
+//				}
+//			});
 
-			// this.add(new JLabel("hi"));
-			// TODO remove this sample image and replace with actual map
+			LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
+			int i = 0;
+			for (Destination d : dest) {
+				JLabel label = new JLabel(d.name);
+				this.add(label);
+				// label.setLocation((Point)d.mapPoint);
+				// label.setSize(20,10);
+				label.addMouseListener(new MouseListener() {
 
-			this.setLayout(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 0;
-			this.add(new JLabel("Hi"), c);
-			c.gridx = 1;
-			c.gridy = 1;
-			this.add(new JLabel("There"), c);
-			c.gridx = 50;
-			c.gridy = 100;
-			this.add(new JLabel("Yo"), c);
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub.
+
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub.
+
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub.
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						MapFrame.this.content.info.displayDestination(d);
+
+					}
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						// TODO Auto-generated method stub.
+
+					}
+				});
+			}
+
+			this.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub.
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub.
+
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub.
+
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub.
+
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println(e.getX());
+					System.out.println(e.getY());
+
+				}
+			});
+
+			this.repaint();
 
 			// TODO determine if we have time to implement panning properly
 			// this.viewer = new JScrollPane(this.map,
@@ -863,39 +1016,51 @@ public class MapFrame extends JFrame {
 			this.validate();
 		}
 
+		/**
+		 * Scales the image, source:
+		 * http://stackoverflow.com/questions/15558202/how-to-resize-image-in-
+		 * java
+		 * 
+		 * @param sbi
+		 *            image to scale
+		 * @param imageType
+		 *            type of image
+		 * @param dWidth
+		 *            width of destination image
+		 * @param dHeight
+		 *            height of destination image
+		 * @param fWidth
+		 *            x-factor for transformation / scaling
+		 * @param fHeight
+		 *            y-factor for transformation / scaling
+		 * @return scaled image
+		 */
+		private BufferedImage scale(BufferedImage sbi, int imageType, int dWidth, int dHeight, double fWidth,
+				double fHeight) {
+			BufferedImage dbi = null;
+			if (sbi != null) {
+				dbi = new BufferedImage(dWidth, dHeight, imageType);
+				Graphics2D g = dbi.createGraphics();
+				AffineTransform at = AffineTransform.getScaleInstance(fWidth, fHeight);
+				g.drawRenderedImage(sbi, at);
+			}
+			return dbi;
+		}
+
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.drawImage(image, 0, 0, null);
-		}
-
-		/**
-		 * 
-		 * Controls panning of the map. Source:
-		 * http://stackoverflow.com/questions/13341857/how-to-pan-an-image-using
-		 * -your-mouse-in-java-swing
-		 * 
-		 * @author David Mehl. Created Feb 10, 2016.
-		 */
-		private class PanListener extends MouseAdapter {
-			private final Point pp = new Point();
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				JViewport vport = (JViewport) e.getSource();
-				JComponent label = (JComponent) vport.getView();
-				Point cp = e.getPoint();
-				Point vp = vport.getViewPosition();
-				vp.translate(this.pp.x - cp.x, this.pp.y - cp.y);
-				label.scrollRectToVisible(new Rectangle(vp, vport.getSize()));
-				this.pp.setLocation(cp);
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				this.pp.setLocation(e.getPoint());
-			}
-
+			g.drawImage(this.image, 0, 0, null);
+			//Graphics2D g2 = (Graphics2D) g;
+			//LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
+//			int i = 0;
+//			for (Destination d : dest) {
+//				i += 10;
+//				Ellipse2D.Double destDot = new Ellipse2D.Double(i, i, 50, 50);
+//				g2.setColor(Color.red);
+//				g2.fill(destDot);
+//				g2.draw(destDot);
+//			}
 		}
 
 	}
