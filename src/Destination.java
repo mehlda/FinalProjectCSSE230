@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ public class Destination {
 	public int rating;
 	public BufferedImage picture;
 	public LinkedList<Connection> neighbors;
-	public Point2D mapPoint;
+	public Point mapPoint;
 
 	/**
 	 * Constructs a new Destination object with null values.
@@ -42,7 +43,7 @@ public class Destination {
 	 *            - LinkedList of all neighbor connections of this destination
 	 */
 	public Destination(Coordinate coordinate, String name, String address,
-			int rating, LinkedList<Connection> neighbors, Point2D point) {
+			int rating, LinkedList<Connection> neighbors, Point point) {
 		this.coordinate = coordinate;
 		this.name = name;
 		this.address = address;

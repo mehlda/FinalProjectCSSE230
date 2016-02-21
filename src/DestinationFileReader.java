@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
@@ -91,6 +92,7 @@ public class DestinationFileReader {
 					count++;
 				}
 				Destination dest = this.makeDestination();
+				System.out.println(dest.name);
 				newgraph.insert(dest);
 				
 				
@@ -147,7 +149,7 @@ public class DestinationFileReader {
 		neighbors[index] = temp;
 		index ++;
 		
-		Point2D point = new Point2D.Double((double) mapx, (double) mapy);
+		Point point = new Point(mapx, mapy);
 		
 		
 		return new Destination(thisspot, name, address, rating, null, point);

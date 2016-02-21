@@ -826,6 +826,40 @@ public class MapFrame extends JFrame {
 			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth() * 2,
 					this.image.getHeight() * 2, 1.45, 1.45);
 			this.setLayout(null);
+			this.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub.
+					
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub.
+					
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub.
+					
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub.
+					
+				}
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub.
+					System.out.println(e.getX());
+					System.out.println(e.getY());
+					
+				}
+			});
 			//
 			// JLabel olymp = new JLabel("Olympia");
 			// this.add(olymp);
@@ -872,8 +906,8 @@ public class MapFrame extends JFrame {
 				this.add(label);
 				label.setForeground(Color.RED);
 
-				// label.setLocation((Point)d.mapPoint);
-				// label.setSize(20,10);
+				 label.setLocation(d.mapPoint);
+				 label.setSize(20,10);
 				label.addMouseListener(new MouseListener() {
 
 					@Override

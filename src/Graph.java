@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
@@ -71,22 +72,19 @@ public class Graph {
 	 * @return - true if insertion was successful
 	 * @throws ObjectNotFoundException
 	 */
-	// Removed BufferedImage pic  ###DAM###
-	public boolean insert(String name, Coordinate c, String address,
-			int rating, String[] neighbors, int[] times,
-			int[] distances, Point2D point) throws ObjectNotFoundException {
-		//removed || pic == null   ###DAM###
-		if (name == null || c == null || address == null )
+	// Removed BufferedImage pic ###DAM###
+	public boolean insert(String name, Coordinate c, String address, int rating, String[] neighbors, int[] times,
+			int[] distances, Point point) throws ObjectNotFoundException {
+		// removed || pic == null ###DAM###
+		if (name == null || c == null || address == null)
 			return false;
-		Destination location1 = new Destination(c, name, address, rating,
-				null, point);
+		Destination location1 = new Destination(c, name, address, rating, null, point);
 		for (int i = 0; i < neighbors.length; i++) {
 			Destination location2 = this.find(neighbors[i]);
 			if (location2 == null)
-				throw new ObjectNotFoundException("Neighbor " + neighbors[i]
-						+ " was not found as a Destination object.");
-			location1.addConnection(new Connection(location1, location2,
-					distances[i], times[i]));
+				throw new ObjectNotFoundException(
+						"Neighbor " + neighbors[i] + " was not found as a Destination object.");
+			location1.addConnection(new Connection(location1, location2, distances[i], times[i]));
 		}
 		return this.insert(location1);
 	}
@@ -103,8 +101,7 @@ public class Graph {
 			this.destinations[this.getHashValue(destination.name)] = new LinkedList<>();
 		}
 		System.out.println("insert graph: " + destination.name);
-		return this.destinations[this.getHashValue(destination.name)]
-				.add(destination);
+		return this.destinations[this.getHashValue(destination.name)].add(destination);
 	}
 
 	/**
@@ -116,8 +113,7 @@ public class Graph {
 	 * @return true if destination object was found and removed
 	 */
 	public boolean remove(Destination destination) {
-		return this.destinations[this.getHashValue(destination.name)]
-				.remove(destination);
+		return this.destinations[this.getHashValue(destination.name)].remove(destination);
 	}
 
 	/**
@@ -132,8 +128,7 @@ public class Graph {
 	public Destination find(String name) {
 		if (this.destinations[this.getHashValue(name)] == null)
 			return null;
-		Iterator<Destination> i = this.destinations[this.getHashValue(name)]
-				.iterator();
+		Iterator<Destination> i = this.destinations[this.getHashValue(name)].iterator();
 		while (i.hasNext()) {
 			Destination d = i.next();
 			if (d.name.equals(name))
@@ -183,8 +178,7 @@ public class Graph {
 	 *            - names of all the waypoint Destinations in order
 	 * @return a RouteQueue object already built with the best Route on top
 	 */
-	public RouteQueue getRouteQueue(String start, String end,
-			String[] waypoints, RouteQueue.Cost costFunction,
+	public RouteQueue getRouteQueue(String start, String end, String[] waypoints, RouteQueue.Cost costFunction,
 			int maxDestinations) {
 		Destination[] midpoints = null;
 		if (waypoints != null) {
@@ -194,10 +188,8 @@ public class Graph {
 			}
 		}
 		if (maxDestinations == -1)
-			return new RouteQueue(this.find(start), this.find(end), midpoints,
-					costFunction);
-		return new RouteQueue(this.find(start), this.find(end), midpoints,
-				costFunction, maxDestinations);
+			return new RouteQueue(this.find(start), this.find(end), midpoints, costFunction);
+		return new RouteQueue(this.find(start), this.find(end), midpoints, costFunction, maxDestinations);
 	}
 
 	/**

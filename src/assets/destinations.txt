@@ -3,11 +3,11 @@ Albany:Concord:Boston
 158:117:180
 186:109:168
 Pierre:44.368,-100.3364:South Dakota:2:553,230
-Cheyanne:Bismark:Saint Paul:Des Moines:Lincoln:Helena
+Cheyenne:Bismark:Saint Paul:Des Moines:Lincoln:Helena
 422:210:399:503:454:700
 407:204:412:433:394:657
 Helena:46.5958,-112.0270:Montana:3:318,107
-Boise:Cheyanne:Pierre:Bismark
+Boise:Cheyenne:Pierre:Bismark
 490:691:701:612
 454:605:662:568
 Bismark:46.8133,-100.7790:North Dakota:4:553,146
@@ -20,18 +20,15 @@ Saint Paul:Des Moines:Springfield:Lansing
 237:268:239:334
 Concord:43.2067,-71.5381:New Hampshire:6:1239,191
 Augusta:Boston:Montpelier
-164:68118
+164:68:118
 150:68:107
 Annapolis:38.9729,-76.5012:Maryland:7:1145,355
 Harrisburg:Dover:Richmond:Charleston
 112:64:143:386
 118:76:135:351
 Boise:43.6167,-116.2000:Idaho:8:224,210
-
 Olympia:Salem:Helena:Cheyenne:Salt Lake City:Carson City
-
 535:475:490:736:340:450
-
 502:454:454:645:290:429
 Austin:30.2500,-97.7500:Texas:9:648,677
 Santa Fe:Oklahoma City:Little Rock:Baton Rouge
@@ -45,7 +42,7 @@ Lincoln:40.8106,-96.6803:Nebraska:11:658,346
 Des Moines:Pierre:Jefferson City:Topeka:Cheyenne:Denver
 186:454:351:166:446:489
 171:194:329:171:390:417
-Boston:42.3601:-71.0589:Massachusetts:12:1247,216
+Boston:42.3601,-71.0589:Massachusetts:12:1247,216
 Concord:Montpelier:Providence:Hartford:Albany
 68:180:51:102:169
 67:168:56:101:164
@@ -54,7 +51,7 @@ Richmond:Columbia:Atlanta:Nashville
 170:226:407:539
 149:198:360:485
 Denver:39.7392,-104.9903:Colorado:14:439,368
-Santa Fe:Lincoln:Topeka:Salt Lake City: Cheyenne:Oklahoma City
+Santa Fe:Lincoln:Topeka:Salt Lake City:Cheyenne:Oklahoma City
 390:489:540:520:102:679
 347:417:448:483:93:569
 Santa Fe:35.6672,-105.9644:New Mexico:15:416,483
@@ -86,7 +83,7 @@ Hartford:Boston:Trenton:Harrisburg:Montpelier
 112:169:205:293:158
 109:164:193:265:186
 Columbus:39.9833,-82.9833:Ohio:22:997,339
-Lansing:Indianapolis:FrankFort:Charleston:Harrisburg
+Lansing:Indianapolis:Frankfort:Charleston:Harrisburg
 256:176:186:163:368
 242:159:181:158:340
 Saint Paul:44.9442,-93.0936:Minnesota:23:733,218
@@ -109,7 +106,7 @@ Augusta:44.3235,-69.7653:Maine:27:1279,129
 Concord
 164
 150
-Oklahoma City:35.4822,-97.5350:28:649,515
+Oklahoma City:35.4822,-97.5350:Oklahoma:28:649,515
 Topeka:Jefferson City:Little Rock:Austin:Santa Fe:Denver
 294:420:339:389:535:679
 257:379:302:350:470:569
