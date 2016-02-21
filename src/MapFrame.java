@@ -1193,9 +1193,11 @@ public class MapFrame extends JFrame {
 			this.removeAll();
 			String name = "<html>" + "<h1>" + d.name + "</h1>";
 			this.info = new JPanel();
-			this.info.setLayout(new GridLayout(10, 1));
+			this.info.setLayout(new GridLayout(0, 1));
 			this.info.add(new JLabel(name));
-			this.info.add(new JLabel(new ImageIcon(d.picture)));
+			JLabel picLabel = new JLabel(new ImageIcon(d.picture));
+			this.info.add(picLabel);
+			picLabel.setPreferredSize(new Dimension(500,500));
 			this.info.add(new JLabel("State: \n" + d.address));
 			this.info.add(new JLabel("Interest Rating: " + d.rating));
 			this.info.setBounds(0, 0, 800, 800);
