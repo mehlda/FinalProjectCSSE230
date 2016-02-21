@@ -167,7 +167,6 @@ public class MapFrame extends JFrame {
 			this.info.setMinimumSize(minimumSize);
 			maximumSize = new Dimension(300, 100000);
 			this.info.setMaximumSize(maximumSize);
-			// this.info.setS
 
 			this.full.setDividerLocation(1150);
 			this.full.setOneTouchExpandable(true);
@@ -386,7 +385,6 @@ public class MapFrame extends JFrame {
 
 				}
 			});
-			// menuItem.setAccelerator();
 			this.menu.add(menuItem);
 			this.menu.getAccessibleContext().setAccessibleDescription("This menu does nothing");
 			this.menuBar.add(this.menu);
@@ -468,6 +466,13 @@ public class MapFrame extends JFrame {
 			}
 		}
 
+		/**
+		 * 
+		 * Displays the destination on the info panel
+		 *
+		 * @author David Mehl.
+		 *         Created Feb 21, 2016.
+		 */
 		private class InterestButtonAction implements ActionListener {
 			private Destination d;
 
