@@ -657,7 +657,9 @@ public class MapFrame extends JFrame {
 					}
 					String errorMessage = "";
 					if (startDest.equals("")) {
+						errorMessage += "<p></p>";
 						errorMessage += "<p>No Starting Point Entered.</p><p>Everybody's gotta start somewhere in life</p>";
+						errorMessage += "<p></p>";
 					} else if (MapFrame.this.graph.find(startDest) == null) {
 						errorMessage += "<p>Could not find Starting Point: " + startDest + "</p>";
 						errorMessage += "<p>Did you mean: </p>";
@@ -680,7 +682,9 @@ public class MapFrame extends JFrame {
 						}
 					}
 					if (endDest.equals("")) {
+						errorMessage += "<p></p>";
 						errorMessage += "<p>No Destination Entered.</p><p>You need to have goals in life,</p><p> and navigation is no exception</p>";
+						errorMessage += "<p></p>";
 					} else if (MapFrame.this.graph.find(endDest) == null) {
 						errorMessage += "<p></p>";
 						errorMessage += "<p>Could not find Destination: " + endDest + "</p>";
@@ -697,6 +701,8 @@ public class MapFrame extends JFrame {
 						JLabel notPossible = new JLabel("<html><h1>Uh Oh</h1>" + errorMessage + "</html>");
 						notPossible.setEnabled(true);
 						TripPlanner.this.errorPanel.removeAll();
+						TripPlanner.this.errorPanel.validate();
+						TripPlanner.this.errorPanel.repaint();
 						TripPlanner.this.errorPanel.add(notPossible);
 						TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
 						TripPlanner.this.remove(TripPlanner.this.routeInstructionPanel);
