@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -255,14 +256,13 @@ public class MapFrame extends JFrame {
 				// Now we perform our rendering
 				String printString = MapPanel.this.tripPlanner.routeWords.getText();
 				String printArray[] = printString.split("\n");
-				int y = 100;
+				g.drawString("Instructions:",100,100);
+				int y = 125;
 				for(String s : printArray){
 					g.drawString(s, 100, y);
 					y+=25;
 				}
 				
-				
-
 				// tell the caller that this page is part
 				// of the printed document
 				return PAGE_EXISTS;
@@ -870,6 +870,7 @@ public class MapFrame extends JFrame {
 		private JScrollPane viewer;
 		private JScrollPane secondViewer;
 		private BufferedImage image;
+		private Route r = null;
 
 		/**
 		 * 
@@ -886,14 +887,12 @@ public class MapFrame extends JFrame {
 			this.image = scale(this.image, BufferedImage.TYPE_INT_RGB, this.image.getWidth()*2, this.image.getHeight()*2,
 					1.45, 1.45);
 			this.setLayout(null);
-			// JButton hiButton = new JButton("HI");
-			// this.add(hiButton);
-			// hiButton.setLocation(500, 500);
-			// hiButton.setSize(50, 100);
+//
 //			JLabel olymp = new JLabel("Olympia");
 //			this.add(olymp);
 //			olymp.setLocation(98,45);
 //			olymp.setSize(50,20);
+//			olymp.setForeground(Color.RED);
 //			olymp.addMouseListener(new MouseListener() {
 //
 //				@Override
@@ -933,25 +932,27 @@ public class MapFrame extends JFrame {
 			for (Destination d : dest) {
 				JLabel label = new JLabel(d.name);
 				this.add(label);
+				label.setForeground(Color.RED);
+				
 				// label.setLocation((Point)d.mapPoint);
 				// label.setSize(20,10);
 				label.addMouseListener(new MouseListener() {
 
 					@Override
 					public void mouseReleased(MouseEvent e) {
-						// TODO Auto-generated method stub.
+						// none
 
 					}
 
 					@Override
 					public void mousePressed(MouseEvent e) {
-						// TODO Auto-generated method stub.
+						// none
 
 					}
 
 					@Override
 					public void mouseExited(MouseEvent e) {
-						// TODO Auto-generated method stub.
+						// none
 
 					}
 
@@ -963,45 +964,12 @@ public class MapFrame extends JFrame {
 
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						// TODO Auto-generated method stub.
+						// none
 
 					}
 				});
 			}
 
-			this.addMouseListener(new MouseListener() {
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub.
-
-				}
-
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println(e.getX());
-					System.out.println(e.getY());
-
-				}
-			});
 
 			this.repaint();
 
@@ -1023,6 +991,11 @@ public class MapFrame extends JFrame {
 			// port.addMouseMotionListener(pl);
 			// port2.addMouseMotionListener(pl);
 			this.validate();
+		}
+		
+		public void drawRoute(Route r){
+			this.r= r;
+			this.repaint();
 		}
 
 		/**
@@ -1060,6 +1033,16 @@ public class MapFrame extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(this.image, 0, 0, null);
+			Graphics2D g2 = (Graphics2D) g;
+			if(this.r != null){
+				Destination prev = this.r.get(0);
+				for(int i = 1; i < this.r.size(); i++){
+					g2.setColor(Color.CYAN);
+					Line2D.Double line = new Line2D.Double(prev.mapPoint,this.r.get(i).mapPoint);
+					prev = this.r.get(i);
+					g2.draw(line);
+				}
+			}
 			//Graphics2D g2 = (Graphics2D) g;
 			//LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
 //			int i = 0;
