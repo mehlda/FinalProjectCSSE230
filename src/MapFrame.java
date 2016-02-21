@@ -353,7 +353,6 @@ public class MapFrame extends JFrame {
 			});
 			this.menu.add(menuItem);
 
-			// TODO work on menus
 			// Build second menu in the menu bar.
 			this.menu = new JMenu("User");
 			this.menu.setMnemonic(KeyEvent.VK_U);
@@ -1040,7 +1039,7 @@ public class MapFrame extends JFrame {
 				label.setForeground(Color.RED);
 
 				label.setLocation(d.mapPoint);
-				label.setSize(80, 35);
+				label.setSize(100, 35);
 				label.addMouseListener(new MouseListener() {
 
 					@Override
@@ -1206,7 +1205,6 @@ public class MapFrame extends JFrame {
 					InformationComponent.this.remove(back);
 					InformationComponent.this.add(InformationComponent.this.info, BorderLayout.CENTER);
 					InformationComponent.this.add(wiki, BorderLayout.SOUTH);
-
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
 				}
@@ -1218,20 +1216,20 @@ public class MapFrame extends JFrame {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
 
-					// InformationComponent.this.jfx = new JFXPanel();
-					// InformationComponent.this.browser.
 					Platform.runLater(() -> {
-						// InformationComponent.this.browser = new WebView();
-						// InformationComponent.this.jfx.setScene(new
-						// Scene(InformationComponent.this.browser));
+						
+						InformationComponent.this.browser = new WebView();
+						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
 						InformationComponent.this.jfx.validate();
+						
 
 					});
 					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
+					
 				}
 			});
 			this.add(wiki, BorderLayout.SOUTH);
