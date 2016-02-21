@@ -195,10 +195,11 @@ public class Graph {
 		}
 		
 		RouteQueue[] waypointQueues = new RouteQueue[waypoints.length + 1];
-		for (int i = 0; i < waypoints.length; i++) {
-			waypointQueues[i] = new RouteQueue(first,
-					this.find(waypoints[i]), costFunction, maxDestinations);
+		waypointQueues[0] = new RouteQueue(first, this.find(waypoints[0]), costFunction, maxDestinations);
+		for (int i = 1; i < waypoints.length; i++) {
+			waypointQueues[i] = new RouteQueue(this.find(waypoints[i-1]), this.find(waypoints[i]), costFunction, maxDestinations);
 		}
+		waypointQueues[waypoints.length] = new RouteQueue(this.find(waypoints[waypoints.length-1]), this.find(end), costFunction, maxDestinations);
 
 		Route[][] waypointRoutes = new Route[waypointQueues.length][2];
 		int index = 0;
@@ -208,7 +209,6 @@ public class Graph {
 			waypointRoutes[index][1] = queue.poll();
 			index++;
 		}
-		
 		Route[] route1 = new Route[2];
 		route1[0] = waypointRoutes[0][0];
 		route1[1] = waypointRoutes[0][1];
@@ -218,7 +218,6 @@ public class Graph {
 			index = 0;
 			for(int i = 0; i < route1.length; i++) {
 				for(int j = 0; j < 2; j++) {
-//					if(route1[i] == null) continue;
 					route2[index] = route1[i].combineRoute(waypointRoutes[s+1][j]);
 					index++;
 				}
@@ -232,46 +231,6 @@ public class Graph {
 				output.add(r);
 		}
 		return output;
-		
-		
-//		Route[] sizeTwo = new Route[2*4];
-//		sizeTwo[0] = route1[0].combineRoute(waypointRoutes[1][0]);
-//		sizeTwo[1] = route1[0].combineRoute(waypointRoutes[1][1]);
-//		
-//		sizeTwo[2] = route1[1].combineRoute(waypointRoutes[1][0]);
-//		sizeTwo[3] = route1[1].combineRoute(waypointRoutes[1][1]);
-//		
-//		
-//		Route[] sizeThree = new Route[4*2];
-//		sizeThree[0] = sizeTwo[0].combineRoute(waypointRoutes[2][0]);
-//		sizeThree[1] = sizeTwo[0].combineRoute(waypointRoutes[2][1]);
-//		
-//		sizeThree[2] = sizeTwo[1].combineRoute(waypointRoutes[2][0]);
-//		sizeThree[3] = sizeTwo[1].combineRoute(waypointRoutes[2][1]);
-//		
-//		sizeThree[4] = sizeTwo[2].combineRoute(waypointRoutes[2][0]);
-//		sizeThree[5] = sizeTwo[2].combineRoute(waypointRoutes[2][1]);
-//		
-//		sizeThree[5] = sizeTwo[3].combineRoute(waypointRoutes[2][0]);
-//		sizeThree[6] = sizeTwo[3].combineRoute(waypointRoutes[2][1]);
-		
-		
-		
-
-		// Destination[] midpoints = null;
-		// if (waypoints != null) {
-		// midpoints = new Destination[waypoints.length];
-		// for (int i = 0; i < waypoints.length; i++) {
-		// midpoints[i] = this.find(waypoints[i]);
-		// }
-		// } else {
-		//
-		// }
-		// if (maxDestinations == -1)
-		// return new RouteQueue(this.find(start), this.find(end), midpoints,
-		// costFunction);
-		// return new RouteQueue(this.find(start), this.find(end), midpoints,
-		// costFunction, maxDestinations);
 	}
 
 	/**
