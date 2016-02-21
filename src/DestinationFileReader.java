@@ -1,15 +1,11 @@
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 
 
@@ -145,12 +141,6 @@ public class DestinationFileReader {
 	private Destination makeDestination() {
 		
 		Coordinate thisspot = new Coordinate(x,y);
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(new File("src/assets/" + name + ".jpg"));
-		} catch (IOException exception) {
-			exception.printStackTrace();
-		}
 		
 		Object[] temp = {this.name, neighborNames, neighborDistCost, neighborTimeCost};
 		
@@ -160,7 +150,7 @@ public class DestinationFileReader {
 		Point2D point = new Point2D.Double((double) mapx, (double) mapy);
 		
 		
-		return new Destination(thisspot, name, address, rating, img, null, point);
+		return new Destination(thisspot, name, address, rating, null, point);
 	}
 	
 	public static void main(String[] args){
