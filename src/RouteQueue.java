@@ -8,13 +8,13 @@ import java.util.Iterator;
  *
  */
 public class RouteQueue extends ArrayList<Route> {
-	public Destination start;
-	public Destination end;
-	public Destination[] waypoints;
-	public Cost costFunction; // if true, use time as cost
-	public int maxDestinations;
+	protected Destination start;
+	protected Destination end;
+	protected Destination[] waypoints;
+	protected Cost costFunction; // if true, use time as cost
+	protected int maxDestinations;
 
-	public enum Cost {
+	protected enum Cost {
 		DISTANCE, TIME, INTEREST
 	}
 
@@ -29,7 +29,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	public RouteQueue(Destination start, Destination end,
+	protected RouteQueue(Destination start, Destination end,
 			Destination[] waypoints, Cost costFunction) {
 		this.maxDestinations = Integer.MAX_VALUE;
 		this.start = start;
@@ -57,7 +57,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	public RouteQueue(Destination start, Destination end,
+	protected RouteQueue(Destination start, Destination end,
 			Destination[] waypoints, Cost costFunction, int maxDestinations) {
 		this.maxDestinations = maxDestinations;
 		this.start = start;
@@ -205,7 +205,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * 
 	 * @return top Route object in PriorityQueue
 	 */
-	public Route peek() {
+	protected Route peek() {
 		if (this.isEmpty())
 			return null;
 		return this.get(0);
@@ -217,7 +217,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * 
 	 * @return Route from top of PriorityQueue
 	 */
-	public Route poll() {
+	protected Route poll() {
 		if (this.isEmpty())
 			return null;
 		Route route = this.peek();
@@ -329,7 +329,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * 
 	 * @return a string of all routes in this Priority Queue.
 	 */
-	public String printStack() {
+	protected String printStack() {
 		String output = "";
 		for (int i = 0; i < this.size(); i++) {
 			output += "i = " + i + " \n";
