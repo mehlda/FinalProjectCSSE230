@@ -1193,7 +1193,7 @@ public class MapFrame extends JFrame {
 			this.info.add(new JLabel(new ImageIcon(d.picture)));
 			this.info.add(new JLabel("State: \n" + d.address));
 			this.info.add(new JLabel("Interest Rating: " + d.rating));
-			this.info.setBounds(0, 0, 300, 300);
+			this.info.setBounds(0, 0, 800, 800);
 			this.add(this.info, BorderLayout.CENTER);
 			JButton wiki = new JButton("Wikipedia");
 			JButton back = new JButton("Back");
@@ -1201,7 +1201,7 @@ public class MapFrame extends JFrame {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					InformationComponent.this.remove(InformationComponent.this.jfx);
+					InformationComponent.this.jfx.setVisible(false);
 					InformationComponent.this.remove(back);
 					InformationComponent.this.add(InformationComponent.this.info, BorderLayout.CENTER);
 					InformationComponent.this.add(wiki, BorderLayout.SOUTH);
@@ -1215,24 +1215,25 @@ public class MapFrame extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					InformationComponent.this.remove(InformationComponent.this.info);
 					InformationComponent.this.remove(wiki);
+					InformationComponent.this.jfx.setVisible(true);
 
 					Platform.runLater(() -> {
-						
+
 						InformationComponent.this.browser = new WebView();
 						InformationComponent.this.jfx.setScene(new Scene(InformationComponent.this.browser));
 						InformationComponent.this.browser.getEngine().load("https://en.wikipedia.org/wiki/" + d.name);
 						InformationComponent.this.jfx.validate();
-						
 
 					});
 					InformationComponent.this.add(InformationComponent.this.jfx, BorderLayout.CENTER);
 					InformationComponent.this.add(back, BorderLayout.SOUTH);
 					InformationComponent.this.validate();
 					InformationComponent.this.repaint();
-					
+
 				}
 			});
 			this.add(wiki, BorderLayout.SOUTH);
+			
 			this.validate();
 		}
 	}
