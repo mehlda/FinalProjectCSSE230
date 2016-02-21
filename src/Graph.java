@@ -74,18 +74,21 @@ public class Graph {
 	 * @throws ObjectNotFoundException
 	 */
 	// Removed BufferedImage pic ###DAM###
-	public boolean insert(String name, Coordinate c, String address, int rating, String[] neighbors, int[] times,
-			int[] distances, Point point) throws ObjectNotFoundException {
+	public boolean insert(String name, Coordinate c, String address,
+			int rating, String[] neighbors, int[] times, int[] distances,
+			Point point) throws ObjectNotFoundException {
 		// removed || pic == null ###DAM###
 		if (name == null || c == null || address == null)
 			return false;
-		Destination location1 = new Destination(c, name, address, rating, null, point);
+		Destination location1 = new Destination(c, name, address, rating, null,
+				point);
 		for (int i = 0; i < neighbors.length; i++) {
 			Destination location2 = this.find(neighbors[i]);
 			if (location2 == null)
-				throw new ObjectNotFoundException(
-						"Neighbor " + neighbors[i] + " was not found as a Destination object.");
-			location1.addConnection(new Connection(location1, location2, distances[i], times[i]));
+				throw new ObjectNotFoundException("Neighbor " + neighbors[i]
+						+ " was not found as a Destination object.");
+			location1.addConnection(new Connection(location1, location2,
+					distances[i], times[i]));
 		}
 		return this.insert(location1);
 	}
@@ -102,7 +105,8 @@ public class Graph {
 			this.destinations[this.getHashValue(destination.name)] = new LinkedList<>();
 		}
 		System.out.println("insert graph: " + destination.name);
-		return this.destinations[this.getHashValue(destination.name)].add(destination);
+		return this.destinations[this.getHashValue(destination.name)]
+				.add(destination);
 	}
 
 	/**
@@ -114,7 +118,8 @@ public class Graph {
 	 * @return true if destination object was found and removed
 	 */
 	public boolean remove(Destination destination) {
-		return this.destinations[this.getHashValue(destination.name)].remove(destination);
+		return this.destinations[this.getHashValue(destination.name)]
+				.remove(destination);
 	}
 
 	/**
@@ -129,7 +134,8 @@ public class Graph {
 	public Destination find(String name) {
 		if (this.destinations[this.getHashValue(name)] == null)
 			return null;
-		Iterator<Destination> i = this.destinations[this.getHashValue(name)].iterator();
+		Iterator<Destination> i = this.destinations[this.getHashValue(name)]
+				.iterator();
 		while (i.hasNext()) {
 			Destination d = i.next();
 			if (d.name.equals(name))
@@ -179,18 +185,93 @@ public class Graph {
 	 *            - names of all the waypoint Destinations in order
 	 * @return a RouteQueue object already built with the best Route on top
 	 */
-	public RouteQueue getRouteQueue(String start, String end, String[] waypoints, RouteQueue.Cost costFunction,
+	public RouteQueue getRouteQueue(String start, String end,
+			String[] waypoints, RouteQueue.Cost costFunction,
 			int maxDestinations) {
-		Destination[] midpoints = null;
-		if (waypoints != null) {
-			midpoints = new Destination[waypoints.length];
-			for (int i = 0; i < waypoints.length; i++) {
-				midpoints[i] = this.find(waypoints[i]);
-			}
+		Destination first = this.find(start);
+		Destination last = this.find(end);
+		if (waypoints == null) {
+			return new RouteQueue(first, last, costFunction, maxDestinations);
 		}
-		if (maxDestinations == -1)
-			return new RouteQueue(this.find(start), this.find(end), midpoints, costFunction);
-		return new RouteQueue(this.find(start), this.find(end), midpoints, costFunction, maxDestinations);
+		
+		RouteQueue[] waypointQueues = new RouteQueue[waypoints.length + 1];
+		for (int i = 0; i < waypoints.length; i++) {
+			waypointQueues[i] = new RouteQueue(first,
+					this.find(waypoints[i]), costFunction, maxDestinations);
+		}
+
+		Route[][] waypointRoutes = new Route[waypointQueues.length][2];
+		int index = 0;
+		for(RouteQueue queue : waypointQueues) {
+			if(queue == null) continue;
+			waypointRoutes[index][0] = queue.poll();
+			waypointRoutes[index][1] = queue.poll();
+			index++;
+		}
+		
+		Route[] route1 = new Route[2];
+		route1[0] = waypointRoutes[0][0];
+		route1[1] = waypointRoutes[0][1];
+		
+		for(int s = 0; s < waypointRoutes.length - 1; s++) {
+			Route[] route2 = new Route[route1.length*2];
+			index = 0;
+			for(int i = 0; i < route1.length; i++) {
+				for(int j = 0; j < 2; j++) {
+//					if(route1[i] == null) continue;
+					route2[index] = route1[i].combineRoute(waypointRoutes[s+1][j]);
+					index++;
+				}
+			}
+			route1 = route2;
+		}
+		
+		RouteQueue output = new RouteQueue(costFunction, first, last, maxDestinations);
+		for(Route r : route1) {
+//			if(r.isCompleteRoute(start, end))
+				output.add(r);
+		}
+		return output;
+		
+		
+//		Route[] sizeTwo = new Route[2*4];
+//		sizeTwo[0] = route1[0].combineRoute(waypointRoutes[1][0]);
+//		sizeTwo[1] = route1[0].combineRoute(waypointRoutes[1][1]);
+//		
+//		sizeTwo[2] = route1[1].combineRoute(waypointRoutes[1][0]);
+//		sizeTwo[3] = route1[1].combineRoute(waypointRoutes[1][1]);
+//		
+//		
+//		Route[] sizeThree = new Route[4*2];
+//		sizeThree[0] = sizeTwo[0].combineRoute(waypointRoutes[2][0]);
+//		sizeThree[1] = sizeTwo[0].combineRoute(waypointRoutes[2][1]);
+//		
+//		sizeThree[2] = sizeTwo[1].combineRoute(waypointRoutes[2][0]);
+//		sizeThree[3] = sizeTwo[1].combineRoute(waypointRoutes[2][1]);
+//		
+//		sizeThree[4] = sizeTwo[2].combineRoute(waypointRoutes[2][0]);
+//		sizeThree[5] = sizeTwo[2].combineRoute(waypointRoutes[2][1]);
+//		
+//		sizeThree[5] = sizeTwo[3].combineRoute(waypointRoutes[2][0]);
+//		sizeThree[6] = sizeTwo[3].combineRoute(waypointRoutes[2][1]);
+		
+		
+		
+
+		// Destination[] midpoints = null;
+		// if (waypoints != null) {
+		// midpoints = new Destination[waypoints.length];
+		// for (int i = 0; i < waypoints.length; i++) {
+		// midpoints[i] = this.find(waypoints[i]);
+		// }
+		// } else {
+		//
+		// }
+		// if (maxDestinations == -1)
+		// return new RouteQueue(this.find(start), this.find(end), midpoints,
+		// costFunction);
+		// return new RouteQueue(this.find(start), this.find(end), midpoints,
+		// costFunction, maxDestinations);
 	}
 
 	/**

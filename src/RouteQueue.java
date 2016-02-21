@@ -10,40 +10,35 @@ import java.util.Iterator;
 public class RouteQueue extends ArrayList<Route> {
 	protected Destination start;
 	protected Destination end;
-	protected Destination[] waypoints;
 	protected Cost costFunction; // if true, use time as cost
 	protected int maxDestinations;
+	private ArrayList<Route> history;
 
 	protected enum Cost {
 		DISTANCE, TIME, INTEREST
 	}
 
 	/**
-	 * Constructs a new RouteQueue object with start, end, and waypoint
-	 * destinations.
+	 * Constructor with no routes on this Priority Queue yet. Used for waypoints
+	 * when adding routes manually.
 	 * 
+	 * @param costFunction
+	 *            - the way the user is searching for the best Route
 	 * @param start
 	 *            - name of starting Destination
 	 * @param end
 	 *            - name of goal, ending Destination
-	 * @param waypoints
-	 *            - Destination array of all waypoints
+	 * @param maxDestinations
+	 *            - maximum number of destinations to travel in the route
 	 */
-	protected RouteQueue(Destination start, Destination end,
-			Destination[] waypoints, Cost costFunction) {
-		this.maxDestinations = Integer.MAX_VALUE;
+	protected RouteQueue(Cost costFunction, Destination start, Destination end,
+			int maxDestinations) {
+		this.maxDestinations = maxDestinations <= 0 ? Integer.MAX_VALUE
+				: maxDestinations;
 		this.start = start;
 		this.end = end;
-		this.waypoints = waypoints;
 		this.costFunction = costFunction;
-		/* Adds the starting destination with heuristic to first waypoint */
-		Route firstRoute = new Route(this.start);
-		if (this.waypoints == null)
-			firstRoute.addHeuristicCost(this.end);
-		else
-			firstRoute.addHeuristicCost(this.waypoints[0]);
-		this.add(firstRoute);
-		this.buildQueue();
+		this.history = new ArrayList<>();
 	}
 
 	/**
@@ -57,19 +52,17 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoints
 	 *            - Destination array of all waypoints
 	 */
-	protected RouteQueue(Destination start, Destination end,
-			Destination[] waypoints, Cost costFunction, int maxDestinations) {
-		this.maxDestinations = maxDestinations;
+	protected RouteQueue(Destination start, Destination end, Cost costFunction,
+			int maxDestinations) {
+		this.maxDestinations = maxDestinations <= 0 ? Integer.MAX_VALUE
+				: maxDestinations;
 		this.start = start;
 		this.end = end;
-		this.waypoints = waypoints;
 		this.costFunction = costFunction;
+		this.history = new ArrayList<>();
 		/* Adds the starting destination with heuristic to first waypoint */
 		Route firstRoute = new Route(this.start);
-		if (this.waypoints == null)
-			firstRoute.addHeuristicCost(this.end);
-		else
-			firstRoute.addHeuristicCost(this.waypoints[0]);
+		firstRoute.addHeuristicCost(this.end);
 		this.add(firstRoute);
 		this.buildQueue();
 	}
@@ -81,9 +74,8 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	private void buildQueue() {
 		while (!this.isEmpty()
-				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)
-				&& ((this.waypoints != null && this.get(0).waypointsReached < this.waypoints.length + 1) || this.waypoints == null)) {
-			buildNextWaypoint(this.nextWaypoint());
+				&& !this.get(0).isCompleteRoute(this.start.name, this.end.name)) {
+			buildNextWaypoint();
 		}
 		/* finished, the top element is a complete route. */
 	}
@@ -106,7 +98,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 * @param waypoint
 	 *            - goal destination to build Routes to
 	 */
-	private void buildNextWaypoint(Destination waypoint) {
+	private void buildNextWaypoint() {
 		Route origin = this.peek();
 		Destination last = origin.getLast();
 		this.remove(origin);
@@ -115,38 +107,22 @@ public class RouteQueue extends ArrayList<Route> {
 			clone.timeCost = origin.timeCost + connection.pathTime;
 			clone.distanceCost = origin.distanceCost + connection.pathDistance;
 			clone.interestCost = origin.interestCost;
-			clone.waypointsReached = origin.waypointsReached;
 
 			if (connection.firstLocation.name.equals(last.name)) {
-				if ((clone.contains(connection.secondLocation) && this.waypoints == null))
+				if (clone.contains(connection.secondLocation))
 					continue;
 				clone.add(connection.secondLocation);
 				clone.interestCost += connection.secondLocation.rating;
 			} else {
-				if (clone.contains(connection.firstLocation)
-						&& this.waypoints == null)
+				if (clone.contains(connection.firstLocation))
 					continue;
 				clone.add(connection.firstLocation);
 				clone.interestCost += connection.firstLocation.rating;
 			}
-			clone.addHeuristicCost(waypoint);
-			if (clone.getLast().name.equals(waypoint.name))
-				clone.waypointsReached++; // waypoint has been reached
+			clone.addHeuristicCost(this.end);
 			if (clone.size() <= this.maxDestinations)
 				this.add(clone);
 		}
-	}
-
-	/**
-	 * Gives the next waypoint that the top Route needs to go to
-	 * 
-	 * @return next waypoint that the top Route needs to go to
-	 */
-	private Destination nextWaypoint() {
-		int waypointIndex = this.get(0).waypointsReached;
-		if (this.waypoints != null && this.waypoints.length > waypointIndex)
-			return this.waypoints[waypointIndex];
-		return this.end;
 	}
 
 	/**
@@ -159,7 +135,7 @@ public class RouteQueue extends ArrayList<Route> {
 	 */
 	public boolean add(Route route) {
 		if (route == null)
-			throw new NullPointerException();
+			return false;
 		super.add(route);
 		this.addBalance(super.size() - 1);
 		return true;
@@ -220,24 +196,22 @@ public class RouteQueue extends ArrayList<Route> {
 	protected Route poll() {
 		if (this.isEmpty())
 			return null;
-		Route route = this.peek();
-		boolean validRoute = false;
-		while (!this.isEmpty() && !validRoute) {
-			validRoute = true;
+		Route route = peek();
+		while(this.history.contains(route)){
+			this.remove(route);
+			route = peek();
+		}
+		if(route.isCompleteRoute(this.start.name, this.end.name)) {
+			this.remove(route);
+			this.history.add(route);
+			return route;
+		}
+		while(!route.isCompleteRoute(this.start.name, this.end.name)){
 			route = this.peek();
 			this.remove(route);
-			if (this.waypoints != null) {
-				for (Destination d : this.waypoints) {
-					if (!route.contains(d)) {
-						System.out.println("almost returned an invalid route!");
-						validRoute = false;
-						break;
-					}
-				}
-			}
-			if (!route.getLast().name.equals(this.end.name))
-				continue;
 		}
+		this.remove(route);
+		this.history.add(route);
 		return route;
 	}
 
