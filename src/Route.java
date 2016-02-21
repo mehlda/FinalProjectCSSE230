@@ -116,10 +116,10 @@ public class Route extends LinkedList<Destination> {
 		if (this.distanceCost + this.distanceHeuristic == route.distanceCost
 				+ route.distanceHeuristic)
 			return 0;
-		if (this.distanceCost + this.distanceHeuristic < route.distanceCost
+		if (this.distanceCost + this.distanceHeuristic > route.distanceCost
 				+ this.distanceHeuristic)
-			return -1;
-		return 1;
+			return 1;
+		return -1;
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class Route extends LinkedList<Destination> {
 		if (this.timeCost + this.timeHeuristic == route.timeCost
 				+ route.timeHeuristic)
 			return 0;
-		if (this.timeCost + this.timeHeuristic < route.timeCost
+		if (this.timeCost + this.timeHeuristic > route.timeCost
 				+ route.timeHeuristic)
 			return 1;
 		return -1;
@@ -164,7 +164,7 @@ public class Route extends LinkedList<Destination> {
 					"Route to compare time with does not exist!");
 		if (this.interestCost == route.interestCost)
 			return 0;
-		if (this.interestCost < route.interestCost)
+		if (this.interestCost > route.interestCost)
 			return -1;
 		return 1;
 	}

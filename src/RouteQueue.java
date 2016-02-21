@@ -221,15 +221,16 @@ public class RouteQueue extends ArrayList<Route> {
 		if (this.isEmpty())
 			return null;
 		Route route = this.peek();
-		boolean flag = true;
-		while (!this.isEmpty() && flag) {
-			flag = false;
+		boolean validRoute = false;
+		while (!this.isEmpty() && !validRoute) {
+			validRoute = true;
 			route = this.peek();
 			this.remove(route);
 			if (this.waypoints != null) {
 				for (Destination d : this.waypoints) {
 					if (!route.contains(d)) {
-						flag = true;
+						System.out.println("almost returned an invalid route!");
+						validRoute = false;
 						break;
 					}
 				}
