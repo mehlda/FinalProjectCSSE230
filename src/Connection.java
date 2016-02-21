@@ -5,9 +5,21 @@
  *
  */
 public class Connection {
+	/**
+	 * First location of this connection
+	 */
 	public Destination firstLocation;
+	/**
+	 * Final location of this connection
+	 */
 	public Destination secondLocation;
+	/**
+	 * Distance of this connection
+	 */
 	public int pathDistance;
+	/**
+	 * Time of this connection
+	 */
 	public int pathTime;
 	
 	/**
