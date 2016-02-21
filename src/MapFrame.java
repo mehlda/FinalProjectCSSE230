@@ -1199,6 +1199,8 @@ public class MapFrame extends JFrame {
 			this.info.add(picLabel);
 			picLabel.setPreferredSize(new Dimension(500,500));
 			this.info.add(new JLabel("State: \n" + d.address));
+			this.info.add(new JLabel("Latitude: " +d.coordinate.x));
+			this.info.add(new JLabel("Longitude: " +d.coordinate.y));
 			this.info.add(new JLabel("Interest Rating: " + d.rating));
 			this.info.setBounds(0, 0, 800, 800);
 			this.add(this.info, BorderLayout.CENTER);
