@@ -2,7 +2,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -31,6 +34,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -630,7 +634,7 @@ public class MapFrame extends JFrame {
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
 						} else {
 							MapFrame.this.rq = MapFrame.this.graph.getRouteQueue(start.getText(), destination.getText(),
-									null, function,maxDest);
+									null, function, maxDest);
 							TripPlanner.this.getRoutesAndPlaceButtons(MapFrame.this.rq);
 						}
 					}
@@ -808,9 +812,11 @@ public class MapFrame extends JFrame {
 	 * @author David Mehl. Created Feb 10, 2016.
 	 */
 	public class MapComponent extends JPanel {
-		private JLabel label;
 		private JPanel map;
+		private JPanel destinationLabels;
 		private JScrollPane viewer;
+		private JScrollPane secondViewer;
+		private Image image;
 
 		/**
 		 * 
@@ -818,32 +824,49 @@ public class MapFrame extends JFrame {
 		 *
 		 */
 		public MapComponent() {
-			this.label = new JLabel();
-			this.map = new JPanel();
-			this.map.setSize(new Dimension(5000, 5000));
+			super();
+			this.setPreferredSize(new Dimension(400, 400));
+			this.image = new ImageIcon("src/assets/mapPic.jpg").getImage();
 
+			// this.add(new JLabel("hi"));
 			// TODO remove this sample image and replace with actual map
-			BufferedImage image = null;
-			try {
-				image = ImageIO.read(new File("src/assets/mapPic.jpg"));
-			} catch (IOException exception) {
-				exception.printStackTrace();
-			}
-			JLabel imageLabel = new JLabel(new ImageIcon(image));
 
-			this.map.add(imageLabel);
+			this.setLayout(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			this.add(new JLabel("Hi"), c);
+			c.gridx = 1;
+			c.gridy = 1;
+			this.add(new JLabel("There"), c);
+			c.gridx = 50;
+			c.gridy = 100;
+			this.add(new JLabel("Yo"), c);
 
-			this.viewer = new JScrollPane(this.map, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			// TODO determine if we have time to implement panning properly
+			// this.viewer = new JScrollPane(this.map,
+			// ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			// this.secondViewer = new JScrollPane(this.destinationLabels,
+			// ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			//
+			// this.viewer.setPreferredSize(new Dimension(2000, 975));
+			// JViewport port = this.viewer.getViewport();
+			// JViewport port2 = this.secondViewer.getViewport();
+			//
+			// PanListener pl = new PanListener();
+			// port.addMouseListener(pl);
+			// port2.addMouseListener(pl);
+			// port.addMouseMotionListener(pl);
+			// port2.addMouseMotionListener(pl);
+			this.validate();
+		}
 
-			this.viewer.setPreferredSize(new Dimension(2000, 975));
-			JViewport port = this.viewer.getViewport();
-
-			this.add(this.viewer);
-			this.label.setVisible(true);
-			PanListener pl = new PanListener();
-			port.addMouseListener(pl);
-			port.addMouseMotionListener(pl);
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(image, 0, 0, null);
 		}
 
 		/**
@@ -936,11 +959,11 @@ public class MapFrame extends JFrame {
 			this.removeAll();
 			String name = "<html>" + "<h1>" + d.name + "</h1>";
 			this.info = new JPanel();
-			this.info.setLayout(new GridLayout(0, 1));
+			this.info.setLayout(new GridLayout(10, 1));
 			this.info.add(new JLabel(name));
 			this.info.add(new JLabel(new ImageIcon(d.picture)));
-			this.info.add(new JLabel(d.address));
-			this.info.add(new JLabel("" + d.rating));
+			this.info.add(new JLabel("State: \n" + d.address));
+			this.info.add(new JLabel("Interest Rating: " + d.rating));
 			this.info.setBounds(0, 0, 300, 300);
 			this.add(this.info, BorderLayout.CENTER);
 			JButton wiki = new JButton("Wikipedia");
