@@ -253,7 +253,15 @@ public class MapFrame extends JFrame {
 				g2d.translate(pf.getImageableX(), pf.getImageableY());
 
 				// Now we perform our rendering
-				g.drawString(MapPanel.this.tripPlanner.routeWords.getText(), 100, 100);
+				String printString = MapPanel.this.tripPlanner.routeWords.getText();
+				String printArray[] = printString.split("\n");
+				int y = 100;
+				for(String s : printArray){
+					g.drawString(s, 100, y);
+					y+=25;
+				}
+				
+				
 
 				// tell the caller that this page is part
 				// of the printed document
@@ -448,6 +456,7 @@ public class MapFrame extends JFrame {
 			JViewport view = (JViewport) textScroll.getComponent(0);
 			JTextArea text = (JTextArea) view.getView();
 			text.setText(r.toString());
+			System.out.println(this.routeWords.getText());
 		}
 
 		/**
