@@ -8,10 +8,10 @@ import java.util.Iterator;
  *
  */
 public class RouteQueue extends ArrayList<Route> {
-	protected Destination start;
-	protected Destination end;
-	protected Cost costFunction; // if true, use time as cost
-	protected int maxDestinations;
+	public Destination start;
+	public Destination end;
+	public Cost costFunction; // if true, use time as cost
+	public int maxDestinations;
 	private ArrayList<Route> history;
 
 	protected enum Cost {
@@ -136,6 +136,8 @@ public class RouteQueue extends ArrayList<Route> {
 	public boolean add(Route route) {
 		if (route == null)
 			return false;
+		if(route.size() > this.maxDestinations)
+			return false;
 		super.add(route);
 		this.addBalance(super.size() - 1);
 		return true;
@@ -201,14 +203,9 @@ public class RouteQueue extends ArrayList<Route> {
 			this.remove(route);
 			route = peek();
 		}
-		if(route.isCompleteRoute(this.start.name, this.end.name)) {
-			this.remove(route);
-			this.history.add(route);
-			return route;
-		}
 		while(!route.isCompleteRoute(this.start.name, this.end.name)){
-			route = this.peek();
 			this.remove(route);
+			route = peek();
 		}
 		this.remove(route);
 		this.history.add(route);

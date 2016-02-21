@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -39,21 +40,29 @@ public class Route extends LinkedList<Destination> {
 	 * 
 	 * @param route
 	 *            - route to add to the end of this route.
+	 * @return new combined Route
 	 */
 	protected Route combineRoute(Route route) {
-		if(route == null) return this;
+		if(route == null || route.size() < 1) return this;
 		Route output = this;
-		route.remove(0);
+		route.removeFirst();
 		boolean possible = false;
 		for(Connection c : output.getLast().neighbors) {
+			if(route.size() < 1) {
+				break;
+			}
 			if(c.firstLocation.name == route.getFirst().name || c.secondLocation.name == route.getFirst().name){
 				possible = true;
 			}
 		}
 		if(!possible) return this;
-		for (Destination d : route) {
-			output.add(d);
+		Iterator<Destination> i = route.iterator();
+		while(i.hasNext()) {
+			output.add(i.next());
 		}
+		output.distanceCost += route.distanceCost;
+		output.timeCost += route.timeCost;
+		output.interestCost += route.interestCost;
 		return output;
 	}
 
