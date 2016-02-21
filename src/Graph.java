@@ -71,10 +71,12 @@ public class Graph {
 	 * @return - true if insertion was successful
 	 * @throws ObjectNotFoundException
 	 */
+	// Removed BufferedImage pic  ###DAM###
 	public boolean insert(String name, Coordinate c, String address,
-			int rating, BufferedImage pic, String[] neighbors, int[] times,
+			int rating, String[] neighbors, int[] times,
 			int[] distances, Point2D point) throws ObjectNotFoundException {
-		if (name == null || c == null || address == null || pic == null)
+		//removed || pic == null   ###DAM###
+		if (name == null || c == null || address == null )
 			return false;
 		Destination location1 = new Destination(c, name, address, rating,
 				null, point);
