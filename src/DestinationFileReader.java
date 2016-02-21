@@ -1,3 +1,4 @@
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
@@ -29,6 +30,8 @@ public class DestinationFileReader {
 	public int rating;
 	public Double x;
 	public Double y;
+	public int mapx;
+	public int mapy;
 	public Graph newgraph;
 	public int index;
 	
@@ -54,6 +57,9 @@ public class DestinationFileReader {
 				y = Double.parseDouble(coord[1]);
 				address = lineArray[2];
 				rating = Integer.parseInt(lineArray[3]);
+				String[] map = lineArray[4].split(",");
+				mapx = Integer.parseInt(map[0]);
+				mapy = Integer.parseInt(map[1]);
 				
 				// second line of the destination read in
 				// holds the names of the neighbors
@@ -151,8 +157,10 @@ public class DestinationFileReader {
 		neighbors[index] = temp;
 		index ++;
 		
-		// TODO: add point2D object as last parameter
-		return new Destination(thisspot, name, address, rating, img, null, null);
+		Point2D point = new Point2D.Double((double) mapx, (double) mapy);
+		
+		
+		return new Destination(thisspot, name, address, rating, img, null, point);
 	}
 	
 	public static void main(String[] args){
