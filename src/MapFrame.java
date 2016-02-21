@@ -1,6 +1,8 @@
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -460,6 +462,7 @@ public class MapFrame extends JFrame {
 				TripPlanner.this.remove(TripPlanner.this.routeInfoPanel);
 				TripPlanner.this.add(TripPlanner.this.routeInstructionPanel, BorderLayout.CENTER);
 				TripPlanner.this.setRouteInstructionPanelText(this.route);
+				MapFrame.this.content.map.drawRoute(this.route);
 				TripPlanner.this.repaint();
 				TripPlanner.this.validate();
 				MapFrame.this.validate();
@@ -828,37 +831,37 @@ public class MapFrame extends JFrame {
 					this.image.getHeight() * 2, 1.45, 1.45);
 			this.setLayout(null);
 			this.addMouseListener(new MouseListener() {
-				
+
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					// TODO Auto-generated method stub.
-					
+
 				}
-				
+
 				@Override
 				public void mousePressed(MouseEvent e) {
 					// TODO Auto-generated method stub.
-					
+
 				}
-				
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 					// TODO Auto-generated method stub.
-					
+
 				}
-				
+
 				@Override
 				public void mouseEntered(MouseEvent e) {
 					// TODO Auto-generated method stub.
-					
+
 				}
-				
+
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					// TODO Auto-generated method stub.
 					System.out.println(e.getX());
 					System.out.println(e.getY());
-					
+
 				}
 			});
 			//
@@ -903,12 +906,13 @@ public class MapFrame extends JFrame {
 
 			LinkedList<Destination> dest = MapFrame.this.graph.getAllDestinations();
 			for (Destination d : dest) {
-				JLabel label = new JLabel(d.name);
+				JLabel label = new JLabel("<html><span style= 'font-size:12px'>" + d.name + "</span></html>");
 				this.add(label);
 				label.setForeground(Color.RED);
 
-				 label.setLocation(d.mapPoint);
-				 label.setSize(20,10);
+				label.setLocation(d.mapPoint);
+				label.setSize(80, 35);
+				//label.setFont(new Font("Arial",Font.PLAIN,5));
 				label.addMouseListener(new MouseListener() {
 
 					@Override
@@ -1018,6 +1022,7 @@ public class MapFrame extends JFrame {
 					g2.setColor(Color.CYAN);
 					Line2D.Double line = new Line2D.Double(prev.mapPoint, this.r.get(i).mapPoint);
 					prev = this.r.get(i);
+					g2.setStroke(new BasicStroke(10));
 					g2.draw(line);
 				}
 			}
