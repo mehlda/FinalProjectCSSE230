@@ -1,6 +1,4 @@
 import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -11,7 +9,10 @@ import java.util.LinkedList;
  *
  */
 public class Graph {
-	public LinkedList<Destination>[] destinations;
+	/**
+	 * List of destinations
+	 */
+	protected LinkedList<Destination>[] destinations;
 
 	/**
 	 * Constructs a new Graph object
